@@ -2,17 +2,21 @@
 <html lang="en-AU">
 <head>
 <meta charset="utf-8">
-<!-- viewport-fit=cover lets the page paint into the notch / home-indicator area,
-     which the safe-area padding below then keeps content clear of. Zooming is
-     deliberately NOT disabled: user-scalable=no fails WCAG 1.4.4. -->
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- viewport-fit is deliberately left at its default. With "cover" the page
+     paints under the status bar, and iOS 26 then frosts that band with its
+     scroll-edge glass effect, blurring the header. Letting iOS inset the view
+     means nothing sits under the status bar for it to blur. The safe-area
+     padding below is kept: it resolves to 0 here and still covers landscape
+     notches and any future re-enable. Zooming is deliberately NOT disabled:
+     user-scalable=no fails WCAG 1.4.4. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Capable — work, money and what you're owed</title>
 <meta name="description" content="Capable helps people with disability in Queensland find work that fits their capacity, track wages, Disability Support Pension and NDIS funding on a fortnightly cycle, and claim entitlements they are already eligible for.">
 
 <!-- Installable app: Add to Home Screen on iOS, Install on Android and desktop. -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#F6F3EC" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0D1413" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16201E" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <!-- "default" rather than "black-translucent": the app has a light and a dark
@@ -275,6 +279,7 @@ a:hover { color: var(--accent-hover); }
   background: var(--accent-soft);
 }
 .navbtn svg { flex: none; }
+.nav-short { display: none; }
 
 main { display: block; padding-block: clamp(1.25rem, 3vw, 2.25rem) 3rem; }
 .view-intro { max-width: var(--measure); margin-bottom: 1.5rem; }
@@ -578,10 +583,72 @@ hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
   border-radius: 4px; padding: .05rem .35rem;
 }
 
-/* 400% zoom / narrow reflow */
+/* ============================================================
+   MOBILE APP SHELL
+   Phones get a native-feeling layout: a slim sticky top bar and a
+   bottom tab bar, instead of the desktop header + wrapping nav.
+   ============================================================ */
+@media (max-width: 40rem) {
+  /* Slim, opaque, sticky top bar — brand left, who you are right, one row. */
+  .site-header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--border); }
+  .site-header .shell {
+    flex-direction: row; align-items: center; justify-content: space-between;
+    gap: .5rem; padding-block: .45rem;
+  }
+  .brand { font-size: 1.05rem; gap: .45rem; }
+  .brand-mark { width: 28px; height: 28px; font-size: .9rem; border-radius: 8px; }
+  .brand-tag { display: none; }
+  .whoami { padding: .2rem .55rem .2rem .22rem; font-size: .85rem; gap: .4rem; }
+  .avatar { width: 26px; height: 26px; font-size: .72rem; }
+  .wi-pre, .wi-post { display: none; }
+
+  /* Navigation moves to a bottom tab bar. Same <nav>, same buttons, same
+     aria-current — only the CSS position changes. */
+  .mainnav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    background: var(--surface);
+    border-top: 1px solid var(--border); border-bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mainnav .shell { padding-left: 0; padding-right: 0; }
+  .mainnav ul { flex-wrap: nowrap; gap: 0; }
+  .mainnav li { flex: 1 1 0; min-width: 0; }
+  .navbtn {
+    flex-direction: column; gap: .15rem;
+    width: 100%; min-height: 58px;
+    padding: .5rem .2rem .45rem;
+    font-size: .72rem; letter-spacing: -.01em;
+    border-radius: 0; border-bottom: 0; border-top: 3px solid transparent;
+  }
+  .navbtn[aria-current="page"] { border-top-color: var(--accent); background: var(--accent-soft); }
+  .nav-full { display: none; }
+  .nav-short { display: inline; }
+
+  /* Keep content clear of the fixed tab bar. */
+  main { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+  .site-footer { padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)); }
+
+  .view-intro { margin-bottom: 1.1rem; }
+  .install-tip { padding: .75rem .85rem; margin-bottom: 1.15rem; }
+  .bignum { margin-top: .1rem; }
+}
+
+/* iOS 26 paints a translucent "glass" band over the top edge of a standalone
+   web app, which frosts whatever sits under it. Fill the status-bar strip with
+   an opaque colour so the app's own header is not what shows through. */
+body::before {
+  content: "";
+  position: fixed; top: 0; left: 0; right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--surface);
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* 400% zoom / narrow reflow.
+   The header is handled by the MOBILE APP SHELL block above, which keeps it on
+   one row; stacking it here would override that and cost a whole row. */
 @media (max-width: 30rem) {
-  body { font-size: 1.0625rem; }
-  .site-header .shell { flex-direction: column; align-items: flex-start; }
   .figrow { flex-direction: column; }
 }
 </style>
@@ -600,7 +667,7 @@ hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
     </p>
     <p class="whoami">
       <span class="avatar" aria-hidden="true">SW</span>
-      <span>Signed in as <strong>Sam Whitton</strong>, Brisbane</span>
+      <span><span class="wi-pre">Signed in as </span><strong>Sam Whitton</strong><span class="wi-post">, Brisbane</span></span>
     </p>
   </div>
 </header>
@@ -610,16 +677,16 @@ hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
     <ul>
       <li><button type="button" class="navbtn" data-view="dashboard" aria-current="page">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="3" y="15" width="7" height="6" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/></svg>
-        Dashboard</button></li>
+        <span class="nav-full">Dashboard</span><span class="nav-short">Home</span></button></li>
       <li><button type="button" class="navbtn" data-view="jobs">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Job mapping</button></li>
+        <span class="nav-full">Job mapping</span><span class="nav-short">Jobs</span></button></li>
       <li><button type="button" class="navbtn" data-view="money">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18v12H3z"/><circle cx="12" cy="12" r="3"/></svg>
-        Financial tracker</button></li>
+        <span class="nav-full">Financial tracker</span><span class="nav-short">Money</span></button></li>
       <li><button type="button" class="navbtn" data-view="claim">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 21V7"/><path d="M12 7S9.5 3 7.5 3A2.5 2.5 0 0 0 7.5 8"/><path d="M12 7s2.5-4 4.5-4a2.5 2.5 0 0 1 0 5"/></svg>
-        Claim</button></li>
+        <span class="nav-full">Claim</span><span class="nav-short">Claim</span></button></li>
     </ul>
   </div>
 </nav>
