@@ -15,8 +15,8 @@
 
 <!-- Installable app: Add to Home Screen on iOS, Install on Android and desktop. -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#16201E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFCF6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#241E17" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -26,46 +26,51 @@
 <style>
 /* ============================================================
    Capable — design tokens
-   Palette: deep teal + warm sand. Deliberately not default blue.
-   All pairs checked to WCAG 2.1 AA (4.5:1 body, 3:1 large/UI).
+   Palette: warm earth tones, chosen for dementia and age-related vision.
+   All pairs checked by script to WCAG AA (4.5:1 body, 3:1 large/UI).
    ============================================================ */
 :root {
   color-scheme: light dark;
 
-  --bg:            #F6F3EC;
-  --bg-sunken:     #EDE8DE;
-  --surface:       #FFFFFF;
-  --surface-alt:   #F2EEE6;
-  --border:        #8F8674;
-  --border-strong: #6E665A;
+  /* Warm, natural, low-saturation. Deliberately NOT the deep teal this
+     started as: blue-green discrimination is exactly what declines with
+     ageing and dementia, so a blue-green accent is the worst available
+     choice for this audience. Earth tones, matt, high luminance contrast,
+     and every status still carries an icon and words as well as a hue. */
+  --bg:            #F5EFE3;   /* warm sand */
+  --bg-sunken:     #E8DFCE;
+  --surface:       #FFFCF6;   /* warm white, not clinical white */
+  --surface-alt:   #F0E8D8;
+  --border:        #8C7859;   /* 3.7:1 on bg */
+  --border-strong: #7A6A52;
 
-  --text:          #14211E;
-  --text-muted:    #4B5A56;
+  --text:          #2B2318;   /* warm near-black, 15.1:1 on surface */
+  --text-muted:    #5A4C3A;
 
-  --accent:        #0C5349;   /* 8.6:1 on --surface */
-  --accent-hover:  #093F38;
+  --accent:        #8A3D1E;   /* terracotta, 7.4:1 on surface */
+  --accent-hover:  #6E2F16;
   --accent-ink:    #FFFFFF;
-  --accent-soft:   #DDECE8;
+  --accent-soft:   #F5E2D6;
 
-  --warn:          #7A4200;   /* 6.9:1 on --surface */
-  --warn-soft:     #FBEEDC;
-  --warn-border:   #A96A1C;
+  --warn:          #7F4E00;   /* amber-brown, 6.9:1 on surface */
+  --warn-soft:     #FAEBD2;
+  --warn-border:   #8C6118;
 
-  --danger:        #97131B;   /* 7.6:1 on --surface */
-  --danger-soft:   #FBE7E6;
-  --danger-border: #B3363C;
+  --danger:        #93231B;   /* 8.2:1 on surface */
+  --danger-soft:   #FADEDA;
+  --danger-border: #B5473C;
 
-  --good:          #17564A;
-  --good-soft:     #DFEEE6;
-  --good-border:   #3C7C68;
+  --good:          #3B5C27;   /* forest, 7.5:1 on surface */
+  --good-soft:     #E5EDD8;
+  --good-border:   #55703B;
 
-  --info:          #3C3372;
-  --info-soft:     #E8E5F5;
-  --info-border:   #6157A0;
+  --info:          #6B3A5B;   /* muted plum, kept well away from the greens */
+  --info-soft:     #F2E2EC;
+  --info-border:   #96688A;
 
   --focus:         #1B1B1B;
   --focus-alt:     #FFFFFF;
-  --tap-highlight: rgba(12, 83, 73, .20);
+  --tap-highlight: rgba(138, 61, 30, .20);
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -80,40 +85,41 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:            #0D1413;
-    --bg-sunken:     #080D0C;
-    --surface:       #16201E;
-    --surface-alt:   #1D2A27;
-    --border:        #647E77;
-    --border-strong: #8CA29D;
+    /* Warm dark, not cold near-black — same reasoning as the light theme. */
+    --bg:            #1A1611;
+    --bg-sunken:     #120F0B;
+    --surface:       #241E17;
+    --surface-alt:   #2E2720;
+    --border:        #877560;
+    --border-strong: #9C8B74;
 
-    --text:          #ECF2F0;
-    --text-muted:    #AFC2BD;
+    --text:          #F2EBE0;
+    --text-muted:    #C6B8A4;
 
-    --accent:        #6FDCC6;
-    --accent-hover:  #92E9D7;
-    --accent-ink:    #06231E;
-    --accent-soft:   #123430;
+    --accent:        #F0A17A;   /* warm apricot, 7.9:1 on --surface */
+    --accent-hover:  #F7BB9C;
+    --accent-ink:    #2A1409;
+    --accent-soft:   #3A2418;
 
-    --warn:          #F5C077;
-    --warn-soft:     #33240F;
-    --warn-border:   #B08243;
+    --warn:          #F0C070;
+    --warn-soft:     #34260F;
+    --warn-border:   #A98040;
 
-    --danger:        #FF9B96;
-    --danger-soft:   #3A1512;
-    --danger-border: #B85A55;
+    --danger:        #FF9E90;
+    --danger-soft:   #3A1712;
+    --danger-border: #B85C50;
 
-    --good:          #7FD8B7;
-    --good-soft:     #10312A;
-    --good-border:   #3F8570;
+    --good:          #A8CE86;
+    --good-soft:     #1E2A14;
+    --good-border:   #5F7C42;
 
-    --info:          #BDB4F0;
-    --info-soft:     #211D3D;
-    --info-border:   #6A5FA8;
+    --info:          #DDA8C8;
+    --info-soft:     #2E1F29;
+    --info-border:   #90647E;
 
     --focus:         #FFFFFF;
-    --focus-alt:     #0D1413;
-    --tap-highlight: rgba(111, 220, 198, .26);
+    --focus-alt:     #1A1611;
+    --tap-highlight: rgba(240, 161, 122, .28);
 
     --shadow: 0 1px 2px rgba(0,0,0,.5), 0 4px 14px rgba(0,0,0,.35);
   }
@@ -127,7 +133,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  font-size: 17px;   /* baseline everywhere; the whole scale is rem off this */
+  font-size: 19px;   /* baseline everywhere; the whole scale is rem off this */
 }
 
 /* ---------- iOS Dynamic Type ----------
@@ -166,8 +172,8 @@ img, svg { max-width: 100%; }
 h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 .5rem; text-wrap: balance; }
 h1 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem); letter-spacing: -.01em; }
 h2 { font-size: clamp(1.25rem, 1.05rem + .8vw, 1.55rem); letter-spacing: -.005em; }
-h3 { font-size: 1.15rem; }
-h4 { font-size: 1rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
 p  { margin: 0 0 .85rem; max-width: var(--measure); }
 ul, ol { margin: 0 0 .85rem; padding-left: 1.25rem; }
 a { color: var(--accent); text-underline-offset: .18em; }
@@ -225,7 +231,7 @@ a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]) {
   letter-spacing: -.01em;
 }
 .muted { color: var(--text-muted); }
-.small { font-size: .9375rem; }
+.small { font-size: 1rem; }
 .stack > * + * { margin-top: 1rem; }
 
 /* ---------- skip link ---------- */
@@ -466,7 +472,7 @@ fieldset {
 }
 legend { font-weight: 700; padding: 0 .4rem; font-size: 1.05rem; }
 label { display: block; font-weight: 600; margin-bottom: .3rem; }
-.hint { color: var(--text-muted); font-size: .9375rem; margin: 0 0 .45rem; }
+.hint { color: var(--text-muted); font-size: 1rem; margin: 0 0 .5rem; }
 
 input[type="text"], input[type="number"], input[type="search"], input[type="tel"], select, textarea {
   width: 100%;
@@ -544,7 +550,7 @@ input[type="range"] {
   accent-color: var(--accent);
 }
 .check span { font-weight: 600; }
-.check .check-note { display: block; font-weight: 400; color: var(--text-muted); font-size: .9375rem; }
+.check .check-note { display: block; font-weight: 400; color: var(--text-muted); font-size: 1rem; }
 
 .field-error {
   display: flex; align-items: flex-start; gap: .45rem;
@@ -770,6 +776,19 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 .dialog-body { padding: .75rem 1.4rem 1.4rem; }
 .dialog-body p:last-child { margin-bottom: 0; }
 
+/* ---------- employer accessibility reviews ---------- */
+.stars { display: inline-flex; gap: 2px; vertical-align: -3px; color: var(--warn); }
+.stars svg { width: 20px; height: 20px; }
+.quotes { list-style: none; margin: .85rem 0 0; padding: 0; display: grid; gap: .75rem; }
+.quotes > li {
+  border-left: 4px solid var(--accent);
+  background: var(--surface-alt);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: .7rem .9rem;
+}
+.quotes blockquote { margin: 0 0 .25rem; font-size: 1.05rem; }
+.quotes p { margin: 0; }
+
 /* ---------- per-view tools: read aloud, share, keep screen on ---------- */
 .view-tools {
   display: flex; flex-wrap: wrap; gap: .6rem;
@@ -786,12 +805,12 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
   border-radius: 999px;
   background: var(--surface);
   color: var(--text);
-  font: inherit; font-size: .9rem; font-weight: 700;
+  font: inherit; font-size: 1.02rem; font-weight: 700;
   cursor: pointer;
 }
 .tool-btn:hover { border-color: var(--accent); color: var(--accent); }
 .tool-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.tool-btn svg { flex: none; }
+.tool-btn svg { flex: none; width: 22px; height: 22px; }
 
 /* ---------- dual labels: plain first, official term second ---------- */
 .jargon-term {
@@ -816,7 +835,7 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
   border-radius: 999px;
   background: var(--surface);
   color: var(--text);
-  font: inherit; font-size: .9rem; font-weight: 700;
+  font: inherit; font-size: 1.02rem; font-weight: 700;
   cursor: pointer;
 }
 .er-toggle:hover { border-color: var(--accent); color: var(--accent); }
@@ -842,7 +861,7 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
   font-size: 1.2rem; line-height: 1.5;
 }
 .er-sym {
-  flex: none; width: 56px; height: 56px; border-radius: 14px;
+  flex: none; width: 64px; height: 64px; border-radius: 16px;
   background: var(--accent-soft); color: var(--accent);
   display: grid; place-items: center;
 }
@@ -857,12 +876,12 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 .onboarding { max-width: 34rem; margin: 0 auto; padding: .5rem 0 2rem; }
 .ob-mark {
   position: relative; width: 76px; height: 76px; margin: 0 auto 1.15rem;
-  border-radius: 20px; background: #0C5349; color: #fff;
+  border-radius: 20px; background: #8A3D1E; color: #fff;
   display: grid; place-items: center;
   font-size: 2.5rem; font-weight: 800; line-height: 1;
 }
 .ob-mark span { transform: translate(-2px, -3px); }
-.ob-mark i { position: absolute; right: 11px; top: 11px; width: 15px; height: 15px; border-radius: 50%; background: #6FDCC6; }
+.ob-mark i { position: absolute; right: 11px; top: 11px; width: 15px; height: 15px; border-radius: 50%; background: #F0A17A; }
 .onboarding h1 { text-align: center; margin-bottom: .5rem; }
 .ob-lead { text-align: center; margin: 0 auto 1.75rem; color: var(--text-muted); max-width: 30rem; }
 .ob-list { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 1rem; }
@@ -936,7 +955,7 @@ body.onboarding-active .view { display: none !important; }
     flex-direction: column; gap: .15rem;
     width: 100%; min-height: 58px;
     padding: .5rem .2rem .45rem;
-    font-size: .72rem; letter-spacing: -.01em;
+    font-size: .82rem; letter-spacing: -.01em;
     border-radius: 0; border-bottom: 0; border-top: 3px solid transparent;
   }
   .navbtn[aria-current="page"] { border-top-color: var(--accent); background: var(--accent-soft); }
@@ -984,7 +1003,7 @@ body::before {
       </button>
       <div class="menu">
         <button type="button" class="icon-btn" id="more-menu-btn" aria-haspopup="true" aria-expanded="false" aria-controls="more-menu-panel" aria-label="More options">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
         </button>
         <div class="menu-panel" id="more-menu-panel" hidden>
           <p class="menu-title">More</p>
@@ -1035,16 +1054,16 @@ body::before {
   <div class="shell">
     <ul>
       <li><button type="button" class="navbtn" data-view="dashboard" aria-current="page">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="8" rx="2"/><rect x="3" y="15" width="7" height="6" rx="2"/><rect x="14" y="12.5" width="7" height="8.5" rx="2"/><circle cx="17.5" cy="6.2" r="2.4" fill="currentColor" stroke="none"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="8" rx="2"/><rect x="3" y="15" width="7" height="6" rx="2"/><rect x="14" y="12.5" width="7" height="8.5" rx="2"/><circle cx="17.5" cy="6.2" r="2.4" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Dashboard</span><span class="nav-short">Home</span></button></li>
       <li><button type="button" class="navbtn" data-view="jobs">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="10" width="14.5" height="10.5" rx="2.5"/><path d="M2 14.6h14.5"/><path d="M6.6 10V7.4a1.9 1.9 0 0 1 1.9-1.9h1.6a1.9 1.9 0 0 1 1.9 1.9V10"/><circle cx="20.3" cy="5.8" r="2.2" fill="currentColor" stroke="none"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="10" width="14.5" height="10.5" rx="2.5"/><path d="M2 14.6h14.5"/><path d="M6.6 10V7.4a1.9 1.9 0 0 1 1.9-1.9h1.6a1.9 1.9 0 0 1 1.9 1.9V10"/><circle cx="20.3" cy="5.8" r="2.2" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Job mapping</span><span class="nav-short">Jobs</span></button></li>
       <li><button type="button" class="navbtn" data-view="money">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 20.5V16"/><path d="M10 20.5V13.5"/><path d="M15.5 20.5V11"/><circle cx="20.3" cy="6.5" r="2.2" fill="currentColor" stroke="none"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 20.5V16"/><path d="M10 20.5V13.5"/><path d="M15.5 20.5V11"/><circle cx="20.3" cy="6.5" r="2.2" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Financial tracker</span><span class="nav-short">Money</span></button></li>
       <li><button type="button" class="navbtn" data-view="claim">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.41 13.41l7.17 7.17a2 2 0 0 0 2.83 0L22 12V2H12L3.41 10.59a2 2 0 0 0 0 2.82z"/><circle cx="16.9" cy="6.9" r="1.9" fill="currentColor" stroke="none"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.41 13.41l7.17 7.17a2 2 0 0 0 2.83 0L22 12V2H12L3.41 10.59a2 2 0 0 0 0 2.82z"/><circle cx="16.9" cy="6.9" r="1.9" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Claim</span><span class="nav-short">Claim</span></button></li>
     </ul>
   </div>
@@ -1418,6 +1437,68 @@ const CASHBACKS = [
   { id:"c6", name:"BankFirst",           offer:"$75 back on a new everyday account", detail:"Requires two deposits of $200 or more in the first 60 days." }
 ];
 
+/* Employer accessibility reviews, written by workers with disability.
+   Demo data. This is the thing a job ad never tells you: not what the role
+   is, but whether the place will actually be all right for you. */
+const REVIEWS = {
+  j1: { rating: 4.6, count: 11, best: "Flexible hours",  worst: "Busy at school pick-up time",
+        quotes: [
+          { text: "They swapped my shifts around chemo without me having to explain myself twice.", who: "Casual, 2 years", tag: "Flexible hours" },
+          { text: "There is a quiet back room you can use if the desk gets loud. Nobody asks why.", who: "Library assistant", tag: "Quiet environment" }
+        ]},
+  j2: { rating: 4.8, count: 17, best: "Working from home", worst: "Onboarding week is in the office",
+        quotes: [
+          { text: "Fully remote after the first week. My chair, my desk, my bathroom.", who: "Data officer, 3 years", tag: "Work from home" },
+          { text: "Nobody has ever once asked why my camera is off.", who: "Data officer", tag: "Low pressure" }
+        ]},
+  j3: { rating: 4.4, count: 8,  best: "They get it",       worst: "Can be loud and emotionally heavy",
+        quotes: [
+          { text: "Everyone here has lived experience. I did not have to educate my manager.", who: "Peer worker, 1 year", tag: "Understanding manager" },
+          { text: "The drop-in space is noisy. Bring your loops if sound is a problem for you.", who: "Peer worker", tag: "Noise" }
+        ]},
+  j4: { rating: 3.9, count: 6,  best: "No phone calls",    worst: "Fixed shift blocks, no swapping",
+        quotes: [
+          { text: "Text chat only. As someone who cannot do phones, this was the whole reason I applied.", who: "Chat support", tag: "No phone calls" },
+          { text: "The four-hour blocks are locked in. Hard if your energy is unpredictable.", who: "Chat support, 8 months", tag: "Inflexible hours" }
+        ]},
+  j5: { rating: 2.6, count: 9,  best: "Friendly team",     worst: "On your feet the whole shift",
+        quotes: [
+          { text: "No seat behind the counter. I lasted five weeks.", who: "Former all-rounder", tag: "Physical demand" },
+          { text: "The team are lovely, the job is brutal on your body.", who: "Barista", tag: "Physical demand" }
+        ]},
+  j6: { rating: 4.7, count: 5,  best: "Genuinely flexible", worst: "Very small team, quiet days",
+        quotes: [
+          { text: "I set my own hours entirely. They care that the work is right, not when I did it.", who: "Bookkeeper, 4 years", tag: "Flexible hours" }
+        ]},
+  j7: { rating: 2.1, count: 14, best: "Steady pay",        worst: "Quotas, lifting, no transport",
+        quotes: [
+          { text: "The pick rate does not move for anybody. I could not keep up and they let me go.", who: "Former picker", tag: "Physical demand" },
+          { text: "No bus stop within walking distance. You need a car.", who: "Picker", tag: "Transport" }
+        ]},
+  j8: { rating: 4.1, count: 7,  best: "Meaningful work",   worst: "Some lifting and hoist work",
+        quotes: [
+          { text: "Rosters come out three weeks ahead, which makes planning appointments possible.", who: "Driver, 2 years", tag: "Predictable roster" }
+        ]},
+  j9: { rating: 4.5, count: 12, best: "Quiet and calm",    worst: "Basement, no natural light",
+        quotes: [
+          { text: "Genuinely the quietest office I have worked in. Ferry stops at the door.", who: "Records officer", tag: "Quiet environment" },
+          { text: "No windows. If light matters to your mood, think about it.", who: "Records officer, 5 years", tag: "Environment" }
+        ]},
+  j10:{ rating: 3.4, count: 10, best: "Good bus routes",   worst: "Standing, and Christmas is relentless",
+        quotes: [
+          { text: "They found me a stool after I asked. Took a while, but they did it.", who: "Retail assistant", tag: "Adjustments made" }
+        ]},
+  j11:{ rating: 4.9, count: 9,  best: "Remote and flexible", worst: "Deadlines cluster at release time",
+        quotes: [
+          { text: "Best employer I have had. Adjustments were sorted before I started, not after I begged.", who: "Test analyst, 2 years", tag: "Adjustments made" },
+          { text: "Async by default. No surprise meetings.", who: "Test analyst", tag: "Low pressure" }
+        ]},
+  j12:{ rating: 3.2, count: 4,  best: "Outdoors, good team", worst: "Kneeling, machinery, no transport",
+        quotes: [
+          { text: "Good crew, but it is real physical work and the site is hard to get to.", who: "Grounds assistant", tag: "Physical demand" }
+        ]}
+};
+
 const TODAY = new Date("2026-08-29T00:00:00+10:00");
 
 // Ship-instead for scheduled Web Push, which would need a push service, VAPID
@@ -1623,8 +1704,10 @@ function viewToolsHtml() {
 
 function estimateOnlyNote() {
   return '<p class="small muted">' + ICON.info +
-    ' <strong>Estimate only, not financial advice.</strong> Based on the Disability Support Pension income test for a single person as at 1 July 2026: the first ' +
-    money2.format(RULES.incomeFreeAreaFortnight) + ' you earn each fortnight does not change your payment, then your payment drops by 50 cents for every extra dollar. Services Australia works out your real payment.</p>';
+    ' <strong>An estimate, not financial advice.</strong> ' +
+    jargon('You can earn ' + money2.format(RULES.incomeFreeAreaFortnight) +
+      ' a fortnight before your payment changes.', 'income free area') +
+    ' ' + jargon('After that it drops by 50 cents in the dollar.', 'taper rate') + '</p>';
 }
 
 function pccReassurance() {
@@ -1649,7 +1732,7 @@ function renderDashboard() {
   const html = [];
   html.push('<div class="view-intro">');
   html.push('<h1>Good morning, ' + esc(USER.name.split(" ")[0]) + '</h1>');
-  html.push('<p>Your work, your money and what you&rsquo;re owed, for ' + dateFmt.format(TODAY) + ' &mdash; shown per fortnight, because that is how your pay and your pension actually arrive.</p>');
+  html.push('<p>Everything per fortnight. ' + dateFmt.format(TODAY) + '.</p>');
   html.push('</div>');
   html.push(viewToolsHtml());
 
@@ -1722,7 +1805,7 @@ function renderJobsShell() {
 
   html.push('<div class="view-intro">');
   html.push('<h1>Job mapping</h1>');
-  html.push('<p>Tell us what you can do and we will show the work that fits. We never ask for your diagnosis. Change anything below and the list updates straight away.</p>');
+  html.push('<p>Tell us what you can do. We will show the work that fits. We never ask about your diagnosis.</p>');
   html.push('</div>');
   html.push(viewToolsHtml());
 
@@ -1739,7 +1822,7 @@ function renderJobsShell() {
   html.push('<fieldset>');
   html.push('<legend>Hours you can work</legend>');
   html.push('<label for="hours-number">Hours available per week</label>');
-  html.push('<p class="hint" id="hours-hint">Anything from 2 to 38 hours. Type it, use the minus and plus buttons, or drag the slider &mdash; whichever suits you. We only show jobs at or under this number.</p>');
+  html.push('<p class="hint" id="hours-hint">2 to 38 hours. Type it, tap minus or plus, or drag. We only show jobs at or under this.</p>');
   html.push('<div class="stepper">');
   html.push('<button type="button" class="btn btn-secondary step-btn" id="hours-down"' +
     (c.hoursPerWeek <= 2 ? ' disabled' : '') + '>' +
@@ -1758,7 +1841,7 @@ function renderJobsShell() {
 
   html.push('<fieldset>');
   html.push('<legend>What you need from a job</legend>');
-  html.push('<p class="hint" id="needs-hint">Tick everything that matters to you. Jobs are ranked by how many of these they meet.</p>');
+  html.push('<p class="hint" id="needs-hint">Tick what matters to you.</p>');
   NEED_KEYS.forEach(function (k) {
     html.push('<label class="check" for="need-' + k + '">');
     html.push('<input type="checkbox" id="need-' + k + '" name="need" value="' + k + '" ' + (c.needs[k] ? "checked" : "") + ' aria-describedby="need-' + k + '-note">');
@@ -1866,6 +1949,52 @@ function setHours(value, source) {
   renderJobResults();
   renderDashboard();
   saveSession();
+}
+
+/* Stars are decorative — the rating is always stated in words too. */
+function starsHtml(rating) {
+  let out = '<span class="stars" aria-hidden="true">';
+  for (let i = 1; i <= 5; i++) {
+    out += (rating >= i - 0.25)
+      ? '<svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9Z"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" focusable="false"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9Z"/></svg>';
+  }
+  return out + '</span>';
+}
+
+function reviewsSectionHtml(results) {
+  const html = [];
+  html.push('<section class="card" style="margin-top:1.75rem" aria-labelledby="reviews-h">');
+  html.push('<h2 id="reviews-h">What workers with disability say</h2>');
+  html.push('<p>A job ad never tells you if the place will be all right for you. These people did the job.</p>');
+  html.push('<p class="small"><span class="badge badge-demo">Demo reviews</span> ' +
+    'Written for this demonstration. The employers are real organisations but the reviews are not.</p>');
+
+  html.push('<ul class="results" style="margin-top:1rem">');
+  results.slice(0, 5).forEach(function (r) {
+    const rev = REVIEWS[r.job.id];
+    if (!rev) return;
+    const tone = rev.rating >= 4.2 ? "good" : rev.rating >= 3.2 ? "warn" : "danger";
+    html.push('<li class="result">');
+    html.push('<h3>' + esc(r.job.employer) + '</h3>');
+    html.push('<p class="result-meta"><span>' + esc(r.job.title) + '</span></p>');
+    html.push('<p>' + starsHtml(rev.rating) +
+      ' <strong>' + rev.rating.toFixed(1) + ' out of 5</strong>, from ' + rev.count +
+      ' ' + plural(rev.count, "worker", "workers") + ' with disability.</p>');
+    html.push('<p class="small"><span class="badge badge-good">' + ICON.tick + ' Best bit: ' +
+      esc(rev.best) + '</span> <span class="badge badge-' + (tone === "danger" ? "danger" : "warn") + '">' +
+      ICON.warn + ' Hardest bit: ' + esc(rev.worst) + '</span></p>');
+    html.push('<ul class="quotes">');
+    rev.quotes.forEach(function (q) {
+      html.push('<li><blockquote>&ldquo;' + esc(q.text) + '&rdquo;</blockquote>' +
+        '<p class="small muted">' + esc(q.who) + ' &mdash; on ' + esc(q.tag) + '</p></li>');
+    });
+    html.push('</ul>');
+    html.push('</li>');
+  });
+  html.push('</ul>');
+  html.push('</section>');
+  return html.join("");
 }
 
 function renderJobResults() {
@@ -1991,6 +2120,7 @@ function renderJobResults() {
   }
 
   html.push(estimateOnlyNote());
+  if (results.length) html.push(reviewsSectionHtml(results));
 
   $("#jobs-results").innerHTML = html.join("");
 }
@@ -2004,8 +2134,10 @@ function renderMoneyShell() {
 
   html.push('<div class="view-intro">');
   html.push('<h1>Financial tracker</h1>');
-  html.push('<p>Your wages, your Disability Support Pension and your NDIS plan funding, all on the fortnightly cycle you actually live on. Plan year runs ' +
-    dateFmt.format(PLAN_START) + ' to ' + dateFmt.format(PLAN_END) + '.</p>');
+  html.push('<p>Your pay, your pension and your NDIS plan. All per fortnight.</p>');
+  html.push('<p class="small muted">' +
+    jargon('You buy your own supports and claim the money back yourself.', 'self-managed plan') +
+    ' Plan year: ' + dateFmt.format(PLAN_START) + ' to ' + dateFmt.format(PLAN_END) + '.</p>');
   html.push('<p class="small muted">' +
     jargon('You buy your own supports and claim the money back yourself.', 'self-managed plan') + '</p>');
   html.push('</div>');
@@ -2017,7 +2149,7 @@ function renderMoneyShell() {
   html.push('<fieldset>');
   html.push('<legend>Your wages</legend>');
   html.push('<label for="wages">Wages you were paid this fortnight, before tax</label>');
-  html.push('<p class="hint" id="wages-hint">Enter a number in dollars, like 390. Include every casual shift paid in the last 14 days.</p>');
+  html.push('<p class="hint" id="wages-hint">A number in dollars, like 390. Everything you were paid in the last 14 days.</p>');
   // inputmode="decimal" gives a numeric keypad: fewer, larger keys, less
   // precision needed, and iOS Dictation stays available so voice entry is free.
   html.push('<input type="text" id="wages" name="wages" inputmode="decimal" enterkeyhint="done" ' +
@@ -2028,8 +2160,7 @@ function renderMoneyShell() {
   // you select the figure off the photo and paste it — far less effort than
   // transcribing a number from paper with a tremor or low vision.
   html.push('<label for="payslip" style="margin-top:1rem">Or take a photo of your payslip</label>');
-  html.push('<p class="hint" id="payslip-hint">The photo stays on your phone. Nothing is uploaded. ' +
-    'Tap and hold the number in the photo to copy it, then paste it above.</p>');
+  html.push('<p class="hint" id="payslip-hint">The photo stays on your phone. Press and hold the number in it to copy.</p>');
   html.push('<input type="file" id="payslip" name="payslip" accept="image/*" capture="environment" ' +
     'aria-describedby="payslip-hint">');
   html.push('<p class="small" id="payslip-status" role="status"></p>');
@@ -2277,23 +2408,6 @@ function renderPlan() {
     html.push('</section>');
   });
 
-  // spending history, collapsed by default
-  html.push('<details class="data-table" style="margin-top:1.75rem"><summary>Show your last ' + PLAN.history.length + ' claims</summary>');
-  html.push('<div class="table-wrap"><table>');
-  html.push('<caption>Recent NDIS spending, newest first</caption>');
-  html.push('<thead><tr><th scope="col">Date</th><th scope="col">What it was for</th><th scope="col">Category</th><th class="num" scope="col">Amount</th></tr></thead><tbody>');
-  PLAN.history.forEach(function (h) {
-    let catName = h.categoryId, budgetName = "";
-    PLAN.budgets.forEach(function (b) {
-      b.categories.forEach(function (c) { if (c.id === h.categoryId) { catName = c.name; budgetName = b.name; } });
-    });
-    html.push('<tr><td>' + dateShort.format(new Date(h.date + "T00:00:00+10:00")) + '</td>' +
-      '<td>' + esc(h.description) + '</td>' +
-      '<td>' + esc(catName) + '<span class="muted small"><br>' + esc(budgetName) + '</span></td>' +
-      '<td class="num">' + money2.format(h.amount) + '</td></tr>');
-  });
-  html.push('</tbody></table></div></details>');
-
   $("#plan-body").innerHTML = html.join("");
 }
 
@@ -2312,7 +2426,7 @@ function renderClaimShell() {
 
   html.push('<div class="view-intro">');
   html.push('<h1>Claim</h1>');
-  html.push('<p>Money you are already entitled to but have not collected. Your Pensioner Concession Card is the key to most of it.</p>');
+  html.push('<p>Money you are owed but have not collected yet.</p>');
   html.push('</div>');
   html.push(viewToolsHtml());
 
@@ -2328,6 +2442,8 @@ function renderClaimShell() {
     html.push('<div role="tabpanel" id="panel-' + t.id + '" aria-labelledby="tab-' + t.id + '" tabindex="0"' +
       (state.claimTab === t.id ? "" : " hidden") + '>' + claimPanelHtml(t.id) + '</div>');
   });
+
+  html.push(claimHistoryHtml());
 
   $("#view-claim").innerHTML = html.join("");
 
@@ -2360,6 +2476,34 @@ function selectClaimTab(id, focusTab) {
     panel.hidden = !sel;
   });
   if (focusTab) document.getElementById("tab-" + id).focus();
+}
+
+/* Your NDIS claim history. It lived on the tracker, but "claims you have
+   made" belongs with everything else called Claim. */
+function claimHistoryHtml() {
+  const html = [];
+  const spent = PLAN.history.reduce(function (t, h) { return t + h.amount; }, 0);
+  html.push('<section class="card" style="margin-top:1.75rem" aria-labelledby="claim-hist-h">');
+  html.push('<h2 id="claim-hist-h">Claims you have already made</h2>');
+  html.push('<p>Your last ' + PLAN.history.length + ' NDIS claims, newest first. ' +
+    'That is ' + money2.format(spent) + ' claimed back.</p>');
+  html.push('<div class="table-wrap"><table>');
+  html.push('<caption>Your NDIS claims, newest first</caption>');
+  html.push('<thead><tr><th scope="col">Date</th><th scope="col">What it was for</th>' +
+    '<th scope="col">Category</th><th class="num" scope="col">Amount</th></tr></thead><tbody>');
+  PLAN.history.forEach(function (h) {
+    let catName = h.categoryId, budgetName = "";
+    PLAN.budgets.forEach(function (b) {
+      b.categories.forEach(function (c) { if (c.id === h.categoryId) { catName = c.name; budgetName = b.name; } });
+    });
+    html.push('<tr><td>' + dateShort.format(new Date(h.date + "T00:00:00+10:00")) + '</td>' +
+      '<td>' + esc(h.description) + '</td>' +
+      '<td>' + esc(catName) + '<span class="muted small"><br>' + esc(budgetName) + '</span></td>' +
+      '<td class="num">' + money2.format(h.amount) + '</td></tr>');
+  });
+  html.push('</tbody></table></div>');
+  html.push('</section>');
+  return html.join("");
 }
 
 function claimPanelHtml(id) {
@@ -2773,21 +2917,73 @@ function stopSpeaking() {
   });
 }
 
+/* Picking a voice. We cannot ship a voice — the browser only offers what the
+   OS has installed — so the job is to choose the best of those instead of
+   taking the default, which is usually the oldest and most robotic one.
+
+   On iOS the good voices are the Siri and "Enhanced"/"Premium" downloads, and
+   they are exposed through getVoices() once the user has them. Preference
+   order: Siri, then enhanced/premium, then a named Australian voice, then any
+   en-AU, then any English. */
+const VOICE_HINTS = ["siri", "enhanced", "premium", "neural", "natural"];
+const VOICE_NAMES = ["karen", "catherine", "matilda", "lee", "zoe", "isha", "samantha", "serena", "daniel"];
+
+let chosenVoice = null;
+function pickVoice() {
+  if (chosenVoice) return chosenVoice;
+  const voices = window.speechSynthesis.getVoices() || [];
+  if (!voices.length) return null;
+  const score = function (v) {
+    const n = (v.name || "").toLowerCase();
+    let pts = 0;
+    VOICE_HINTS.forEach(function (h, i) { if (n.indexOf(h) > -1) pts += (VOICE_HINTS.length - i) * 40; });
+    if (VOICE_NAMES.indexOf(n.split(" ")[0]) > -1) pts += 30;
+    if (v.lang === "en-AU") pts += 60;
+    else if (v.lang === "en-GB") pts += 30;
+    else if ((v.lang || "").indexOf("en") === 0) pts += 10;
+    if (n.indexOf("compact") > -1) pts -= 50;   // the old, robotic ones
+    if (v.localService) pts += 5;               // no network hiccup mid-sentence
+    return pts;
+  };
+  chosenVoice = voices.slice().sort(function (a, b) { return score(b) - score(a); })[0] || null;
+  return chosenVoice;
+}
+if ("speechSynthesis" in window) {
+  // Safari populates the list asynchronously, so re-pick when it arrives.
+  window.speechSynthesis.addEventListener("voiceschanged", function () { chosenVoice = null; pickVoice(); });
+}
+
+/* Read it a sentence at a time. One long utterance is what makes browser
+   speech sound like a machine reading a spreadsheet; sentence-sized chunks
+   let the engine apply its own intonation and give a natural beat between
+   ideas. */
+function speakQueue(text, onDone) {
+  const voice = pickVoice();
+  const parts = text.split(/(?<=[.!?])\s+/).filter(Boolean);
+  let i = 0;
+  (function next() {
+    if (i >= parts.length) { onDone(); return; }
+    const u = new SpeechSynthesisUtterance(parts[i++]);
+    if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-AU"; }
+    u.rate = 0.92;    // just under natural pace: easier to follow, not sluggish
+    u.pitch = 1.0;
+    u.volume = 1;
+    u.onend = next;
+    u.onerror = function () { onDone(); };
+    window.speechSynthesis.speak(u);
+  })();
+}
+
 function toggleSpeak(btn) {
   if (!("speechSynthesis" in window)) {
     btn.disabled = true;
     btn.querySelector("[data-speak-label]").textContent = "Reading aloud not available";
     return;
   }
-  if (window.speechSynthesis.speaking) { stopSpeaking(); return; }
+  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) { stopSpeaking(); return; }
   // First call must happen inside a user gesture on iOS — it does, this is a click.
-  const u = new SpeechSynthesisUtterance(spokenSummary());
-  u.lang = "en-AU";
-  u.rate = 0.95;
-  u.onend = stopSpeaking;
-  u.onerror = stopSpeaking;
-  window.speechSynthesis.speak(u);
   btn.querySelector("[data-speak-label]").textContent = "Stop reading";
+  speakQueue(spokenSummary(), stopSpeaking);
 }
 
 async function shareView(btn) {
