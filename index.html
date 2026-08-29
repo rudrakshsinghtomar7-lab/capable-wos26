@@ -640,7 +640,9 @@ body.onboarding-active .view { display: none !important; }
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
     background: var(--surface);
     border-top: 1px solid var(--border); border-bottom: 0;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* The iOS home indicator floats over app content, and with viewport-fit
+       unset env() reports 0, so a floor is required or it lands on the labels. */
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 24px);
   }
   .mainnav .shell { padding-left: 0; padding-right: 0; }
   .mainnav ul { flex-wrap: nowrap; gap: 0; }
@@ -657,8 +659,8 @@ body.onboarding-active .view { display: none !important; }
   .nav-short { display: inline; }
 
   /* Keep content clear of the fixed tab bar. */
-  main { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
-  .site-footer { padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)); }
+  main { padding-bottom: calc(4.5rem + max(env(safe-area-inset-bottom, 0px), 24px)); }
+  .site-footer { padding-bottom: calc(5.25rem + max(env(safe-area-inset-bottom, 0px), 24px)); }
 
   .view-intro { margin-bottom: 1.1rem; }
   .install-tip { padding: .75rem .85rem; margin-bottom: 1.15rem; }
@@ -2080,6 +2082,13 @@ window.addEventListener("appinstalled", function () { dismissTip(); });
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
     navigator.serviceWorker.register("sw.js").catch(function () { /* offline mode unavailable */ });
+    // When a new worker activates, reload once so the new build is what you see.
+    var refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
   });
 }
 </script>
