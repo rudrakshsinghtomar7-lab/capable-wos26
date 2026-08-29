@@ -776,7 +776,17 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 .dialog-body { padding: .75rem 1.4rem 1.4rem; }
 .dialog-body p:last-child { margin-bottom: 0; }
 
-/* ---------- employer accessibility reviews ---------- */
+/* ---------- employer accessibility reviews, inline on each job ---------- */
+.job-review {
+  margin-top: 1rem;
+  padding-top: .9rem;
+  border-top: 2px dashed var(--border);
+}
+.jr-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin: 0 0 .4rem; }
+.jr-rating { margin: 0 0 .5rem; }
+.job-review .quotes { margin-top: .6rem; }
+.job-review details.data-table > summary { padding: .35rem 0; font-size: 1rem; }
+
 .stars { display: inline-flex; gap: 2px; vertical-align: -3px; color: var(--warn); }
 .stars svg { width: 20px; height: 20px; }
 .quotes { list-style: none; margin: .85rem 0 0; padding: 0; display: grid; gap: .75rem; }
@@ -1962,39 +1972,40 @@ function starsHtml(rating) {
   return out + '</span>';
 }
 
-function reviewsSectionHtml(results) {
-  const html = [];
-  html.push('<section class="card" style="margin-top:1.75rem" aria-labelledby="reviews-h">');
-  html.push('<h2 id="reviews-h">What workers with disability say</h2>');
-  html.push('<p>A job ad never tells you if the place will be all right for you. These people did the job.</p>');
-  html.push('<p class="small"><span class="badge badge-demo">Demo reviews</span> ' +
-    'Written for this demonstration. The employers are real organisations but the reviews are not.</p>');
+/* Reviews live on the job they are about, not in a list of their own — you
+   want them at the moment you are deciding about that job. Kept compact:
+   rating, the best and hardest bits, one quote, and the rest one tap away. */
+function jobReviewHtml(jobId) {
+  const rev = REVIEWS[jobId];
+  if (!rev) return "";
+  const tone = rev.rating >= 4.2 ? "good" : rev.rating >= 3.2 ? "warn" : "danger";
+  const h = [];
+  h.push('<div class="job-review">');
+  h.push('<p class="jr-head"><strong>What workers with disability say</strong> ' +
+    '<span class="badge badge-demo">Demo</span></p>');
+  // Stars are decorative; the rating is always stated in words as well.
+  h.push('<p class="jr-rating">' + starsHtml(rev.rating) +
+    ' <strong>' + rev.rating.toFixed(1) + ' out of 5</strong> from ' + rev.count +
+    ' ' + plural(rev.count, "worker", "workers") + '.</p>');
+  h.push('<p class="small"><span class="badge badge-good">' + ICON.tick + ' Best: ' + esc(rev.best) +
+    '</span> <span class="badge badge-' + (tone === "danger" ? "danger" : "warn") + '">' +
+    ICON.warn + ' Hardest: ' + esc(rev.worst) + '</span></p>');
 
-  html.push('<ul class="results" style="margin-top:1rem">');
-  results.slice(0, 5).forEach(function (r) {
-    const rev = REVIEWS[r.job.id];
-    if (!rev) return;
-    const tone = rev.rating >= 4.2 ? "good" : rev.rating >= 3.2 ? "warn" : "danger";
-    html.push('<li class="result">');
-    html.push('<h3>' + esc(r.job.employer) + '</h3>');
-    html.push('<p class="result-meta"><span>' + esc(r.job.title) + '</span></p>');
-    html.push('<p>' + starsHtml(rev.rating) +
-      ' <strong>' + rev.rating.toFixed(1) + ' out of 5</strong>, from ' + rev.count +
-      ' ' + plural(rev.count, "worker", "workers") + ' with disability.</p>');
-    html.push('<p class="small"><span class="badge badge-good">' + ICON.tick + ' Best bit: ' +
-      esc(rev.best) + '</span> <span class="badge badge-' + (tone === "danger" ? "danger" : "warn") + '">' +
-      ICON.warn + ' Hardest bit: ' + esc(rev.worst) + '</span></p>');
-    html.push('<ul class="quotes">');
-    rev.quotes.forEach(function (q) {
-      html.push('<li><blockquote>&ldquo;' + esc(q.text) + '&rdquo;</blockquote>' +
+  const first = rev.quotes[0];
+  h.push('<ul class="quotes"><li><blockquote>&ldquo;' + esc(first.text) + '&rdquo;</blockquote>' +
+    '<p class="small muted">' + esc(first.who) + ' &mdash; on ' + esc(first.tag) + '</p></li></ul>');
+
+  if (rev.quotes.length > 1) {
+    h.push('<details class="data-table"><summary>Read ' + (rev.quotes.length - 1) + ' more from this workplace</summary>');
+    h.push('<ul class="quotes" style="margin-top:.6rem">');
+    rev.quotes.slice(1).forEach(function (q) {
+      h.push('<li><blockquote>&ldquo;' + esc(q.text) + '&rdquo;</blockquote>' +
         '<p class="small muted">' + esc(q.who) + ' &mdash; on ' + esc(q.tag) + '</p></li>');
     });
-    html.push('</ul>');
-    html.push('</li>');
-  });
-  html.push('</ul>');
-  html.push('</section>');
-  return html.join("");
+    h.push('</ul></details>');
+  }
+  h.push('</div>');
+  return h.join("");
 }
 
 function renderJobResults() {
@@ -2098,6 +2109,8 @@ function renderJobResults() {
         ' hours a week &mdash; concession card kept for up to 2 years</span></p>');
     }
 
+    html.push(jobReviewHtml(job.id));
+
     html.push('</li>');
   });
   html.push('</ul>');
@@ -2120,7 +2133,6 @@ function renderJobResults() {
   }
 
   html.push(estimateOnlyNote());
-  if (results.length) html.push(reviewsSectionHtml(results));
 
   $("#jobs-results").innerHTML = html.join("");
 }
