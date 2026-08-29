@@ -65,6 +65,7 @@
 
   --focus:         #1B1B1B;
   --focus-alt:     #FFFFFF;
+  --tap-highlight: rgba(12, 83, 73, .20);
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -112,6 +113,7 @@
 
     --focus:         #FFFFFF;
     --focus-alt:     #0D1413;
+    --tap-highlight: rgba(111, 220, 198, .26);
 
     --shadow: 0 1px 2px rgba(0,0,0,.5), 0 4px 14px rgba(0,0,0,.35);
   }
@@ -153,7 +155,11 @@ body {
   font-size: 1rem;   /* root is 17px, or the reader's Dynamic Type size */
   line-height: 1.6;
   overflow-wrap: break-word;
-  -webkit-tap-highlight-color: transparent;
+  /* The tap highlight is deliberately kept, not removed. iOS Safari has no
+     Vibration API, so this flash is the only immediate confirmation that a tap
+     registered — which matters most to the people who most need confirming.
+     Tinted to the brand rather than left as the default grey. */
+  -webkit-tap-highlight-color: var(--tap-highlight);
   overscroll-behavior-y: contain;
 }
 img, svg { max-width: 100%; }
@@ -174,6 +180,23 @@ a:hover { color: var(--accent-hover); }
   border-radius: 4px;
 }
 .on-accent :focus-visible { outline-color: var(--focus-alt); }
+
+/* WCAG 2.2 SC 2.4.11 Focus Not Obscured.
+   The sticky header and the fixed bottom tab bar will happily scroll a
+   focused control underneath themselves — invisible to a sighted keyboard or
+   Switch Control user. scroll-margin keeps the browser from parking a focused
+   element in either band. The bottom value covers the tab bar plus the home
+   indicator; the top value covers the header. */
+a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]) {
+  scroll-margin-top: 5rem;
+  scroll-margin-bottom: 2rem;
+}
+@media (max-width: 40rem) {
+  a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]) {
+    scroll-margin-top: 4.5rem;
+    scroll-margin-bottom: calc(6rem + max(env(safe-area-inset-bottom, 0px), 24px));
+  }
+}
 
 /* ---------- motion ---------- */
 @media (prefers-reduced-motion: reduce) {
@@ -658,7 +681,10 @@ details.data-table > summary:hover { color: var(--accent-hover); }
 
 /* ---------- tabs (Claim) ---------- */
 .tablist {
-  display: flex; flex-wrap: wrap; gap: .35rem;
+  display: flex; flex-wrap: wrap;
+  /* Adjacent targets need space, not just size (2.5.8). At .35rem these tabs
+     sat ~4-6px apart, so a shaky tap on one landed on its neighbour. */
+  gap: .75rem;
   border-bottom: 2px solid var(--border);
   margin-bottom: 1.25rem;
 }
@@ -851,6 +877,10 @@ body::before {
         </button>
         <div class="menu-panel" id="more-menu-panel" hidden>
           <p class="menu-title">More</p>
+          <button type="button" class="menu-item" data-open-dialog="help-dialog">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.2 2.9c-.5.2-.8.7-.8 1.2v.4"/><path d="M12 17h.01"/></svg>
+            Help and who to call
+          </button>
           <button type="button" class="menu-item" data-open-dialog="about-dialog">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg>
             About this app
@@ -949,6 +979,47 @@ body::before {
   </div>
 </footer>
 
+<!-- Help lives in the More menu, which sits in the same place in the header on
+     every view (WCAG 2.2 SC 3.2.6 Consistent Help). It is a real route to a
+     human, not a placeholder. -->
+<dialog id="help-dialog" aria-labelledby="help-title">
+  <div class="dialog-head">
+    <h2 id="help-title">Help and who to call</h2>
+    <button type="button" class="icon-btn" data-close-dialog aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="dialog-body">
+    <h3>If a number here disagrees with a letter from Centrelink</h3>
+    <p><strong>Believe the letter, not this app.</strong> Everything in Capable is an
+      estimate worked out from the published rates. It does not know about your
+      full circumstances, and it is not connected to Centrelink or the NDIA.
+      Nothing you do here changes your payment or reports your income.</p>
+    <p>If the difference matters to you, ring Services Australia and ask them to
+      explain the figure on the letter. You will not get in trouble for asking.</p>
+
+    <h3>Services Australia &mdash; Disability, Sickness and Carers line</h3>
+    <p><a href="tel:132717">13 27 17</a><br>
+      <span class="small muted">Monday to Friday, 8am to 5pm. For questions about your
+      Disability Support Pension, reporting income, and your concession card.</span></p>
+
+    <h3>National Disability Insurance Agency</h3>
+    <p><a href="tel:1800800110">1800 800 110</a><br>
+      <span class="small muted">Monday to Friday, 8am to 8pm. For questions about your
+      NDIS plan, your budgets, and what your funding can pay for.</span></p>
+
+    <h3>If you would rather not use the phone</h3>
+    <p>The National Relay Service passes calls on for people who are deaf, hard of
+      hearing, or have a speech disability. Details are at
+      <a href="https://www.accesshub.gov.au/about-the-nrs" target="_blank" rel="noopener noreferrer">accesshub.gov.au<span class="visually-hidden"> (National Relay Service, opens in a new tab)</span></a>.
+      You can also use your myGov account to message Services Australia in writing.</p>
+
+    <h3>Reporting your income</h3>
+    <p>Capable does <strong>not</strong> report anything for you. You still need to
+      report your fortnightly income to Services Australia the way you normally do.</p>
+  </div>
+</dialog>
+
 <dialog id="about-dialog" aria-labelledby="about-title">
   <div class="dialog-head">
     <h2 id="about-title">About this app</h2>
@@ -960,6 +1031,27 @@ body::before {
     <p><strong>Capable is a demonstration.</strong> All figures shown are estimates for one made-up demo user in Queensland. Nothing here is financial advice, and no data is sent anywhere &mdash; everything runs in your browser and is forgotten when you close the tab.</p>
     <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight, then <span class="num">50</span> cents less payment for every dollar earned above it (single, as at 1 July 2026). Check your own situation with Services Australia, and your plan with the NDIA.</p>
     <p>Built for WOS26. Queensland only.</p>
+
+    <h3 id="accessibility-statement">Accessibility</h3>
+    <p>Capable targets <strong>WCAG 2.2 Level AA</strong>. Accessibility is the
+      product here, not a feature bolted on at the end.</p>
+    <p><strong>What we built for.</strong> Every control is real HTML that works with a
+      keyboard, a switch, or a screen reader. Zoom is never disabled and the app
+      follows your phone&rsquo;s own text size setting. Nothing is signalled by colour
+      alone. Dragging is never the only way to do something. Nothing flashes,
+      autoplays, or times out.</p>
+    <p><strong>No account, on purpose.</strong> There is no login, so there is no password
+      or puzzle standing between you and your own money information &mdash; which is how
+      we meet SC 3.3.8 Accessible Authentication. Nothing you type leaves this
+      device, and there is no server to leak it.</p>
+    <p><strong>What we tested with.</strong> Keyboard only; the largest iOS text size;
+      400% zoom down to a 320px wide window; light and dark; and with the app
+      offline. Figures and contrast ratios were checked by script rather than by eye.</p>
+    <p><strong>What we know is imperfect.</strong> This has not yet been tested by disabled
+      people, which is the test that actually counts. Easy Read and read-aloud are
+      not built yet. The demo figures are made up, and the pension rate used here is
+      an estimate rather than a verified current figure.</p>
+    <p>If something here blocked you, that is a bug and we want to know.</p>
 
     <h3>Your saved answers</h3>
     <p>Capable remembers the hours, needs and wages you enter, so putting your
@@ -1619,6 +1711,8 @@ function renderJobResults() {
   const results = matchedJobs(state.capacity, state.strictOnly);
   const selectedCount = NEED_KEYS.filter(function (k) { return state.capacity.needs[k]; }).length;
   const anyLongHours = results.some(function (r) { return r.job.hoursPerWeek >= RULES.pccHoursThreshold; });
+  // Reuse the wages already entered in the tracker rather than asking again.
+  const current = dspEstimate(state.fortnightlyWages);
 
   $("#jobs-count-live").innerHTML =
     '<p class="midnum" style="margin-bottom:.4rem">' +
@@ -1628,7 +1722,10 @@ function renderJobResults() {
     '</p>' +
     '<p class="small muted">Up to ' + state.capacity.hoursPerWeek + ' hours a week' +
     (selectedCount ? ', with ' + selectedCount + ' ' + plural(selectedCount, "need", "needs") + ' ticked' : ', with no needs ticked') +
-    (state.strictOnly ? ', showing only jobs that meet every need.' : ', ranked by best fit.') + '</p>';
+    (state.strictOnly ? ', showing only jobs that meet every need.' : ', ranked by best fit.') + '</p>' +
+    '<p class="small muted">Earnings below are compared with where you are now &mdash; ' +
+    money2.format(current.wages) + ' of wages plus ' + money2.format(current.payment) +
+    ' pension, taken from your tracker. You do not need to enter it again.</p>';
 
   const html = [];
 
@@ -1689,11 +1786,17 @@ function renderJobResults() {
     html.push('</dl>');
 
     if (est.aboveFreeArea) {
+      // Compared against what they already told the tracker, not a hypothetical
+      // zero — we do not ask for the same figure twice (WCAG 2.2 SC 3.3.7).
+      const diff = est.total - current.total;
       html.push('<p class="small">' + ICON.warn + ' <strong>Above the income free area.</strong> ' +
         money2.format(fortnightly) + ' is ' + money2.format(est.over) + ' more than the ' +
         money2.format(RULES.incomeFreeAreaFortnight) + ' you can earn before your payment changes, so your pension drops by ' +
-        money2.format(est.reduction) + ' a fortnight. You are still ' +
-        money2.format(est.total - dspEstimate(0).payment) + ' a fortnight better off than not working.</p>');
+        money2.format(est.reduction) + ' a fortnight. ' +
+        (diff >= 0
+          ? 'Next to where you are now, that is <strong>' + money2.format(diff) + ' more a fortnight</strong>.'
+          : 'Next to where you are now, that is <strong>' + money2.format(Math.abs(diff)) + ' less a fortnight</strong>.') +
+        '</p>');
     } else {
       html.push('<p class="small">' + ICON.ok + ' <strong>Under the income free area.</strong> ' +
         money2.format(fortnightly) + ' a fortnight is below ' + money2.format(RULES.incomeFreeAreaFortnight) +
@@ -1776,6 +1879,9 @@ function renderMoneyShell() {
     validateWages(wages.value);
     renderIncomeSummary();
     renderDashboard();
+    // Job results compare against this figure, so they go stale otherwise —
+    // which would quietly defeat the point of not asking for it twice.
+    renderJobResults();
     saveSession();
   });
 
