@@ -86,7 +86,7 @@ What makes it installable:
 - `sw.js` — a service worker that precaches the app. Navigations are network-first so a redeploy is picked up, everything else is cache-first. Fully offline after first load.
 - Safe-area insets (`env(safe-area-inset-*)`) so nothing hides under the Dynamic Island, the notch, or the home indicator.
 
-Two deliberate differences from a stock PWA setup, both driven by the accessibility mandate:
+Three deliberate differences from a stock PWA setup, all driven by the accessibility mandate:
 
 - **Zoom is not disabled.** The usual `maximum-scale=1, user-scalable=no` is a documented WCAG 1.4.4 failure, so it is not used.
 - **Orientation is `any`, not locked to portrait.** WCAG 2.1 SC 1.3.4 (Orientation, Level AA) forbids restricting to a single orientation unless essential — it matters for people using a mounted device.
