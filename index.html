@@ -2,9 +2,25 @@
 <html lang="en-AU">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- viewport-fit=cover lets the page paint into the notch / home-indicator area,
+     which the safe-area padding below then keeps content clear of. Zooming is
+     deliberately NOT disabled: user-scalable=no fails WCAG 1.4.4. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Capable — work, money and what you're owed</title>
 <meta name="description" content="Capable helps people with disability in Queensland find work that fits their capacity, track wages, Disability Support Pension and NDIS funding on a fortnightly cycle, and claim entitlements they are already eligible for.">
+
+<!-- Installable app: Add to Home Screen on iOS, Install on Android and desktop. -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F6F3EC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1413" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- "default" rather than "black-translucent": the app has a light and a dark
+     theme, and a translucent bar forces white status-bar text over both. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Capable">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
 <style>
 /* ============================================================
    Capable — design tokens
@@ -110,6 +126,10 @@ body {
   font-size: 1.0625rem;
   line-height: 1.6;
   overflow-wrap: break-word;
+  /* Installed-app feel on iOS: no grey flash on tap, no rubber-band bounce
+     past the ends of the page. Scrolling and zooming are untouched. */
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
 }
 img, svg { max-width: 100%; }
 h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 .5rem; text-wrap: balance; }
@@ -179,11 +199,17 @@ a:hover { color: var(--accent-hover); }
 }
 
 /* ---------- layout ---------- */
-.shell { max-width: 1180px; margin: 0 auto; padding: 0 clamp(.75rem, 2vw, 1.5rem); }
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: max(clamp(.75rem, 2vw, 1.5rem), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(.75rem, 2vw, 1.5rem), env(safe-area-inset-right, 0px));
+}
 
 .site-header {
   background: var(--surface);
   border-bottom: 2px solid var(--border);
+  padding-top: env(safe-area-inset-top, 0px);
 }
 .site-header .shell {
   display: flex;
@@ -518,13 +544,36 @@ details.data-table > summary:hover { color: var(--accent-hover); }
 .site-footer {
   background: var(--surface);
   border-top: 2px solid var(--border);
-  padding-block: 1.5rem 2.5rem;
+  padding-block: 1.5rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
   color: var(--text-muted);
   font-size: .9375rem;
 }
 .site-footer h2 { font-size: 1rem; color: var(--text); }
 
 hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+/* ---------- Add to Home Screen tip ---------- */
+.install-tip {
+  display: flex; gap: .75rem; align-items: flex-start;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-left-width: 6px;
+  border-radius: var(--radius-sm);
+  padding: .9rem 1rem;
+  margin: 0 0 1.75rem;
+  color: var(--text);
+}
+.install-tip[hidden] { display: none; }
+.install-tip > svg { flex: none; margin-top: .15rem; color: var(--accent); }
+.install-tip .it-body { flex: 1; min-width: 0; }
+.install-tip .it-title { font-size: 1.05rem; margin-bottom: .3rem; }
+.install-tip p { margin: 0; max-width: none; }
+.install-tip .it-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.install-tip kbd {
+  font: inherit; font-weight: 700;
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: 4px; padding: .05rem .35rem;
+}
 
 /* 400% zoom / narrow reflow */
 @media (max-width: 30rem) {
@@ -574,6 +623,18 @@ hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 
 <main id="main" tabindex="-1">
   <div class="shell">
+    <div class="install-tip" id="install-tip" hidden>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"/><path d="m8 7 4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+      <div class="it-body">
+        <p class="it-title"><strong>Use Capable like an app</strong></p>
+        <p id="install-tip-text"></p>
+        <div class="it-actions">
+          <button type="button" class="btn" id="install-btn" hidden>Install Capable</button>
+          <button type="button" class="btn btn-secondary" id="install-dismiss">No thanks, hide this</button>
+        </div>
+      </div>
+    </div>
+
     <div id="view-dashboard" class="view"></div>
     <div id="view-jobs" class="view" hidden></div>
     <div id="view-money" class="view" hidden></div>
@@ -1769,6 +1830,74 @@ renderJobsShell();
 renderMoneyShell();
 renderClaimShell();
 showView("dashboard", false);
+
+/* ============================================================
+   11. INSTALLABLE APP
+   Add to Home Screen on iOS; the native install prompt elsewhere.
+   ============================================================ */
+
+const TIP_KEY = "capable.installTipDismissed";
+
+function tipDismissed() {
+  try { return localStorage.getItem(TIP_KEY) === "1"; } catch (e) { return false; }
+}
+function dismissTip() {
+  try { localStorage.setItem(TIP_KEY, "1"); } catch (e) { /* private browsing */ }
+  const tip = document.getElementById("install-tip");
+  tip.hidden = true;
+  document.getElementById("main").focus();
+}
+function isStandalone() {
+  return window.navigator.standalone === true ||
+         (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+}
+function isIOS() {
+  const ua = navigator.userAgent || "";
+  return /iPad|iPhone|iPod/.test(ua) ||
+         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); // iPadOS 13+
+}
+
+function showTip(text, withButton) {
+  if (tipDismissed() || isStandalone()) return;
+  document.getElementById("install-tip-text").innerHTML = text;
+  document.getElementById("install-btn").hidden = !withButton;
+  document.getElementById("install-tip").hidden = false;
+}
+
+document.getElementById("install-dismiss").addEventListener("click", dismissTip);
+
+// iOS has no install prompt API — tell people where the control actually is.
+if (isIOS()) {
+  showTip('Tap the Share button <kbd>\u2191</kbd> at the bottom of Safari, then choose ' +
+          '<kbd>Add to Home Screen</kbd>. Capable then opens full screen from your Home Screen, ' +
+          'with no browser bars, and works without an internet connection.', false);
+}
+
+// Android and desktop: capture the prompt and offer a real button.
+let deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", function (e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  showTip("Install Capable to open it from your home screen or dock, full screen and offline.", true);
+});
+
+document.getElementById("install-btn").addEventListener("click", function () {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.finally(function () {
+    deferredPrompt = null;
+    dismissTip();
+  });
+});
+
+window.addEventListener("appinstalled", function () { dismissTip(); });
+
+/* Offline support. Fails silently on file:// and anywhere without HTTPS. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () { /* offline mode unavailable */ });
+  });
+}
 </script>
 </body>
 </html>

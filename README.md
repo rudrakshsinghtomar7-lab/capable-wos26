@@ -69,6 +69,29 @@ Built to **WCAG 2.1 Level AA**, applied while writing each component rather than
 - Every meter/bar has a `<table>` alternative *and* a plain-text statement of the same fact.
 - `font-variant-numeric: tabular-nums` on all figures.
 
+## Install it as an app (iOS)
+
+Capable is a PWA, so it installs to the Home Screen and runs like a native app — no App Store, no build.
+
+**On iPhone or iPad:** open the live link in Safari → tap **Share** → **Add to Home Screen** → **Add**. It then launches full screen with no browser chrome, its own icon and app title, and works with no internet connection.
+
+**On Android or desktop Chrome/Edge:** the browser offers an **Install** button; the app shows its own in-page install prompt too.
+
+The app detects iOS Safari and shows a dismissible tip explaining exactly where the Add to Home Screen control is. It hides itself once installed, and the dismissal is remembered.
+
+What makes it installable:
+
+- `manifest.json` — `display: standalone`, relative `start_url`/`scope` (so it works on any host), theme and background colours matched to the light palette.
+- `apple-touch-icon` at 180×180, plus 192/512 icons and a 512 **maskable** icon with the mark inside the safe zone for Android's adaptive shapes.
+- `sw.js` — a service worker that precaches the app. Navigations are network-first so a redeploy is picked up, everything else is cache-first. Fully offline after first load.
+- Safe-area insets (`env(safe-area-inset-*)`) so nothing hides under the Dynamic Island, the notch, or the home indicator.
+
+Two deliberate differences from a stock PWA setup, both driven by the accessibility mandate:
+
+- **Zoom is not disabled.** The usual `maximum-scale=1, user-scalable=no` is a documented WCAG 1.4.4 failure, so it is not used.
+- **Orientation is `any`, not locked to portrait.** WCAG 2.1 SC 1.3.4 (Orientation, Level AA) forbids restricting to a single orientation unless essential — it matters for people using a mounted device.
+- The iOS status bar style is `default` rather than `black-translucent`, because a translucent bar forces white status-bar text over both the light and dark themes.
+
 ## Running it
 
 ```
