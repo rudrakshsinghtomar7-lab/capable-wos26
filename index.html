@@ -120,7 +120,9 @@
 /* ---------- reset-ish ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
+/* Safari inflates text in landscape unless this is pinned, which quietly
+   breaks the type scale. Both spellings: Safari still needs the prefix. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--bg);
@@ -421,11 +423,16 @@ legend { font-weight: 700; padding: 0 .4rem; font-size: 1.05rem; }
 label { display: block; font-weight: 600; margin-bottom: .3rem; }
 .hint { color: var(--text-muted); font-size: .9375rem; margin: 0 0 .45rem; }
 
-input[type="text"], input[type="number"], input[type="search"], select {
+input[type="text"], input[type="number"], input[type="search"], input[type="tel"], select, textarea {
   width: 100%;
   min-height: var(--tap);
   padding: .55rem .7rem;
   font: inherit;
+  /* iOS Safari force-zooms the page when a control smaller than 16px is
+     focused, and does not zoom back out — stranding the user inside a form
+     they can only see part of. A 16px floor is the fix; disabling zoom is not
+     (that would fail WCAG 1.4.4). max() so Dynamic Type can still scale up. */
+  font-size: max(1.0625rem, 16px);
   font-variant-numeric: tabular-nums;
   color: var(--text);
   background: var(--surface);
@@ -563,7 +570,14 @@ input[type="range"] {
 .figrow dd { margin: 0; font-weight: 800; font-variant-numeric: tabular-nums; }
 
 /* ---------- tables ---------- */
-.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.table-wrap {
+  overflow-x: auto;
+  /* Stop a sideways table scroll from chaining into the page and firing
+     pull-to-refresh part-way through a form. */
+  overscroll-behavior: contain;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
 table { border-collapse: collapse; width: 100%; min-width: 30rem; background: var(--surface); }
 caption { text-align: left; padding: .7rem .8rem; font-weight: 700; background: var(--surface-alt); border-bottom: 1px solid var(--border); }
 th, td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -1616,7 +1630,10 @@ function renderMoneyShell() {
   html.push('<legend>Your wages</legend>');
   html.push('<label for="wages">Wages you were paid this fortnight, before tax</label>');
   html.push('<p class="hint" id="wages-hint">Enter a number in dollars, like 390. Include every casual shift paid in the last 14 days.</p>');
-  html.push('<input type="text" id="wages" name="wages" inputmode="decimal" autocomplete="off" value="' + esc(state.wagesInputValue) +
+  // inputmode="decimal" gives a numeric keypad: fewer, larger keys, less
+  // precision needed, and iOS Dictation stays available so voice entry is free.
+  html.push('<input type="text" id="wages" name="wages" inputmode="decimal" enterkeyhint="done" ' +
+    'autocomplete="off" autocorrect="off" spellcheck="false" value="' + esc(state.wagesInputValue) +
     '" aria-describedby="wages-hint wages-error" style="max-width:16rem">');
   html.push('<p class="field-error" id="wages-error" hidden></p>');
   html.push('</fieldset>');
