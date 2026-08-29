@@ -8,8 +8,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#F5EFE3",
-  "theme_color": "#FFFCF6",
+  "background_color": "#F7F1DE",
+  "theme_color": "#FDFAF1",
   "categories": [
     "finance",
     "government",
