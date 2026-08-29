@@ -19,8 +19,6 @@
 <meta name="theme-color" content="#16201E" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<!-- "default" rather than "black-translucent": the app has a light and a dark
-     theme, and a translucent bar forces white status-bar text over both. -->
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Capable">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -89,14 +87,14 @@
     --border-strong: #8CA29D;
 
     --text:          #ECF2F0;
-    --text-muted:    #AFC2BD;   /* 8.9:1 on --surface */
+    --text-muted:    #AFC2BD;
 
-    --accent:        #6FDCC6;   /* 10.4:1 on --surface */
+    --accent:        #6FDCC6;
     --accent-hover:  #92E9D7;
     --accent-ink:    #06231E;
     --accent-soft:   #123430;
 
-    --warn:          #F5C077;   /* 9.5:1 on --surface */
+    --warn:          #F5C077;
     --warn-soft:     #33240F;
     --warn-border:   #B08243;
 
@@ -121,8 +119,6 @@
 
 /* ---------- reset-ish ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-/* The UA rule [hidden]{display:none} is weaker than any author display rule,
-   so a hidden .btn (display:inline-flex) would still render. Enforce it. */
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
@@ -133,8 +129,6 @@ body {
   font-size: 1.0625rem;
   line-height: 1.6;
   overflow-wrap: break-word;
-  /* Installed-app feel on iOS: no grey flash on tap, no rubber-band bounce
-     past the ends of the page. Scrolling and zooming are untouched. */
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: contain;
 }
@@ -239,19 +233,79 @@ a:hover { color: var(--accent-hover); }
   font-size: 1.05rem; font-weight: 800;
 }
 .brand-tag { font-weight: 500; font-size: .9rem; color: var(--text-muted); }
-.whoami {
-  display: flex; align-items: center; gap: .6rem;
+
+/* ---------- header actions: hamburger + profile ---------- */
+.hdr-actions { display: flex; align-items: center; gap: .5rem; }
+.icon-btn {
+  appearance: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--tap); height: var(--tap); padding: 0; flex: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  cursor: pointer;
+}
+.icon-btn:hover { background: var(--surface-alt); }
+.icon-btn[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+.menu { position: relative; }
+.profile-btn {
+  appearance: none;
+  display: flex; align-items: center; gap: .55rem;
+  min-height: var(--tap);
   background: var(--surface-alt);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: .35rem .9rem .35rem .4rem;
-  font-size: .9375rem;
+  padding: .35rem .75rem .35rem .4rem;
+  font: inherit; font-size: .9375rem; color: var(--text);
+  cursor: pointer;
 }
+.profile-btn:hover { border-color: var(--border-strong); }
+.profile-btn[aria-expanded="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.profile-btn .chev { color: var(--text-muted); flex: none; }
 .avatar {
   width: 32px; height: 32px; border-radius: 999px; flex: none;
   background: var(--accent-soft); color: var(--accent);
   display: grid; place-items: center; font-weight: 800; font-size: .85rem;
 }
+
+.menu-panel {
+  position: absolute; right: 0; top: calc(100% + .5rem); z-index: 70;
+  width: max-content;
+  min-width: 15rem;
+  max-width: min(21rem, calc(100vw - 2rem));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: .4rem;
+}
+.menu-panel[hidden] { display: none; }
+.menu-title { margin: 0; padding: .5rem .6rem .3rem; font-size: .8125rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.menu-item {
+  appearance: none;
+  display: flex; width: 100%; align-items: center; gap: .65rem;
+  min-height: var(--tap); padding: .5rem .6rem;
+  background: transparent; border: 0; border-radius: var(--radius-sm);
+  font: inherit; font-size: .9375rem; font-weight: 600; color: var(--text);
+  text-align: left; cursor: pointer; text-decoration: none;
+}
+.menu-item:hover { background: var(--surface-alt); }
+.menu-item svg { flex: none; color: var(--accent); }
+.menu-sep { border: 0; border-top: 1px solid var(--border); margin: .35rem 0; }
+.profile-head { display: flex; align-items: center; gap: .7rem; padding: .5rem .6rem .6rem; }
+.profile-head .avatar { width: 40px; height: 40px; font-size: .95rem; }
+.profile-head strong { display: block; font-size: 1rem; }
+.profile-head span.muted-line { color: var(--text-muted); font-size: .875rem; }
+.chiprow { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0 .6rem .55rem; }
+.chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .2rem .6rem; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: .8125rem; font-weight: 700;
+}
+.menu-panel .fineprint { margin: 0; padding: 0 .6rem .5rem; }
 
 /* ---------- main nav ---------- */
 .mainnav { background: var(--surface); border-bottom: 1px solid var(--border); }
@@ -311,15 +365,26 @@ main { display: block; padding-block: clamp(1.25rem, 3vw, 2.25rem) 3rem; }
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-/* module cards on dashboard */
-.module-card { display: flex; flex-direction: column; gap: .35rem; }
-.module-card h2 { display: flex; align-items: center; gap: .55rem; margin-bottom: .15rem; }
-.module-card .icon-wrap {
-  width: 38px; height: 38px; flex: none; border-radius: 10px;
-  background: var(--accent-soft); color: var(--accent);
-  display: grid; place-items: center;
+/* ---------- mini widgets (dashboard + plan summary) ---------- */
+.widget-grid { display: grid; gap: .85rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr)); }
+.widget {
+  display: flex; flex-direction: column; gap: .2rem;
 }
-.module-card .btn { margin-top: auto; align-self: flex-start; }
+.widget h2, .widget h3 {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .8125rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--text-muted); margin-bottom: .15rem;
+}
+.widget h2 svg, .widget h3 svg { color: var(--accent); flex: none; }
+.widget-value {
+  font-size: 1.75rem; font-weight: 800; letter-spacing: -.015em; line-height: 1.1;
+  font-variant-numeric: tabular-nums lining-nums;
+  margin: 0 0 .2rem;
+}
+.widget-caption { margin: 0 0 .6rem; font-size: .9375rem; }
+.widget .btn, .widget .btn-secondary { margin-top: auto; align-self: flex-start; }
+.widget-stat .widget-value { margin-bottom: 0; }
+.widget-stat .widget-caption { margin-bottom: 0; }
 
 /* ---------- buttons ---------- */
 .btn {
@@ -342,6 +407,7 @@ main { display: block; padding-block: clamp(1.25rem, 3vw, 2.25rem) 3rem; }
   border-color: var(--accent);
 }
 .btn-secondary:hover { background: var(--accent-soft); color: var(--accent); }
+.btn-sm { min-height: 38px; padding: .4rem .85rem; font-size: .9375rem; }
 
 /* ---------- form controls ---------- */
 fieldset {
@@ -430,6 +496,12 @@ input[type="range"] {
 .badge-info   { color: var(--info);   background: var(--info-soft); }
 .badge-demo   { color: var(--text-muted); background: var(--surface-alt); border-color: var(--border-strong); }
 
+/* ---------- pills (budget-type tags) ---------- */
+.pill { display: inline-flex; align-items: center; gap: .3rem; padding: .1rem .55rem; border-radius: 999px; font-size: .75rem; font-weight: 800; white-space: nowrap; }
+.pill-core    { background: var(--info-soft);   color: var(--info); }
+.pill-cb      { background: var(--accent-soft); color: var(--accent); }
+.pill-capital { background: var(--warn-soft);   color: var(--warn); }
+
 /* ---------- meters (decorative; always paired with real numbers) ---------- */
 .meter {
   height: 14px;
@@ -452,6 +524,8 @@ input[type="range"] {
 
 /* ---------- lists of results ---------- */
 .results { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.results.cols-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr)); align-items: start; }
+.results.cols-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr)); align-items: start; }
 .result {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -508,6 +582,26 @@ details.data-table > summary {
 }
 details.data-table > summary:hover { color: var(--accent-hover); }
 
+/* ---------- category mini-cards (Financial tracker) ---------- */
+.cat-grid { display: grid; gap: .85rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16.5rem), 1fr)); margin: 1rem 0 1.4rem; }
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .9rem 1rem 1rem;
+}
+.cat-card h4 { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .35rem; }
+.cat-left { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; margin: 0 0 .05rem; }
+.cat-of { font-size: .8125rem; color: var(--text-muted); font-weight: 700; }
+.cat-card details { margin-top: .55rem; }
+.cat-card details > summary {
+  min-height: 40px; display: flex; align-items: center;
+  font-weight: 700; color: var(--accent); cursor: pointer; font-size: .9375rem;
+}
+.cat-card details > summary:hover { color: var(--accent-hover); }
+.cat-card details p:last-child { margin-bottom: 0; }
+.alert-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0 0; list-style: none; padding: 0; }
+
 /* ---------- tabs (Claim) ---------- */
 .tablist {
   display: flex; flex-wrap: wrap; gap: .35rem;
@@ -536,35 +630,45 @@ details.data-table > summary:hover { color: var(--accent-hover); }
 [role="tabpanel"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
 /* ---------- scheme / offer items ---------- */
-.scheme {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.1rem;
-}
 .scheme-head {
   display: flex; flex-wrap: wrap; gap: .5rem 1rem;
   align-items: baseline; justify-content: space-between;
 }
-.scheme-value { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scheme-value { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ext-link { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; }
 
 .site-footer {
   background: var(--surface);
   border-top: 2px solid var(--border);
-  padding-block: 1.5rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
+  padding-block: 1rem calc(1.75rem + env(safe-area-inset-bottom, 0px));
   color: var(--text-muted);
   font-size: .9375rem;
 }
-.site-footer h2 { font-size: 1rem; color: var(--text); }
+.site-footer .shell { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .6rem .9rem; }
+.site-footer p { margin: 0; }
 
 hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+/* ---------- dialogs (About this app) ---------- */
+dialog {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0;
+  max-width: 34rem; width: calc(100% - 2rem);
+  background: var(--surface); color: var(--text);
+  box-shadow: var(--shadow);
+}
+dialog::backdrop { background: rgba(10, 15, 14, .55); }
+.dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.1rem 0 1.4rem; }
+.dialog-head h2 { margin-bottom: 0; }
+.dialog-body { padding: .75rem 1.4rem 1.4rem; }
+.dialog-body p:last-child { margin-bottom: 0; }
 
 /* ---------- Onboarding ---------- */
 .onboarding { max-width: 34rem; margin: 0 auto; padding: .5rem 0 2rem; }
 .ob-mark {
   position: relative; width: 76px; height: 76px; margin: 0 auto 1.15rem;
-  border-radius: 20px; background: #0C5349; color: #fff;   /* brand colours, both themes */
+  border-radius: 20px; background: #0C5349; color: #fff;
   display: grid; place-items: center;
   font-size: 2.5rem; font-weight: 800; line-height: 1;
 }
@@ -592,23 +696,21 @@ body.onboarding-active .site-footer,
 body.onboarding-active #install-tip { display: none; }
 body.onboarding-active .view { display: none !important; }
 
-/* ---------- Add to Home Screen tip ---------- */
+/* ---------- Add to Home Screen tip: a slim single-line strip ---------- */
 .install-tip {
-  display: flex; gap: .75rem; align-items: flex-start;
+  display: flex; gap: .6rem; align-items: center; flex-wrap: wrap;
   background: var(--accent-soft);
   border: 1px solid var(--accent);
-  border-left-width: 6px;
   border-radius: var(--radius-sm);
-  padding: .9rem 1rem;
-  margin: 0 0 1.75rem;
+  padding: .5rem .5rem .5rem .8rem;
+  margin: 0 0 1.25rem;
   color: var(--text);
 }
 .install-tip[hidden] { display: none; }
-.install-tip > svg { flex: none; margin-top: .15rem; color: var(--accent); }
-.install-tip .it-body { flex: 1; min-width: 0; }
-.install-tip .it-title { font-size: 1.05rem; margin-bottom: .3rem; }
-.install-tip p { margin: 0; max-width: none; }
-.install-tip .it-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.install-tip > svg { flex: none; color: var(--accent); }
+.install-tip .it-body { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; flex: 1; min-width: 0; }
+.install-tip p { margin: 0; max-width: none; font-size: .9375rem; }
+.install-tip .it-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
 .install-tip kbd {
   font: inherit; font-weight: 700;
   background: var(--surface); border: 1px solid var(--border-strong);
@@ -617,11 +719,8 @@ body.onboarding-active .view { display: none !important; }
 
 /* ============================================================
    MOBILE APP SHELL
-   Phones get a native-feeling layout: a slim sticky top bar and a
-   bottom tab bar, instead of the desktop header + wrapping nav.
    ============================================================ */
 @media (max-width: 40rem) {
-  /* Slim, opaque, sticky top bar — brand left, who you are right, one row. */
   .site-header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--border); }
   .site-header .shell {
     flex-direction: row; align-items: center; justify-content: space-between;
@@ -630,18 +729,15 @@ body.onboarding-active .view { display: none !important; }
   .brand { font-size: 1.05rem; gap: .45rem; }
   .brand-mark { width: 28px; height: 28px; font-size: .9rem; border-radius: 8px; }
   .brand-tag { display: none; }
-  .whoami { padding: .2rem .55rem .2rem .22rem; font-size: .85rem; gap: .4rem; }
-  .avatar { width: 26px; height: 26px; font-size: .72rem; }
-  .wi-pre, .wi-post { display: none; }
+  .profile-btn .pf-text { display: none; }
+  .profile-btn { padding: .25rem; }
+  .avatar { width: 28px; height: 28px; font-size: .75rem; }
+  .hdr-actions { gap: .35rem; }
 
-  /* Navigation moves to a bottom tab bar. Same <nav>, same buttons, same
-     aria-current — only the CSS position changes. */
   .mainnav {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
     background: var(--surface);
     border-top: 1px solid var(--border); border-bottom: 0;
-    /* The iOS home indicator floats over app content, and with viewport-fit
-       unset env() reports 0, so a floor is required or it lands on the labels. */
     padding-bottom: max(env(safe-area-inset-bottom, 0px), 24px);
   }
   .mainnav .shell { padding-left: 0; padding-right: 0; }
@@ -658,18 +754,13 @@ body.onboarding-active .view { display: none !important; }
   .nav-full { display: none; }
   .nav-short { display: inline; }
 
-  /* Keep content clear of the fixed tab bar. */
   main { padding-bottom: calc(4.5rem + max(env(safe-area-inset-bottom, 0px), 24px)); }
   .site-footer { padding-bottom: calc(5.25rem + max(env(safe-area-inset-bottom, 0px), 24px)); }
 
   .view-intro { margin-bottom: 1.1rem; }
-  .install-tip { padding: .75rem .85rem; margin-bottom: 1.15rem; }
-  .bignum { margin-top: .1rem; }
+  .install-tip { padding: .5rem; margin-bottom: 1.15rem; }
 }
 
-/* iOS 26 paints a translucent "glass" band over the top edge of a standalone
-   web app, which frosts whatever sits under it. Fill the status-bar strip with
-   an opaque colour so the app's own header is not what shows through. */
 body::before {
   content: "";
   position: fixed; top: 0; left: 0; right: 0;
@@ -679,9 +770,7 @@ body::before {
   pointer-events: none;
 }
 
-/* 400% zoom / narrow reflow.
-   The header is handled by the MOBILE APP SHELL block above, which keeps it on
-   one row; stacking it here would override that and cost a whole row. */
+/* 400% zoom / narrow reflow. */
 @media (max-width: 30rem) {
   .figrow { flex-direction: column; }
 }
@@ -699,10 +788,50 @@ body::before {
         <span class="brand-tag">Work, money and what you&rsquo;re owed</span>
       </span>
     </p>
-    <p class="whoami">
-      <span class="avatar" aria-hidden="true">SW</span>
-      <span><span class="wi-pre">Signed in as </span><strong>Sam Whitton</strong><span class="wi-post">, Brisbane</span></span>
-    </p>
+
+    <div class="hdr-actions">
+      <div class="menu">
+        <button type="button" class="icon-btn" id="more-menu-btn" aria-haspopup="true" aria-expanded="false" aria-controls="more-menu-panel" aria-label="More options">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+        </button>
+        <div class="menu-panel" id="more-menu-panel" hidden>
+          <p class="menu-title">More</p>
+          <button type="button" class="menu-item" data-open-dialog="about-dialog">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg>
+            About this app
+          </button>
+          <button type="button" class="menu-item" id="menu-install" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v13"/><path d="m8 12 4 4 4-4"/><path d="M5 19h14"/></svg>
+            Install Capable
+          </button>
+          <button type="button" class="menu-item" id="menu-replay">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+            Replay the intro
+          </button>
+        </div>
+      </div>
+
+      <div class="menu">
+        <button type="button" class="profile-btn" id="profile-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profile-panel" aria-label="Sam Whitton — account and profile menu">
+          <span class="avatar" aria-hidden="true">SW</span>
+          <span class="pf-text"><strong>Sam Whitton</strong></span>
+          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="menu-panel" id="profile-panel" hidden>
+          <div class="profile-head">
+            <span class="avatar" aria-hidden="true">SW</span>
+            <span><strong>Sam Whitton</strong><br><span class="muted-line">Woolloongabba, Brisbane QLD</span></span>
+          </div>
+          <div class="chiprow">
+            <span class="chip">Disability Support Pension</span>
+            <span class="chip">Pensioner Concession Card</span>
+            <span class="chip">Self-managed NDIS plan</span>
+          </div>
+          <hr class="menu-sep">
+          <p class="small fineprint">Demo profile for this WOS26 demonstration. Not a real account &mdash; nothing here is saved.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -741,14 +870,13 @@ body::before {
     </section>
 
     <div class="install-tip" id="install-tip" hidden>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"/><path d="m8 7 4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"/><path d="m8 7 4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
       <div class="it-body">
-        <p class="it-title"><strong>Use Capable like an app</strong></p>
         <p id="install-tip-text"></p>
-        <div class="it-actions">
-          <button type="button" class="btn" id="install-btn" hidden>Install Capable</button>
-          <button type="button" class="btn btn-secondary" id="install-dismiss">No thanks, hide this</button>
-        </div>
+      </div>
+      <div class="it-actions">
+        <button type="button" class="btn btn-sm" id="install-btn" hidden>Install</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="install-dismiss">Dismiss</button>
       </div>
     </div>
 
@@ -761,13 +889,24 @@ body::before {
 
 <footer class="site-footer">
   <div class="shell">
-    <h2>About this app</h2>
+    <p class="small">Capable is a demonstration for WOS26. Queensland only &mdash; figures are estimates and nothing is sent anywhere.</p>
+    <button type="button" class="btn btn-secondary btn-sm" data-open-dialog="about-dialog">About &amp; data sources</button>
+  </div>
+</footer>
+
+<dialog id="about-dialog" aria-labelledby="about-title">
+  <div class="dialog-head">
+    <h2 id="about-title">About this app</h2>
+    <button type="button" class="icon-btn" data-close-dialog aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="dialog-body">
     <p><strong>Capable is a demonstration.</strong> All figures shown are estimates for one made-up demo user in Queensland. Nothing here is financial advice, and no data is sent anywhere &mdash; everything runs in your browser and is forgotten when you close the tab.</p>
     <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight, then <span class="num">50</span> cents less payment for every dollar earned above it (single, as at 1 July 2026). Check your own situation with Services Australia, and your plan with the NDIA.</p>
     <p>Built for WOS26. Queensland only.</p>
-    <p><button type="button" class="btn btn-secondary" id="ob-replay">Show the intro again</button></p>
   </div>
-</footer>
+</dialog>
 
 <script>
 "use strict";
@@ -777,14 +916,9 @@ body::before {
    ============================================================ */
 
 const RULES = {
-  // Disability Support Pension income test, single, as at 1 July 2026.
   incomeFreeAreaFortnight: 226.00,
   taperPerDollar: 0.50,
-  // Maximum single DSP rate per fortnight (base + pension supplement +
-  // energy supplement). Used as the starting point before the income test.
   maxRateFortnight: 1178.70,
-  // Pensioner Concession Card is retained for up to 2 years if the payment
-  // stops because of work of 30+ hours a week or higher earnings.
   pccRetentionYears: 2,
   pccHoursThreshold: 30
 };
@@ -889,6 +1023,8 @@ const PLAN = {
     {
       id: "core",
       name: "Core supports",
+      pillClass: "pill-core",
+      pillLabel: "Core",
       flexible: true,
       note: "You can move funding freely between these categories, because none of them are stated supports.",
       categories: [
@@ -901,6 +1037,8 @@ const PLAN = {
     {
       id: "cb",
       name: "Capacity Building supports",
+      pillClass: "pill-cb",
+      pillLabel: "Capacity Building",
       flexible: true,
       note: "Capacity Building funding is separate from Core. It can move between the categories below, but never into Core.",
       categories: [
@@ -911,6 +1049,8 @@ const PLAN = {
     {
       id: "capital",
       name: "Capital supports",
+      pillClass: "pill-capital",
+      pillLabel: "Capital",
       flexible: false,
       note: "This is a stated support. It can only pay for the exact item named in your plan, and it is not counted as money you are free to spend.",
       categories: [
@@ -919,7 +1059,6 @@ const PLAN = {
       ]
     }
   ],
-  // Recent self-managed claims, newest first.
   history: [
     { date:"2026-08-22", categoryId:"transport", description:"Accessible taxi — hydrotherapy, Yeronga", amount:64.30 },
     { date:"2026-08-20", categoryId:"daily",     description:"Support worker, 4 hrs weekday",           amount:271.20 },
@@ -1184,10 +1323,9 @@ function estimateOnlyNote() {
 
 function pccReassurance() {
   return '<div class="note note-good">' + ICON.card +
-    '<div><p><strong>You would keep your Pensioner Concession Card.</strong> If your payment stops because you are working ' +
-    RULES.pccHoursThreshold + ' hours a week or more, or earning too much, you keep the Pensioner Concession Card for up to ' +
-    RULES.pccRetentionYears + ' years. Your electricity rebate, transport concession and other card-based entitlements carry on during that time.</p>' +
-    '<p class="small">Taking on more hours does not mean losing everything at once.</p></div></div>';
+    '<div><p><strong>You would keep your Pensioner Concession Card</strong> for up to ' + RULES.pccRetentionYears +
+    ' years if your payment stops because you are working ' + RULES.pccHoursThreshold +
+    ' hours a week or more, or earning too much &mdash; your electricity rebate, transport concession and other card-based entitlements carry on, so more hours does not mean losing everything at once.</p></div></div>';
 }
 
 /* ============================================================
@@ -1205,59 +1343,54 @@ function renderDashboard() {
   const html = [];
   html.push('<div class="view-intro">');
   html.push('<h1>Good morning, ' + esc(USER.name.split(" ")[0]) + '</h1>');
-  html.push('<p>Here is where your work, your money and your entitlements sit today, ' + dateFmt.format(TODAY) + '. Everything is shown per fortnight, because that is how your payment and your pay actually arrive.</p>');
+  html.push('<p>Your work, your money and what you&rsquo;re owed, for ' + dateFmt.format(TODAY) + ' &mdash; shown per fortnight, because that is how your pay and your pension actually arrive.</p>');
   html.push('</div>');
 
-  html.push('<div class="grid grid-3" role="group" aria-label="Your three summaries">');
+  html.push('<div class="widget-grid" role="group" aria-label="Your three summaries">');
 
-  // Card 1 — jobs
-  html.push('<section class="card module-card" aria-labelledby="dash-jobs-h">');
-  html.push('<h2 id="dash-jobs-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="10" width="14.5" height="10.5" rx="2.5"/><path d="M2 14.6h14.5"/><path d="M6.6 10V7.4a1.9 1.9 0 0 1 1.9-1.9h1.6a1.9 1.9 0 0 1 1.9 1.9V10"/><circle cx="20.3" cy="5.8" r="2.2" fill="currentColor" stroke="none"/></svg></span>Job mapping</h2>');
-  html.push('<p class="bignum" aria-hidden="true">' + jobs.length + '</p>');
-  html.push('<p><strong>' + jobs.length + ' ' + plural(jobs.length, "job matches", "jobs match") + ' your profile</strong> right now &mdash; that is work you can do in ' +
-    state.capacity.hoursPerWeek + ' hours a week or less, ranked by how well it fits your needs.</p>');
-  html.push('<p class="small muted">Matched on what you can do, not on your diagnosis.</p>');
-  html.push('<button type="button" class="btn" data-goto="jobs">See matching jobs</button>');
+  // Widget 1 — jobs
+  html.push('<section class="card widget" aria-labelledby="dash-jobs-h">');
+  html.push('<h2 id="dash-jobs-h">' + navIcon("jobs", 18) + ' Job mapping</h2>');
+  html.push('<p class="widget-value" aria-hidden="true">' + jobs.length + '</p>');
+  html.push('<p class="widget-caption"><strong>' + jobs.length + ' ' + plural(jobs.length, "job matches", "jobs match") +
+    '</strong> your profile, up to ' + state.capacity.hoursPerWeek + ' hrs/week.</p>');
+  html.push('<button type="button" class="btn btn-secondary btn-sm" data-goto="jobs">See matching jobs</button>');
   html.push('</section>');
 
-  // Card 2 — money
-  html.push('<section class="card module-card" aria-labelledby="dash-money-h">');
-  html.push('<h2 id="dash-money-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 20.5V16"/><path d="M10 20.5V13.5"/><path d="M15.5 20.5V11"/><circle cx="20.3" cy="6.5" r="2.2" fill="currentColor" stroke="none"/></svg></span>Financial tracker</h2>');
-  html.push('<p class="bignum money" aria-hidden="true">' + money0.format(totals.spendableLeft) + '</p>');
-  html.push('<p><strong>' + money2.format(totals.spendableLeft) + ' of NDIS funding left to spend</strong>, with ' +
-    PLAN_DAYS_LEFT + ' days to go in your plan.</p>');
-  html.push('<p class="small muted">A further ' + money2.format(totals.statedLeft) + ' sits in a stated support and can only buy the item named in your plan, so it is not counted here.</p>');
-  if (alerts.length) {
-    html.push('<p class="small"><span class="badge badge-' + (alerts[0].stats.status === "danger" ? "danger" : "warn") + '">' +
-      ICON.warn + ' ' + alerts.length + ' ' + plural(alerts.length, "category", "categories") + ' running out early</span></p>');
-  }
-  html.push('<button type="button" class="btn" data-goto="money">Open the tracker</button>');
+  // Widget 2 — money
+  html.push('<section class="card widget" aria-labelledby="dash-money-h">');
+  html.push('<h2 id="dash-money-h">' + navIcon("money", 18) + ' Financial tracker</h2>');
+  html.push('<p class="widget-value money" aria-hidden="true">' + money0.format(totals.spendableLeft) + '</p>');
+  html.push('<p class="widget-caption"><strong>' + money2.format(totals.spendableLeft) + ' left to spend</strong> in your NDIS plan, ' +
+    PLAN_DAYS_LEFT + ' days to go' +
+    (alerts.length ? ' &mdash; <span class="badge badge-' + (alerts[0].stats.status === "danger" ? "danger" : "warn") + '">' + ICON.warn + ' ' + alerts.length + ' ' + plural(alerts.length, "category", "categories") + ' running low</span>' : '.') +
+    '</p>');
+  html.push('<button type="button" class="btn btn-secondary btn-sm" data-goto="money">Open the tracker</button>');
   html.push('</section>');
 
-  // Card 3 — claim
-  html.push('<section class="card module-card" aria-labelledby="dash-claim-h">');
-  html.push('<h2 id="dash-claim-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.41 13.41l7.17 7.17a2 2 0 0 0 2.83 0L22 12V2H12L3.41 10.59a2 2 0 0 0 0 2.82z"/><circle cx="16.9" cy="6.9" r="1.9" fill="currentColor" stroke="none"/></svg></span>Claim</h2>');
-  html.push('<p class="bignum money" aria-hidden="true">' + money0.format(unclaimed) + '</p>');
-  html.push('<p><strong>' + money2.format(unclaimed) + ' a year you are eligible for but not claiming</strong>, across ' +
-    unclaimedCount + ' Queensland ' + plural(unclaimedCount, "scheme", "schemes") + ' your Pensioner Concession Card already qualifies you for.</p>');
-  html.push('<p class="small muted">Plus a Companion Card, which is free entry for your support person rather than a cash amount.</p>');
-  html.push('<button type="button" class="btn" data-goto="claim">See what you can claim</button>');
+  // Widget 3 — claim
+  html.push('<section class="card widget" aria-labelledby="dash-claim-h">');
+  html.push('<h2 id="dash-claim-h">' + navIcon("claim", 18) + ' Claim</h2>');
+  html.push('<p class="widget-value money" aria-hidden="true">' + money0.format(unclaimed) + '</p>');
+  html.push('<p class="widget-caption"><strong>' + money2.format(unclaimed) + ' a year not yet claimed</strong>, across ' +
+    unclaimedCount + ' Queensland ' + plural(unclaimedCount, "scheme", "schemes") + '.</p>');
+  html.push('<button type="button" class="btn btn-secondary btn-sm" data-goto="claim">See what you can claim</button>');
   html.push('</section>');
 
   html.push('</div>');
 
-  // This fortnight
-  html.push('<hr class="sep">');
-  html.push('<section class="card" aria-labelledby="dash-fortnight-h">');
-  html.push('<h2 id="dash-fortnight-h">This fortnight</h2>');
-  html.push('<p>You are working ' + USER.currentHoursPerWeek + ' hours a week casual at ' + money2.format(USER.currentHourlyRate) + ' an hour.</p>');
+  // This fortnight — compact
+  html.push('<section class="card" style="margin-top:1.25rem" aria-labelledby="dash-fortnight-h">');
+  html.push('<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem 1rem">');
+  html.push('<h2 id="dash-fortnight-h" style="margin-bottom:0">This fortnight</h2>');
+  html.push('<button type="button" class="btn btn-secondary btn-sm" data-goto="money">Full breakdown</button>');
+  html.push('</div>');
+  html.push('<p class="small muted" style="margin-top:.5rem">Working ' + USER.currentHoursPerWeek + ' hours a week casual at ' + money2.format(USER.currentHourlyRate) + ' an hour.</p>');
   html.push('<dl class="figrow" aria-label="Your fortnightly income">');
   html.push('<div><dt>Wages</dt><dd class="money">' + money2.format(dsp.wages) + '</dd></div>');
   html.push('<div><dt>Disability Support Pension</dt><dd class="money">' + money2.format(dsp.payment) + '</dd></div>');
   html.push('<div><dt>Total for the fortnight</dt><dd class="money">' + money2.format(dsp.total) + '</dd></div>');
   html.push('</dl>');
-  html.push(estimateOnlyNote());
-  html.push('<p><button type="button" class="btn btn-secondary" data-goto="money">Break this down</button></p>');
   html.push('</section>');
 
   $("#view-dashboard").innerHTML = html.join("");
@@ -1324,7 +1457,6 @@ function renderJobsShell() {
 
   $("#view-jobs").innerHTML = html.join("");
 
-  // wire up
   const hours = $("#hours");
   hours.addEventListener("input", function () {
     state.capacity.hoursPerWeek = Number(hours.value);
@@ -1353,7 +1485,6 @@ function renderJobResults() {
   const selectedCount = NEED_KEYS.filter(function (k) { return state.capacity.needs[k]; }).length;
   const anyLongHours = results.some(function (r) { return r.job.hoursPerWeek >= RULES.pccHoursThreshold; });
 
-  // Live count announcement.
   $("#jobs-count-live").innerHTML =
     '<p class="midnum" style="margin-bottom:.4rem">' +
     (results.length === 0
@@ -1396,7 +1527,6 @@ function renderJobResults() {
     html.push('<span class="money">' + money2.format(job.hourlyRate) + ' an hour</span>');
     html.push('</p>');
     html.push('<p>' + esc(job.summary) + '</p>');
-
     html.push('<p><strong>' + matchWords + '.</strong>' +
       (m.meetsAll && selectedCount ? ' <span class="badge badge-good">' + ICON.tick + ' Meets everything you asked for</span>' : '') + '</p>');
     if (selectedCount) {
@@ -1565,10 +1695,9 @@ function renderIncomeSummary() {
   if (!dsp.aboveFreeArea) {
     html.push('<div class="note note-good">' + ICON.ok +
       '<div><p><strong>Your pension is not affected.</strong> You earned ' + money2.format(dsp.wages) +
-      ', which is under the ' + money2.format(RULES.incomeFreeAreaFortnight) +
-      ' income free area. You keep your full payment of ' + money2.format(dsp.payment) + ' and every dollar of your wages.</p>' +
-      '<p class="small">You could earn another ' + money2.format(RULES.incomeFreeAreaFortnight - dsp.wages) +
-      ' this fortnight before your payment changes.</p></div></div>');
+      ', under the ' + money2.format(RULES.incomeFreeAreaFortnight) + ' income free area, so you keep your full ' +
+      money2.format(dsp.payment) + ' payment and every dollar of your wages &mdash; you could earn another ' +
+      money2.format(RULES.incomeFreeAreaFortnight - dsp.wages) + ' this fortnight before it changes.</p></div></div>');
   } else if (dsp.paymentStops) {
     html.push('<div class="note note-warn">' + ICON.warn +
       '<div><p><strong>Your pension would stop at this level of earnings.</strong> ' + money2.format(dsp.wages) +
@@ -1578,9 +1707,9 @@ function renderIncomeSummary() {
     html.push('<div class="note note-warn">' + ICON.warn +
       '<div><p><strong>Your pension is reduced, and you are still better off.</strong> You earned ' +
       money2.format(dsp.over) + ' more than the ' + money2.format(RULES.incomeFreeAreaFortnight) +
-      ' income free area, so your payment drops by 50 cents in the dollar &mdash; ' + money2.format(dsp.reduction) + ' less.</p>' +
-      '<p>Not working at all you would get ' + money2.format(base) + '. Working, you have ' + money2.format(dsp.total) +
-      '. That is <strong>' + money2.format(dsp.total - base) + ' more a fortnight</strong>.</p></div></div>');
+      ' free area, so it drops by ' + money2.format(dsp.reduction) + ' &mdash; but working still leaves you with ' +
+      money2.format(dsp.total) + ' this fortnight against ' + money2.format(base) + ' if you did not work at all, ' +
+      money2.format(dsp.total - base) + ' more.</p></div></div>');
   }
 
   html.push('<details class="data-table"><summary>Show the income test working, step by step</summary>');
@@ -1603,30 +1732,26 @@ function renderPlan() {
   const totals = planTotals();
   const alerts = planAlerts();
 
-  // --- live summary ---
+  // --- compact plan summary as mini widgets ---
   const sum = [];
-  sum.push('<div class="card" style="margin-bottom:1.25rem">');
-  sum.push('<h3>Where your plan stands</h3>');
-  sum.push('<p>You are <strong>' + Math.round(PLAN_ELAPSED_PCT * 100) + '% of the way</strong> through the plan year &mdash; day ' +
-    PLAN_DAYS_ELAPSED + ' of ' + PLAN_DAYS_TOTAL + ', with ' + PLAN_DAYS_LEFT + ' days left.</p>');
-  sum.push('<dl class="figrow">');
-  sum.push('<div><dt>Funded in total</dt><dd class="money">' + money2.format(totals.allocated) + '</dd></div>');
-  sum.push('<div><dt>Spent so far</dt><dd class="money">' + money2.format(totals.spent) + '</dd></div>');
-  sum.push('<div><dt>Free to spend</dt><dd class="money">' + money2.format(totals.spendableLeft) + '</dd></div>');
-  sum.push('<div><dt>Locked in a stated support</dt><dd class="money">' + money2.format(totals.statedLeft) + '</dd></div>');
-  sum.push('</dl>');
-  sum.push('<p class="small muted">' + ICON.lock + ' The ' + money2.format(totals.statedLeft) +
-    ' stated amount is deliberately left out of &ldquo;free to spend&rdquo;. It can only buy the item named in your plan.</p>');
+  sum.push('<p style="margin:0 0 .8rem">You are <strong>' + Math.round(PLAN_ELAPSED_PCT * 100) + '% of the way</strong> through the plan year &mdash; day ' +
+    PLAN_DAYS_ELAPSED + ' of ' + PLAN_DAYS_TOTAL + ', ' + PLAN_DAYS_LEFT + ' days left.</p>');
+
+  sum.push('<div class="widget-grid" style="margin-bottom:1rem">');
+  sum.push('<div class="card widget widget-stat"><h3>Funded in total</h3><p class="widget-value money">' + money2.format(totals.allocated) + '</p></div>');
+  sum.push('<div class="card widget widget-stat"><h3>Spent so far</h3><p class="widget-value money">' + money2.format(totals.spent) + '</p></div>');
+  sum.push('<div class="card widget widget-stat"><h3>Free to spend</h3><p class="widget-value money">' + money2.format(totals.spendableLeft) + '</p></div>');
+  sum.push('<div class="card widget widget-stat"><h3>' + ICON.lock + ' Locked, stated</h3><p class="widget-value money">' + money2.format(totals.statedLeft) + '</p></div>');
   sum.push('</div>');
 
   if (alerts.length) {
     sum.push('<div class="note note-' + (alerts[0].stats.status === "danger" ? "danger" : "warn") + '">' + ICON.warn);
-    sum.push('<div><p><strong>' + alerts.length + ' ' + plural(alerts.length, "category is", "categories are") +
-      ' on track to run out before ' + dateFmt.format(PLAN_END) + '.</strong></p><ul>');
+    sum.push('<div><p style="margin-bottom:.5rem"><strong>' + alerts.length + ' ' + plural(alerts.length, "category is", "categories are") +
+      ' on track to run out before ' + dateFmt.format(PLAN_END) + '.</strong> See the highlighted cards below for the full reasoning.</p>');
+    sum.push('<ul class="alert-tags">');
     alerts.forEach(function (a) {
-      sum.push('<li><strong>' + esc(a.cat.name) + '</strong> &mdash; ' + money2.format(a.stats.left) +
-        ' left, spending about ' + money2.format(a.stats.perFortnight) + ' a fortnight. At that rate the money runs out around <strong>' +
-        dateShort.format(a.stats.runsOutDate) + '</strong>, roughly ' + a.stats.shortfallDays + ' days early.</li>');
+      sum.push('<li><span class="badge badge-' + (a.stats.status === "danger" ? "danger" : "warn") + '">' +
+        esc(a.cat.name) + ' &mdash; ' + a.stats.shortfallDays + ' days early</span></li>');
     });
     sum.push('</ul></div></div>');
   } else {
@@ -1636,65 +1761,58 @@ function renderPlan() {
 
   $("#plan-summary").innerHTML = sum.join("");
 
-  // --- budgets ---
+  // --- budgets, as compact category grids ---
   const html = [];
 
-  html.push('<div class="note note-info">' + ICON.info +
-    '<div><p><strong>How the three budgets work.</strong> Within one budget you can usually move funding between categories. You can <em>never</em> move funding from one budget to another &mdash; Core money cannot pay for a Capacity Building support, and neither can touch Capital.</p></div></div>');
+  html.push('<p class="small muted">' + ICON.info +
+    ' Funding moves freely within a budget, never between budgets &mdash; Core, Capacity Building and Capital stay separate.</p>');
 
   PLAN.budgets.forEach(function (budget) {
     const bAlloc = budget.categories.reduce(function (t, c) { return t + c.allocated; }, 0);
     const bSpent = budget.categories.reduce(function (t, c) { return t + c.spent; }, 0);
     const bLeft = bAlloc - bSpent;
-    const hasStated = budget.categories.some(function (c) { return c.stated; });
 
-    html.push('<section class="card" style="margin-bottom:1.25rem" aria-labelledby="b-' + budget.id + '-h">');
-    html.push('<h3 id="b-' + budget.id + '-h">' + esc(budget.name) +
-      (hasStated ? ' <span class="badge badge-info">' + ICON.lock + ' Stated support</span>' : '') + '</h3>');
-    html.push('<p>' + money2.format(bSpent) + ' spent of ' + money2.format(bAlloc) + '. <strong>' +
-      money2.format(bLeft) + ' left in this budget' + (hasStated ? ', locked to the item named in your plan' : '') + '.</strong></p>');
-    html.push('<p class="small muted">' + esc(budget.note) + '</p>');
+    html.push('<section style="margin-top:1.5rem" aria-labelledby="b-' + budget.id + '-h">');
+    html.push('<h3 id="b-' + budget.id + '-h" style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">' +
+      '<span class="pill ' + budget.pillClass + '">' + esc(budget.pillLabel) + '</span> ' + esc(budget.name) + '</h3>');
+    html.push('<p class="small muted" style="margin-bottom:.2rem">' + money2.format(bSpent) + ' spent of ' + money2.format(bAlloc) +
+      ' &mdash; <strong>' + money2.format(bLeft) + ' left' + (!budget.flexible ? ', locked to the item named in your plan' : '') + '.</strong> ' + esc(budget.note) + '</p>');
 
+    html.push('<div class="cat-grid">');
     budget.categories.forEach(function (cat) {
       const s = categoryStats(cat);
       const pct = Math.round(s.usedPct * 100);
       const meterClass = s.status === "danger" ? "is-danger" : s.status === "warn" ? "is-warn" : "";
 
-      html.push('<div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">');
-      html.push('<h4>' + esc(cat.name) +
-        (cat.stated ? ' <span class="badge badge-info">' + ICON.lock + ' Stated &mdash; not free to spend</span>' : '') + '</h4>');
-
-      html.push('<p><strong class="money">' + money2.format(s.left) + ' left</strong> of ' + money2.format(cat.allocated) +
-        '. You have used <span class="num">' + pct + '%</span> of this category, and you are <span class="num">' +
-        Math.round(PLAN_ELAPSED_PCT * 100) + '%</span> of the way through the plan year.</p>');
-
+      html.push('<div class="cat-card">');
+      html.push('<h4>' + esc(cat.name) + (cat.stated ? ' ' + ICON.lock : '') + '</h4>');
+      html.push('<p class="cat-left money">' + money2.format(s.left) + ' <span class="cat-of">left of ' + money2.format(cat.allocated) + '</span></p>');
       html.push('<div class="meter ' + meterClass + ' meter-marker" style="--marker:' + (PLAN_ELAPSED_PCT * 100).toFixed(1) + '%" aria-hidden="true"><span style="width:' + Math.min(100, pct) + '%"></span></div>');
-      html.push('<p class="small muted" aria-hidden="true">Bar shows funding used. The vertical line shows how far through the plan year you are.</p>');
 
+      let statusBadge;
+      if (cat.stated) statusBadge = '<span class="badge badge-info">' + ICON.lock + ' Stated &mdash; not free to spend</span>';
+      else if (s.status === "danger") statusBadge = '<span class="badge badge-danger">' + ICON.warn + ' Running low</span>';
+      else if (s.status === "warn") statusBadge = '<span class="badge badge-warn">' + ICON.warn + ' Watch this one</span>';
+      else statusBadge = '<span class="badge badge-good">' + ICON.ok + ' On track</span>';
+      html.push('<p class="small" style="margin:.3rem 0 0">' + statusBadge + '</p>');
+
+      html.push('<details><summary>Details</summary>');
+      html.push('<p class="small" style="margin-top:.4rem">Used <span class="num">' + pct + '%</span> of this category; you are <span class="num">' +
+        Math.round(PLAN_ELAPSED_PCT * 100) + '%</span> through the plan year.</p>');
       if (cat.stated) {
-        html.push('<div class="note note-info" style="margin-top:.6rem">' + ICON.lock +
-          '<div><p><strong>This is a stated support.</strong> ' + esc(cat.statedDetail) +
-          ' It cannot be spent on anything else, and it is not included in your &ldquo;free to spend&rdquo; total.</p></div></div>');
-      } else if (s.status === "danger") {
-        html.push('<div class="note note-danger" style="margin-top:.6rem">' + ICON.warn +
-          '<div><p><strong>Running low: ' + money2.format(s.left) + ' left in ' + esc(cat.name) + '.</strong> ' +
-          'You are spending about ' + money2.format(s.perFortnight) + ' a fortnight. At that rate this runs out around <strong>' +
-          dateShort.format(s.runsOutDate) + '</strong> &mdash; about ' + s.shortfallDays + ' days before your plan ends.</p>' +
-          '<p class="small">Because this sits in ' + esc(budget.name) + ', you can move funding across from another category in the same budget.</p></div></div>');
-      } else if (s.status === "warn") {
-        html.push('<div class="note note-warn" style="margin-top:.6rem">' + ICON.warn +
-          '<div><p><strong>Watch this one: ' + money2.format(s.left) + ' left in ' + esc(cat.name) + '.</strong> ' +
-          'At about ' + money2.format(s.perFortnight) + ' a fortnight it runs out around <strong>' +
-          dateShort.format(s.runsOutDate) + '</strong>, roughly ' + s.shortfallDays + ' days before the plan ends.</p></div></div>');
+        html.push('<p class="small">' + esc(cat.statedDetail) + ' It cannot be spent on anything else, and it is not included in your &ldquo;free to spend&rdquo; total.</p>');
+      } else if (s.status === "danger" || s.status === "warn") {
+        html.push('<p class="small">Spending about ' + money2.format(s.perFortnight) + ' a fortnight, this runs out around <strong>' +
+          dateShort.format(s.runsOutDate) + '</strong>, roughly ' + s.shortfallDays + ' days before the plan ends. Because this sits in ' +
+          esc(budget.name) + ', you can move funding across from another category in the same budget.</p>');
       } else {
-        html.push('<div class="note note-good" style="margin-top:.6rem">' + ICON.ok +
-          '<div><p><strong>On track.</strong> At about ' + money2.format(s.perFortnight) +
-          ' a fortnight, this lasts the rest of the plan year.</p></div></div>');
+        html.push('<p class="small">At about ' + money2.format(s.perFortnight) + ' a fortnight, this lasts the rest of the plan year.</p>');
       }
+      html.push('</details>');
       html.push('</div>');
     });
+    html.push('</div>');
 
-    // table alternative for this budget
     html.push('<details class="data-table"><summary>Show ' + esc(budget.name) + ' as a table</summary>');
     html.push('<div class="table-wrap"><table>');
     html.push('<caption>' + esc(budget.name) + ' &mdash; funding, spending and how long it will last</caption>');
@@ -1714,12 +1832,10 @@ function renderPlan() {
     html.push('</section>');
   });
 
-  // spending history
-  html.push('<section class="card" aria-labelledby="hist-h">');
-  html.push('<h3 id="hist-h">Recent claims you have made</h3>');
-  html.push('<p class="small muted">Your last ' + PLAN.history.length + ' self-managed claims, newest first.</p>');
+  // spending history, collapsed by default
+  html.push('<details class="data-table" style="margin-top:1.75rem"><summary>Show your last ' + PLAN.history.length + ' claims</summary>');
   html.push('<div class="table-wrap"><table>');
-  html.push('<caption>Recent NDIS spending</caption>');
+  html.push('<caption>Recent NDIS spending, newest first</caption>');
   html.push('<thead><tr><th scope="col">Date</th><th scope="col">What it was for</th><th scope="col">Category</th><th class="num" scope="col">Amount</th></tr></thead><tbody>');
   PLAN.history.forEach(function (h) {
     let catName = h.categoryId, budgetName = "";
@@ -1731,8 +1847,7 @@ function renderPlan() {
       '<td>' + esc(catName) + '<span class="muted small"><br>' + esc(budgetName) + '</span></td>' +
       '<td class="num">' + money2.format(h.amount) + '</td></tr>');
   });
-  html.push('</tbody></table></div>');
-  html.push('</section>');
+  html.push('</tbody></table></div></details>');
 
   $("#plan-body").innerHTML = html.join("");
 }
@@ -1812,20 +1927,17 @@ function entitlementsHtml() {
   const total = unclaimedCashTotal();
   const html = [];
 
-  html.push('<section class="card" style="margin-bottom:1.5rem" aria-labelledby="ent-total-h">');
-  html.push('<h2 id="ent-total-h">Government entitlements you are not claiming</h2>');
-  html.push('<p class="bignum money" aria-hidden="true">' + money0.format(total) + '</p>');
-  html.push('<div aria-live="polite" aria-atomic="true">');
-  html.push('<p><strong>' + money2.format(total) + ' a year</strong> across ' + unclaimedCash.length +
-    ' Queensland ' + plural(unclaimedCash.length, "scheme", "schemes") + ' you are eligible for and have not claimed. ' +
-    'That is about <strong>' + money2.format(total / 26) + ' a fortnight</strong>.</p>');
-  html.push('</div>');
-  html.push('<p class="small muted">' + ICON.info +
-    ' These are real Queensland Government schemes. Values are the published annual amounts and can change each July. Each one has its own form &mdash; most take about ten minutes.</p>');
+  html.push('<section class="card widget" style="margin-bottom:1.5rem" aria-labelledby="ent-total-h">');
+  html.push('<h2 id="ent-total-h" style="text-transform:none;font-size:1.15rem;color:var(--text);letter-spacing:normal;font-weight:800">Government entitlements you are not claiming</h2>');
+  html.push('<p class="widget-value money" aria-hidden="true" style="font-size:2.2rem">' + money0.format(total) + '</p>');
+  html.push('<p class="widget-caption" aria-live="polite" aria-atomic="true"><strong>' + money2.format(total) + ' a year</strong> (about ' + money2.format(total / 26) + ' a fortnight) across ' + unclaimedCash.length +
+    ' Queensland ' + plural(unclaimedCash.length, "scheme", "schemes") + ' you are eligible for and have not claimed.</p>');
+  html.push('<p class="small muted" style="margin:0">' + ICON.info +
+    ' Real Queensland Government schemes. Values are published annual amounts and can change each July. Each has its own form &mdash; most take about ten minutes.</p>');
   html.push('</section>');
 
   html.push('<h2>Every scheme, and where you stand</h2>');
-  html.push('<ul class="results">');
+  html.push('<ul class="results cols-2">');
 
   ENTITLEMENTS.slice().sort(function (a, b) {
     if (a.claimed !== b.claimed) return a.claimed ? 1 : -1;
@@ -1835,7 +1947,7 @@ function entitlementsHtml() {
     html.push('<div class="scheme-head">');
     html.push('<h3 style="margin:0">' + esc(e.name) + '</h3>');
     html.push('<p class="scheme-value money" style="margin:0">' +
-      (e.cashValue ? "Up to " + money2.format(e.annualValue) + " a year" : "No cash value") + '</p>');
+      (e.cashValue ? "Up to " + money2.format(e.annualValue) + "/yr" : "No cash value") + '</p>');
     html.push('</div>');
 
     html.push('<p style="margin-top:.5rem">' +
@@ -1846,7 +1958,6 @@ function entitlementsHtml() {
     html.push('<p><strong>What it covers.</strong> ' + esc(e.covers) + '</p>');
     html.push('<p><strong>Who can get it.</strong> ' + esc(e.eligibility) + '</p>');
     if (e.valueNote) html.push('<p class="small muted">' + esc(e.valueNote) + '</p>');
-
     html.push('<p><a class="ext-link" href="' + esc(e.link) + '" target="_blank" rel="noopener noreferrer">' +
       (e.claimed ? "Check your " + esc(e.name) : "Claim the " + esc(e.name)) + ' on qld.gov.au ' + ICON.ext +
       '<span class="visually-hidden"> (' + esc(e.linkLabel) + ', opens in a new tab)</span></a>');
@@ -1884,15 +1995,15 @@ function offersHtml(list, kind) {
     ? "Money paid back to you after you buy or switch. Always check the offer still runs before you sign up to anything."
     : "Money off at the counter when you show your Pensioner Concession Card.") + '</p>');
 
-  html.push('<ul class="results">');
+  html.push('<ul class="results cols-3">');
   list.forEach(function (o) {
     html.push('<li class="result" style="border-left-color:var(--border-strong)">');
     html.push('<div class="scheme-head">');
     html.push('<h3 style="margin:0">' + esc(o.name) + '</h3>');
-    html.push('<p style="margin:0"><span class="badge badge-demo">Demo partner</span></p>');
+    html.push('<p style="margin:0"><span class="badge badge-demo">Demo</span></p>');
     html.push('</div>');
-    html.push('<p class="midnum" style="margin:.4rem 0">' + esc(o.offer) + '</p>');
-    html.push('<p>' + esc(o.detail) + '</p>');
+    html.push('<p class="midnum" style="margin:.4rem 0;font-size:1.15rem">' + esc(o.offer) + '</p>');
+    html.push('<p class="small">' + esc(o.detail) + '</p>');
     html.push('</li>');
   });
   html.push('</ul>');
@@ -1953,15 +2064,97 @@ document.addEventListener("click", function (e) {
 });
 
 /* ============================================================
-   10. START
+   10. HEADER MENUS — hamburger "More" menu and profile menu.
+   A lightweight disclosure pattern: a trigger button with
+   aria-expanded/aria-controls and a plain panel of real buttons
+   and links (not role="menu", so normal Tab/Enter/Space behaviour
+   just works). Escape closes and returns focus to the trigger;
+   clicking outside closes without moving focus.
+   ============================================================ */
+
+const OPEN_MENUS = [];
+function closeAllMenus() { OPEN_MENUS.forEach(function (close) { close(false); }); }
+
+function initMenu(triggerId, panelId) {
+  const trigger = document.getElementById(triggerId);
+  const panel = document.getElementById(panelId);
+  if (!trigger || !panel) return;
+
+  function open() {
+    closeAllMenus();
+    panel.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+  }
+  function close(returnFocus) {
+    if (panel.hidden) return;
+    panel.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+    if (returnFocus) trigger.focus();
+  }
+
+  trigger.addEventListener("click", function (e) {
+    e.stopPropagation();
+    if (panel.hidden) open(); else close(false);
+  });
+  panel.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") close(true);
+  });
+  panel.addEventListener("click", function (e) {
+    if (e.target.closest("button, a")) close(false);
+  });
+  document.addEventListener("click", function (e) {
+    if (!panel.hidden && !panel.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
+      close(false);
+    }
+  });
+
+  OPEN_MENUS.push(close);
+}
+
+initMenu("more-menu-btn", "more-menu-panel");
+initMenu("profile-btn", "profile-panel");
+
+/* ============================================================
+   11. DIALOGS — "About this app" etc, using native <dialog>.
+   ============================================================ */
+
+let lastDialogOpener = null;
+
+document.addEventListener("click", function (e) {
+  const openBtn = e.target.closest("[data-open-dialog]");
+  if (openBtn) {
+    lastDialogOpener = openBtn;
+    const d = document.getElementById(openBtn.getAttribute("data-open-dialog"));
+    if (d) { if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", ""); }
+    return;
+  }
+  const closeBtn = e.target.closest("[data-close-dialog]");
+  if (closeBtn) {
+    const d = closeBtn.closest("dialog");
+    if (d) d.close();
+  }
+});
+
+Array.prototype.forEach.call(document.querySelectorAll("dialog"), function (d) {
+  // Clicking the backdrop (a click that lands on the <dialog> element itself,
+  // not on its content) closes it.
+  d.addEventListener("click", function (e) { if (e.target === d) d.close(); });
+  d.addEventListener("close", function () {
+    if (lastDialogOpener) { lastDialogOpener.focus(); lastDialogOpener = null; }
+  });
+});
+
+/* ============================================================
+   12. START
    ============================================================ */
 
 renderDashboard();
 renderJobsShell();
 renderMoneyShell();
 renderClaimShell();
+
 /* ============================================================
-   11. ONBOARDING
+   13. ONBOARDING
    One screen, shown the first time the app opens. No carousel, no
    auto-advance: everything is on screen at once and one button leaves.
    ============================================================ */
@@ -1970,7 +2163,7 @@ const ONBOARD_KEY = "capable.onboarded";
 
 const ONBOARD_STEPS = [
   { icon: "jobs",  title: "Job mapping",
-    text: "Work matched to what you can actually do \u2014 the hours you have and what you need from a job. Never your diagnosis." },
+    text: "Work matched to what you can actually do — the hours you have and what you need from a job. Never your diagnosis." },
   { icon: "money", title: "Financial tracker",
     text: "Your wages, your Disability Support Pension and your NDIS plan funding in one place, on the fortnightly cycle you live on." },
   { icon: "claim", title: "Claim",
@@ -1991,7 +2184,7 @@ function hasOnboarded() {
 function showOnboarding(moveFocus) {
   document.body.classList.add("onboarding-active");
   document.getElementById("onboarding").hidden = false;
-  document.title = "Welcome \u2014 Capable";
+  document.title = "Welcome — Capable";
   window.scrollTo(0, 0);
   if (moveFocus) document.getElementById("ob-title").focus();
 }
@@ -2004,7 +2197,8 @@ function finishOnboarding() {
 }
 
 document.getElementById("ob-start").addEventListener("click", finishOnboarding);
-document.getElementById("ob-replay").addEventListener("click", function () {
+document.getElementById("menu-replay").addEventListener("click", function () {
+  closeAllMenus();
   try { localStorage.removeItem(ONBOARD_KEY); } catch (e) { /* private browsing */ }
   showOnboarding(true);
 });
@@ -2014,8 +2208,10 @@ showView("dashboard", false);
 if (!hasOnboarded()) showOnboarding(false);
 
 /* ============================================================
-   12. INSTALLABLE APP
+   14. INSTALLABLE APP
    Add to Home Screen on iOS; the native install prompt elsewhere.
+   A slim one-line strip nudges once; "Install Capable" in the
+   header menu offers the same action on demand, any time.
    ============================================================ */
 
 const TIP_KEY = "capable.installTipDismissed";
@@ -2025,9 +2221,7 @@ function tipDismissed() {
 }
 function dismissTip() {
   try { localStorage.setItem(TIP_KEY, "1"); } catch (e) { /* private browsing */ }
-  const tip = document.getElementById("install-tip");
-  tip.hidden = true;
-  document.getElementById("main").focus();
+  document.getElementById("install-tip").hidden = true;
 }
 function isStandalone() {
   return window.navigator.standalone === true ||
@@ -2036,11 +2230,11 @@ function isStandalone() {
 function isIOS() {
   const ua = navigator.userAgent || "";
   return /iPad|iPhone|iPod/.test(ua) ||
-         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); // iPadOS 13+
+         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 }
 
-function showTip(text, withButton) {
-  if (tipDismissed() || isStandalone()) return;
+function showTip(text, withButton, force) {
+  if ((tipDismissed() || isStandalone()) && !force) return;
   document.getElementById("install-tip-text").innerHTML = text;
   document.getElementById("install-btn").hidden = !withButton;
   document.getElementById("install-tip").hidden = false;
@@ -2048,20 +2242,16 @@ function showTip(text, withButton) {
 
 document.getElementById("install-dismiss").addEventListener("click", dismissTip);
 
-// iOS has no install prompt API — tell people where the control actually is.
-if (isIOS()) {
-  showTip('Tap the Share button <kbd>\u2191</kbd> at the bottom of Safari, then choose ' +
-          '<kbd>Add to Home Screen</kbd>. Capable then opens full screen from your Home Screen, ' +
-          'with no browser bars, and works without an internet connection.', false);
-}
+const installMenuItem = document.getElementById("menu-install");
+if (isStandalone()) installMenuItem.hidden = true;
 
-// Android and desktop: capture the prompt and offer a real button.
+const IOS_INSTALL_TEXT = 'Tap the Share button <kbd>↑</kbd>, then <kbd>Add to Home Screen</kbd>. Capable then opens full screen with no browser bars, and works offline.';
+
+if (isIOS()) showTip(IOS_INSTALL_TEXT, false);
+
 let deferredPrompt = null;
 window.addEventListener("beforeinstallprompt", function (e) {
   e.preventDefault();
-  // iOS has no working prompt API. If a browser claiming to be iOS fires this
-  // anyway, keep the Share > Add to Home Screen wording rather than offering a
-  // button that cannot do anything.
   if (isIOS()) return;
   deferredPrompt = e;
   showTip("Install Capable to open it from your home screen or dock, full screen and offline.", true);
@@ -2076,13 +2266,24 @@ document.getElementById("install-btn").addEventListener("click", function () {
   });
 });
 
-window.addEventListener("appinstalled", function () { dismissTip(); });
+installMenuItem.addEventListener("click", function () {
+  closeAllMenus();
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(function () { deferredPrompt = null; });
+  } else if (isIOS()) {
+    showTip(IOS_INSTALL_TEXT, false, true);
+  } else {
+    showTip("Your browser does not offer an install prompt yet. Look for &ldquo;Install app&rdquo; or &ldquo;Add to Home screen&rdquo; in its menu.", false, true);
+  }
+});
+
+window.addEventListener("appinstalled", function () { dismissTip(); installMenuItem.hidden = true; });
 
 /* Offline support. Fails silently on file:// and anywhere without HTTPS. */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
     navigator.serviceWorker.register("sw.js").catch(function () { /* offline mode unavailable */ });
-    // When a new worker activates, reload once so the new build is what you see.
     var refreshing = false;
     navigator.serviceWorker.addEventListener("controllerchange", function () {
       if (refreshing) return;
