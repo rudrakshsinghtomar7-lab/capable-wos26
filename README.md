@@ -22,11 +22,15 @@ Sam Whitton, Woolloongabba (Brisbane). On the Disability Support Pension, self-m
 
 ## Rules and figures modelled
 
-### Disability Support Pension income test (single, as at 1 July 2026)
+### Disability Support Pension income test (single)
 
-- Income free area: **$226.00 per fortnight** — earnings below this do not reduce the payment.
+The two figures below are indexed on **different cycles**, so they never share a single "as at" date. Collapsing them into one is a real source of error.
+
+- **Income free area: $226.00 per fortnight** — indexed 1 July each year, so this is as at **1 July 2026**. Earnings below it do not reduce the payment.
 - Above it, the payment reduces by **50 cents per dollar**.
-- Maximum single rate used as the starting point: **$1,178.70 per fortnight** (base + pension supplement + energy supplement). Every screen that uses these carries an *"Estimate only, not financial advice"* line.
+- **Maximum single rate: $1,200.90 per fortnight** — indexed 20 March and 20 September, so this is as at **20 March 2026**. This is the starting point the income test reduces from.
+
+Every screen that uses these carries an *"Estimate only, not financial advice"* line, and the in-app accessibility statement says plainly that the rate is an estimate rather than a verified current figure.
 
 ### NDIS plan structure
 

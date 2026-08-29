@@ -1254,7 +1254,7 @@ body::before {
   </div>
   <div class="dialog-body">
     <p><strong>Capable is a demonstration.</strong> All figures shown are estimates for one made-up demo user in Queensland. Nothing here is financial advice, and no data is sent anywhere &mdash; everything runs in your browser and is forgotten when you close the tab.</p>
-    <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight, then <span class="num">50</span> cents less payment for every dollar earned above it (single, as at 1 July 2026). Check your own situation with Services Australia, and your plan with the NDIA.</p>
+    <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight (indexed 1 July 2026), then <span class="num">50</span> cents less payment for every dollar earned above it. Maximum single rate of <span class="num">$1,200.90</span> per fortnight (indexed 20 March 2026 &mdash; a separate cycle to the income free area). Check your own situation with Services Australia, and your plan with the NDIA.</p>
     <p>Built for WOS26. Queensland only.</p>
 
     <h3 id="accessibility-statement">Accessibility</h3>
@@ -1297,9 +1297,13 @@ body::before {
    ============================================================ */
 
 const RULES = {
+  // Income free area is indexed 1 July each year. As at 1 July 2026.
   incomeFreeAreaFortnight: 226.00,
   taperPerDollar: 0.50,
-  maxRateFortnight: 1178.70,
+  // Maximum single DSP rate, indexed 20 March and 20 September — a
+  // DIFFERENT cycle to the income free area above. As at 20 March 2026.
+  // The two dates must never be collapsed into one "as at" line.
+  maxRateFortnight: 1200.90,
   pccRetentionYears: 2,
   pccHoursThreshold: 30
 };
