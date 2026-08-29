@@ -560,6 +560,38 @@ details.data-table > summary:hover { color: var(--accent-hover); }
 
 hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 
+/* ---------- Onboarding ---------- */
+.onboarding { max-width: 34rem; margin: 0 auto; padding: .5rem 0 2rem; }
+.ob-mark {
+  position: relative; width: 76px; height: 76px; margin: 0 auto 1.15rem;
+  border-radius: 20px; background: #0C5349; color: #fff;   /* brand colours, both themes */
+  display: grid; place-items: center;
+  font-size: 2.5rem; font-weight: 800; line-height: 1;
+}
+.ob-mark span { transform: translate(-2px, -3px); }
+.ob-mark i { position: absolute; right: 11px; top: 11px; width: 15px; height: 15px; border-radius: 50%; background: #6FDCC6; }
+.onboarding h1 { text-align: center; margin-bottom: .5rem; }
+.ob-lead { text-align: center; margin: 0 auto 1.75rem; color: var(--text-muted); max-width: 30rem; }
+.ob-list { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 1rem; }
+.ob-list li {
+  display: flex; gap: .9rem; align-items: flex-start;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.1rem;
+}
+.ob-ico {
+  flex: none; width: 42px; height: 42px; border-radius: 11px;
+  background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center;
+}
+.ob-list h2 { font-size: 1.08rem; margin-bottom: .2rem; }
+.ob-list p { margin: 0; font-size: .96rem; color: var(--text-muted); }
+.ob-go { width: 100%; font-size: 1.05rem; min-height: 52px; }
+.ob-fine { text-align: center; margin: .9rem 0 0; }
+body.onboarding-active .mainnav,
+body.onboarding-active .site-footer,
+body.onboarding-active #install-tip { display: none; }
+body.onboarding-active .view { display: none !important; }
+
 /* ---------- Add to Home Screen tip ---------- */
 .install-tip {
   display: flex; gap: .75rem; align-items: flex-start;
@@ -676,16 +708,16 @@ body::before {
   <div class="shell">
     <ul>
       <li><button type="button" class="navbtn" data-view="dashboard" aria-current="page">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="3" y="15" width="7" height="6" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="8" rx="2"/><rect x="3" y="15" width="7" height="6" rx="2"/><rect x="14" y="12.5" width="7" height="8.5" rx="2"/><circle cx="17.5" cy="6.2" r="2.4" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Dashboard</span><span class="nav-short">Home</span></button></li>
       <li><button type="button" class="navbtn" data-view="jobs">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="10" width="14.5" height="10.5" rx="2.5"/><path d="M2 14.6h14.5"/><path d="M6.6 10V7.4a1.9 1.9 0 0 1 1.9-1.9h1.6a1.9 1.9 0 0 1 1.9 1.9V10"/><circle cx="20.3" cy="5.8" r="2.2" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Job mapping</span><span class="nav-short">Jobs</span></button></li>
       <li><button type="button" class="navbtn" data-view="money">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18v12H3z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 20.5V16"/><path d="M10 20.5V13.5"/><path d="M15.5 20.5V11"/><circle cx="20.3" cy="6.5" r="2.2" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Financial tracker</span><span class="nav-short">Money</span></button></li>
       <li><button type="button" class="navbtn" data-view="claim">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 21V7"/><path d="M12 7S9.5 3 7.5 3A2.5 2.5 0 0 0 7.5 8"/><path d="M12 7s2.5-4 4.5-4a2.5 2.5 0 0 1 0 5"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.41 13.41l7.17 7.17a2 2 0 0 0 2.83 0L22 12V2H12L3.41 10.59a2 2 0 0 0 0 2.82z"/><circle cx="16.9" cy="6.9" r="1.9" fill="currentColor" stroke="none"/></svg>
         <span class="nav-full">Claim</span><span class="nav-short">Claim</span></button></li>
     </ul>
   </div>
@@ -693,6 +725,19 @@ body::before {
 
 <main id="main" tabindex="-1">
   <div class="shell">
+    <section class="onboarding" id="onboarding" aria-labelledby="ob-title" hidden>
+      <p class="ob-mark" aria-hidden="true"><span>C</span><i></i></p>
+      <h1 id="ob-title" tabindex="-1">Welcome to Capable</h1>
+      <p class="ob-lead">Work, money, and what you&rsquo;re owed &mdash; in one place, for people with disability in Queensland.</p>
+      <ul class="ob-list" id="ob-list"></ul>
+      <div class="note note-info">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg>
+        <div><p><strong>Everything here runs on a fortnight, not a month</strong> &mdash; because that is how your pay and your pension actually arrive.</p></div>
+      </div>
+      <button type="button" class="btn ob-go" id="ob-start">Get started</button>
+      <p class="small muted ob-fine">A demonstration using made-up figures for one demo user. Not financial advice.</p>
+    </section>
+
     <div class="install-tip" id="install-tip" hidden>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"/><path d="m8 7 4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
       <div class="it-body">
@@ -718,6 +763,7 @@ body::before {
     <p><strong>Capable is a demonstration.</strong> All figures shown are estimates for one made-up demo user in Queensland. Nothing here is financial advice, and no data is sent anywhere &mdash; everything runs in your browser and is forgotten when you close the tab.</p>
     <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight, then <span class="num">50</span> cents less payment for every dollar earned above it (single, as at 1 July 2026). Check your own situation with Services Australia, and your plan with the NDIA.</p>
     <p>Built for WOS26. Queensland only.</p>
+    <p><button type="button" class="btn btn-secondary" id="ob-replay">Show the intro again</button></p>
   </div>
 </footer>
 
@@ -983,6 +1029,19 @@ function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
 function addDays(d, n) { const x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
 function plural(n, one, many) { return n === 1 ? one : many; }
 
+const NAV_ICONS = {
+  dashboard: '<rect x="3" y="3" width="7" height="8" rx="2"/><rect x="3" y="15" width="7" height="6" rx="2"/><rect x="14" y="12.5" width="7" height="8.5" rx="2"/><circle cx="17.5" cy="6.2" r="2.4" fill="currentColor" stroke="none"/>',
+  jobs: '<rect x="2" y="10" width="14.5" height="10.5" rx="2.5"/><path d="M2 14.6h14.5"/><path d="M6.6 10V7.4a1.9 1.9 0 0 1 1.9-1.9h1.6a1.9 1.9 0 0 1 1.9 1.9V10"/><circle cx="20.3" cy="5.8" r="2.2" fill="currentColor" stroke="none"/>',
+  money: '<path d="M4.5 20.5V16"/><path d="M10 20.5V13.5"/><path d="M15.5 20.5V11"/><circle cx="20.3" cy="6.5" r="2.2" fill="currentColor" stroke="none"/>',
+  claim: '<path d="M3.41 13.41l7.17 7.17a2 2 0 0 0 2.83 0L22 12V2H12L3.41 10.59a2 2 0 0 0 0 2.82z"/><circle cx="16.9" cy="6.9" r="1.9" fill="currentColor" stroke="none"/>'
+};
+
+function navIcon(name, size) {
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" ' +
+    'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+    'aria-hidden="true" focusable="false">' + NAV_ICONS[name] + '</svg>';
+}
+
 const ICON = {
   warn:  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
   alert: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5h.01"/></svg>',
@@ -1151,7 +1210,7 @@ function renderDashboard() {
 
   // Card 1 — jobs
   html.push('<section class="card module-card" aria-labelledby="dash-jobs-h">');
-  html.push('<h2 id="dash-jobs-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>Job mapping</h2>');
+  html.push('<h2 id="dash-jobs-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="10" width="14.5" height="10.5" rx="2.5"/><path d="M2 14.6h14.5"/><path d="M6.6 10V7.4a1.9 1.9 0 0 1 1.9-1.9h1.6a1.9 1.9 0 0 1 1.9 1.9V10"/><circle cx="20.3" cy="5.8" r="2.2" fill="currentColor" stroke="none"/></svg></span>Job mapping</h2>');
   html.push('<p class="bignum" aria-hidden="true">' + jobs.length + '</p>');
   html.push('<p><strong>' + jobs.length + ' ' + plural(jobs.length, "job matches", "jobs match") + ' your profile</strong> right now &mdash; that is work you can do in ' +
     state.capacity.hoursPerWeek + ' hours a week or less, ranked by how well it fits your needs.</p>');
@@ -1161,7 +1220,7 @@ function renderDashboard() {
 
   // Card 2 — money
   html.push('<section class="card module-card" aria-labelledby="dash-money-h">');
-  html.push('<h2 id="dash-money-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18v12H3z"/><circle cx="12" cy="12" r="3"/></svg></span>Financial tracker</h2>');
+  html.push('<h2 id="dash-money-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 20.5V16"/><path d="M10 20.5V13.5"/><path d="M15.5 20.5V11"/><circle cx="20.3" cy="6.5" r="2.2" fill="currentColor" stroke="none"/></svg></span>Financial tracker</h2>');
   html.push('<p class="bignum money" aria-hidden="true">' + money0.format(totals.spendableLeft) + '</p>');
   html.push('<p><strong>' + money2.format(totals.spendableLeft) + ' of NDIS funding left to spend</strong>, with ' +
     PLAN_DAYS_LEFT + ' days to go in your plan.</p>');
@@ -1175,7 +1234,7 @@ function renderDashboard() {
 
   // Card 3 — claim
   html.push('<section class="card module-card" aria-labelledby="dash-claim-h">');
-  html.push('<h2 id="dash-claim-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 21V7"/></svg></span>Claim</h2>');
+  html.push('<h2 id="dash-claim-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.41 13.41l7.17 7.17a2 2 0 0 0 2.83 0L22 12V2H12L3.41 10.59a2 2 0 0 0 0 2.82z"/><circle cx="16.9" cy="6.9" r="1.9" fill="currentColor" stroke="none"/></svg></span>Claim</h2>');
   html.push('<p class="bignum money" aria-hidden="true">' + money0.format(unclaimed) + '</p>');
   html.push('<p><strong>' + money2.format(unclaimed) + ' a year you are eligible for but not claiming</strong>, across ' +
     unclaimedCount + ' Queensland ' + plural(unclaimedCount, "scheme", "schemes") + ' your Pensioner Concession Card already qualifies you for.</p>');
@@ -1899,10 +1958,61 @@ renderDashboard();
 renderJobsShell();
 renderMoneyShell();
 renderClaimShell();
+/* ============================================================
+   11. ONBOARDING
+   One screen, shown the first time the app opens. No carousel, no
+   auto-advance: everything is on screen at once and one button leaves.
+   ============================================================ */
+
+const ONBOARD_KEY = "capable.onboarded";
+
+const ONBOARD_STEPS = [
+  { icon: "jobs",  title: "Job mapping",
+    text: "Work matched to what you can actually do \u2014 the hours you have and what you need from a job. Never your diagnosis." },
+  { icon: "money", title: "Financial tracker",
+    text: "Your wages, your Disability Support Pension and your NDIS plan funding in one place, on the fortnightly cycle you live on." },
+  { icon: "claim", title: "Claim",
+    text: "The Queensland entitlements your concession card already qualifies you for, and the money you are not collecting yet." }
+];
+
+function renderOnboarding() {
+  document.getElementById("ob-list").innerHTML = ONBOARD_STEPS.map(function (st) {
+    return '<li><span class="ob-ico">' + navIcon(st.icon, 24) + '</span>' +
+           '<div><h2>' + esc(st.title) + '</h2><p>' + st.text + '</p></div></li>';
+  }).join("");
+}
+
+function hasOnboarded() {
+  try { return localStorage.getItem(ONBOARD_KEY) === "1"; } catch (e) { return false; }
+}
+
+function showOnboarding(moveFocus) {
+  document.body.classList.add("onboarding-active");
+  document.getElementById("onboarding").hidden = false;
+  document.title = "Welcome \u2014 Capable";
+  window.scrollTo(0, 0);
+  if (moveFocus) document.getElementById("ob-title").focus();
+}
+
+function finishOnboarding() {
+  try { localStorage.setItem(ONBOARD_KEY, "1"); } catch (e) { /* private browsing */ }
+  document.body.classList.remove("onboarding-active");
+  document.getElementById("onboarding").hidden = true;
+  showView(state.view, true);
+}
+
+document.getElementById("ob-start").addEventListener("click", finishOnboarding);
+document.getElementById("ob-replay").addEventListener("click", function () {
+  try { localStorage.removeItem(ONBOARD_KEY); } catch (e) { /* private browsing */ }
+  showOnboarding(true);
+});
+
+renderOnboarding();
 showView("dashboard", false);
+if (!hasOnboarded()) showOnboarding(false);
 
 /* ============================================================
-   11. INSTALLABLE APP
+   12. INSTALLABLE APP
    Add to Home Screen on iOS; the native install prompt elsewhere.
    ============================================================ */
 
