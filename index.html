@@ -37,12 +37,16 @@
      ageing and dementia, so a blue-green accent is the worst available
      choice for this audience. Earth tones, matt, high luminance contrast,
      and every status still carries an icon and words as well as a hue. */
-  --bg:            #F7F1DE;   /* aged ivory — a legal pad left in the sun */
-  --bg-sunken:     #EFE7CE;
-  --surface:       #FDFAF1;   /* fresh page */
-  --surface-alt:   #F3ECD8;
-  --border:        #8A7856;   /* 3.8:1 on bg */
-  --border-strong: #756848;
+  --bg:            #FAF5E3;   /* the page — a legal pad left in the sun */
+  --bg-sunken:     #EFE7CD;
+  --surface:       #FFFCF2;   /* a sheet laid on top, barely lighter */
+  --surface-alt:   #F2EBD6;
+  /* Notion draws almost nothing. --hair is a decorative rule between blocks
+     and carries no contrast duty; --border is kept for boundaries that mean
+     something, and --border-strong for form controls, which must hit 3:1. */
+  --hair:          #E0D6BA;
+  --border:        #8A7856;
+  --border-strong: #6F6242;
 
   --text:          #2C2718;   /* sepia ink, 14.3:1 on surface */
   --text-muted:    #5C5238;
@@ -72,9 +76,11 @@
   --focus-alt:     #FFFFFF;
   --tap-highlight: rgba(138, 61, 30, .20);
 
-  --radius: 16px;
-  --radius-sm: 11px;
-  --shadow: 0 1px 2px rgba(44,39,24,.07), 0 6px 18px rgba(44,39,24,.05);
+  --radius: 10px;
+  --radius-sm: 7px;
+  /* Notion's elevation is a whisper, not a drop shadow. */
+  --shadow: none;
+  --shadow-raised: 0 1px 2px rgba(44,39,24,.06);
   --ease: 180ms cubic-bezier(.2, .7, .3, 1);
 
   --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -414,16 +420,18 @@ a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]) {
 .nav-short { display: none; }
 
 main { display: block; padding-block: clamp(1.25rem, 3vw, 2.25rem) 3rem; }
+.view > section + section { margin-top: 2rem; }
 .view-intro { max-width: var(--measure); margin-bottom: 1.5rem; }
 
 /* ---------- cards & panels ---------- */
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--hair);   /* 1px hairline, never a slab */
   border-radius: var(--radius);
-  padding: clamp(1rem, 2vw, 1.4rem);
-  box-shadow: var(--shadow);
+  padding: clamp(1rem, 2vw, 1.35rem);
+  box-shadow: var(--shadow-raised);
 }
+.card + .card { margin-top: 1.5rem; }
 .grid { display: grid; gap: 1rem; }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
@@ -471,7 +479,7 @@ main { display: block; padding-block: clamp(1.25rem, 3vw, 2.25rem) 3rem; }
   min-height: var(--tap); min-width: var(--tap);
   padding: .6rem 1.1rem;
   border-radius: var(--radius-sm);
-  border: 2px solid var(--accent);
+  border: 1px solid var(--accent);
   background: var(--accent);
   color: var(--accent-ink);
   font: inherit; font-weight: 700;
@@ -489,7 +497,7 @@ main { display: block; padding-block: clamp(1.25rem, 3vw, 2.25rem) 3rem; }
 
 /* ---------- form controls ---------- */
 fieldset {
-  border: 1px solid var(--border);
+  border: 1px solid var(--hair);
   border-radius: var(--radius-sm);
   padding: 1rem 1.1rem 1.15rem;
   margin: 0 0 1.15rem;
@@ -588,10 +596,9 @@ input[type="range"] {
 /* ---------- notes / callouts ---------- */
 .note {
   display: flex; gap: .7rem; align-items: flex-start;
-  border: 1px solid var(--border);
-  border-left-width: 6px;
+  border: 1px solid var(--hair);
   border-radius: var(--radius-sm);
-  padding: .8rem .95rem;
+  padding: .85rem 1rem;
   background: var(--surface-alt);
   margin: 0 0 1rem;
 }
@@ -653,10 +660,10 @@ input[type="range"] {
 .results.cols-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr)); align-items: start; }
 .result {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 6px solid var(--accent);
+  border: 1px solid var(--hair);
   border-radius: var(--radius);
-  padding: 1rem 1.1rem;
+  padding: 1.15rem 1.2rem;
+  box-shadow: var(--shadow-raised);
 }
 .result h3 { margin-bottom: .2rem; }
 .result-meta {
@@ -703,6 +710,18 @@ th, td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid var(--
 th { font-weight: 700; background: var(--surface-alt); }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums lining-nums; }
 tbody tr:last-child td { border-bottom: 0; }
+
+details.quiet { margin: .5rem 0 .25rem; }
+details.quiet > summary {
+  display: flex; align-items: center; gap: .4rem;
+  min-height: var(--tap);
+  padding: .35rem 0;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 1rem; font-weight: 600;
+}
+details.quiet > summary:hover { color: var(--accent); }
+details.quiet > p, details.quiet > ul { margin-top: .35rem; }
 
 details.data-table { margin-top: .9rem; }
 details.data-table > summary {
@@ -784,7 +803,7 @@ details.data-table > summary:hover { color: var(--accent-hover); }
 .site-footer p { margin: 0; }
 .footer-actions { display: flex; flex-wrap: wrap; gap: .75rem; max-width: none; }
 
-hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+hr.sep { border: 0; border-top: 1px solid var(--hair); margin: 2.5rem 0; }
 
 /* ---------- dialogs (About this app) ---------- */
 dialog {
@@ -856,17 +875,17 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 }
 .tool-btn {
   appearance: none;
-  display: inline-flex; align-items: center; gap: .45rem;
+  display: inline-flex; align-items: center; gap: .5rem;
   min-height: var(--tap);
-  padding: .45rem .85rem;
-  border: 2px solid var(--border-strong);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--text);
-  font: inherit; font-size: 1.02rem; font-weight: 700;
+  padding: .45rem .7rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit; font-size: 1rem; font-weight: 600;
   cursor: pointer;
 }
-.tool-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tool-btn:hover { background: var(--surface-alt); color: var(--text); }
 .tool-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .tool-btn svg { flex: none; width: 22px; height: 22px; }
 
@@ -2133,6 +2152,7 @@ function renderJobResults() {
       html.push('<div class="meter ' + (pct >= 100 ? "" : pct >= 60 ? "is-warn" : "is-danger") + '" aria-hidden="true"><span style="width:' + pct + '%"></span></div>');
     }
 
+    html.push('<details class="quiet"><summary>What this job is like</summary>');
     html.push('<ul class="taglist">');
     NEED_KEYS.forEach(function (k) {
       const wanted = state.capacity.needs[k];
@@ -2146,6 +2166,7 @@ function renderJobResults() {
         (wanted ? '' : ' <span class="small">(not on your list)</span>') + '</span></li>');
     });
     html.push('</ul>');
+    html.push('</details>');
 
     html.push('<dl class="figrow">');
     html.push('<div><dt>Wages a fortnight</dt><dd class="money">' + money2.format(fortnightly) + '</dd></div>');
@@ -2157,18 +2178,22 @@ function renderJobResults() {
       // Compared against what they already told the tracker, not a hypothetical
       // zero — we do not ask for the same figure twice (WCAG 2.2 SC 3.3.7).
       const diff = est.total - current.total;
-      html.push('<p class="small">' + ICON.warn + ' <strong>Above the income free area.</strong> ' +
-        money2.format(fortnightly) + ' is ' + money2.format(est.over) + ' more than the ' +
-        money2.format(RULES.incomeFreeAreaFortnight) + ' you can earn before your payment changes, so your pension drops by ' +
-        money2.format(est.reduction) + ' a fortnight. ' +
+      html.push('<p class="small">' + ICON.warn + ' <strong>' +
         (diff >= 0
-          ? 'Next to where you are now, that is <strong>' + money2.format(diff) + ' more a fortnight</strong>.'
-          : 'Next to where you are now, that is <strong>' + money2.format(Math.abs(diff)) + ' less a fortnight</strong>.') +
-        '</p>');
+          ? money2.format(diff) + ' more a fortnight than now.'
+          : money2.format(Math.abs(diff)) + ' less a fortnight than now.') +
+        '</strong></p>');
+      html.push('<details class="quiet"><summary>How that works out</summary>' +
+        '<p class="small">' + money2.format(fortnightly) + ' is ' + money2.format(est.over) +
+        ' more than the ' + money2.format(RULES.incomeFreeAreaFortnight) +
+        ' you can earn before your payment changes, so your pension drops by ' +
+        money2.format(est.reduction) + ' a fortnight. You keep the rest.</p></details>');
     } else {
-      html.push('<p class="small">' + ICON.ok + ' <strong>Under the income free area.</strong> ' +
-        money2.format(fortnightly) + ' a fortnight is below ' + money2.format(RULES.incomeFreeAreaFortnight) +
-        ', so your pension does not change at all. You keep every dollar you earn.</p>');
+      html.push('<p class="small">' + ICON.ok + ' <strong>Your pension does not change.</strong></p>');
+      html.push('<details class="quiet"><summary>How that works out</summary>' +
+        '<p class="small">' + money2.format(fortnightly) + ' a fortnight is below ' +
+        money2.format(RULES.incomeFreeAreaFortnight) +
+        ', the amount you can earn before your payment is affected. You keep every dollar you earn.</p></details>');
     }
 
     if (job.hoursPerWeek >= RULES.pccHoursThreshold) {
