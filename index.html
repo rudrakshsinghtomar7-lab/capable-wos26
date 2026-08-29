@@ -16,7 +16,7 @@
 <!-- Installable app: Add to Home Screen on iOS, Install on Android and desktop. -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FDFAF1" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#241E17" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#211E1A" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -37,44 +37,44 @@
      ageing and dementia, so a blue-green accent is the worst available
      choice for this audience. Earth tones, matt, high luminance contrast,
      and every status still carries an icon and words as well as a hue. */
-  --bg:            #FAF5E3;   /* the page — a legal pad left in the sun */
-  --bg-sunken:     #EFE7CD;
-  --surface:       #FFFCF2;   /* a sheet laid on top, barely lighter */
-  --surface-alt:   #F2EBD6;
+  --bg:            #F5F2E8;   /* the page — a legal pad left in the sun */
+  --bg-sunken:     #E7E3D5;
+  --surface:       #FCFAF5;   /* a sheet laid on top, barely lighter */
+  --surface-alt:   #ECE8DC;
   /* Notion draws almost nothing. --hair is a decorative rule between blocks
      and carries no contrast duty; --border is kept for boundaries that mean
      something, and --border-strong for form controls, which must hit 3:1. */
-  --hair:          #E0D6BA;
-  --border:        #8A7856;
-  --border-strong: #6F6242;
+  --hair:          #D7D2C3;
+  --border:        #81755F;
+  --border-strong: #675F4A;
 
-  --text:          #2C2718;   /* sepia ink, 14.3:1 on surface */
-  --text-muted:    #5C5238;
+  --text:          #29251C;   /* sepia ink, 14.3:1 on surface */
+  --text-muted:    #564F3E;
 
-  --accent:        #8C3A1B;   /* oxblood, like a red pen on a ledger */
-  --accent-hover:  #6E2C12;
+  --accent:        #78432F;   /* oxblood, like a red pen on a ledger */
+  --accent-hover:  #5E3322;
   --accent-ink:    #FFFFFF;
   --accent-soft:   #F6E3D3;
 
-  --warn:          #7A4B00;   /* ochre */
+  --warn:          #654615;   /* ochre */
   --warn-soft:     #F9E9CE;
-  --warn-border:   #8A5F16;
+  --warn-border:   #765A2A;
 
-  --danger:        #8F2118;
+  --danger:        #7A332D;
   --danger-soft:   #F9DCD7;
-  --danger-border: #B2453A;
+  --danger-border: #9D564F;
 
-  --good:          #3A5A25;   /* forest */
+  --good:          #3C512E;   /* forest */
   --good-soft:     #E6EDD5;
-  --good-border:   #536E39;
+  --good-border:   #536542;
 
-  --info:          #67375A;   /* muted plum, a nod to Acedex */
+  --info:          #5F3F56;   /* muted plum, a nod to Acedex */
   --info-soft:     #F1E1EB;
-  --info-border:   #94668A;
+  --info-border:   #8C6E85;
 
   --focus:         #1B1B1B;
   --focus-alt:     #FFFFFF;
-  --tap-highlight: rgba(138, 61, 30, .20);
+  --tap-highlight: rgba(120, 67, 47, .20);
 
   --radius: 10px;
   --radius-sm: 7px;
@@ -97,40 +97,40 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Warm dark, not cold near-black — same reasoning as the light theme. */
-    --bg:            #1A1611;
-    --bg-sunken:     #120F0B;
-    --surface:       #241E17;
-    --surface-alt:   #2E2720;
-    --border:        #877560;
-    --border-strong: #9C8B74;
+    --bg:            #181613;
+    --bg-sunken:     #100F0D;
+    --surface:       #211E1A;
+    --surface-alt:   #2B2723;
+    --border:        #807467;
+    --border-strong: #958A7B;
 
-    --text:          #F2EBE0;
-    --text-muted:    #C6B8A4;
+    --text:          #EFEAE3;
+    --text-muted:    #C0B7AA;
 
-    --accent:        #F0A17A;   /* warm apricot, 7.9:1 on --surface */
-    --accent-hover:  #F7BB9C;
-    --accent-ink:    #2A1409;
-    --accent-soft:   #3A2418;
+    --accent:        #DBA88F;   /* warm apricot, 7.9:1 on --surface */
+    --accent-hover:  #E7C0AC;
+    --accent-ink:    #26170F;
+    --accent-soft:   #322620;
 
-    --warn:          #F0C070;
-    --warn-soft:     #34260F;
-    --warn-border:   #A98040;
+    --warn:          #DABA86;
+    --warn-soft:     #2C2417;
+    --warn-border:   #977C52;
 
-    --danger:        #FF9E90;
-    --danger-soft:   #3A1712;
-    --danger-border: #B85C50;
+    --danger:        #ECADA3;
+    --danger-soft:   #311E1B;
+    --danger-border: #A66A62;
 
-    --good:          #A8CE86;
-    --good-soft:     #1E2A14;
-    --good-border:   #5F7C42;
+    --good:          #A9C193;
+    --good-soft:     #1E2519;
+    --good-border:   #5F724C;
 
-    --info:          #DDA8C8;
-    --info-soft:     #2E1F29;
-    --info-border:   #90647E;
+    --info:          #D4B1C6;
+    --info-soft:     #2B2228;
+    --info-border:   #886C7D;
 
     --focus:         #FFFFFF;
-    --focus-alt:     #1A1611;
-    --tap-highlight: rgba(240, 161, 122, .28);
+    --focus-alt:     #181613;
+    --tap-highlight: rgba(219, 168, 143, .26);
 
     --shadow: 0 1px 2px rgba(0,0,0,.5), 0 4px 14px rgba(0,0,0,.35);
   }
@@ -953,12 +953,12 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 .onboarding { max-width: 34rem; margin: 0 auto; padding: .5rem 0 2rem; }
 .ob-mark {
   position: relative; width: 76px; height: 76px; margin: 0 auto 1.15rem;
-  border-radius: 20px; background: #8C3A1B; color: #fff;
+  border-radius: 20px; background: #78432F; color: #fff;
   display: grid; place-items: center;
   font-size: 2.5rem; font-weight: 800; line-height: 1;
 }
 .ob-mark span { transform: translate(-2px, -3px); }
-.ob-mark i { position: absolute; right: 11px; top: 11px; width: 15px; height: 15px; border-radius: 50%; background: #F0A17A; }
+.ob-mark i { position: absolute; right: 11px; top: 11px; width: 15px; height: 15px; border-radius: 50%; background: #DBA88F; }
 .onboarding h1 { text-align: center; margin-bottom: .5rem; }
 .ob-lead { text-align: center; margin: 0 auto 1.75rem; color: var(--text-muted); max-width: 30rem; }
 .ob-list { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 1rem; }
