@@ -1,7 +1,7 @@
 /* Capable — offline service worker.
    The whole app is one HTML file, so the cache is tiny and precaching it
    means the app opens with no network at all once it has been installed. */
-const CACHE = "capable-v5";
+const CACHE = "capable-v4";
 const ASSETS = [
   "./",
   "./index.html",
