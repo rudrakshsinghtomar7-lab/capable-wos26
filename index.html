@@ -903,7 +903,7 @@ body::before {
   </div>
   <div class="dialog-body">
     <p><strong>Capable is a demonstration.</strong> All figures shown are estimates for one made-up demo user in Queensland. Nothing here is financial advice, and no data is sent anywhere &mdash; everything runs in your browser and is forgotten when you close the tab.</p>
-    <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight, then <span class="num">50</span> cents less payment for every dollar earned above it (single, as at 1 July 2026). Check your own situation with Services Australia, and your plan with the NDIA.</p>
+    <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight (indexed 1 July), then <span class="num">50</span> cents less payment for every dollar earned above it. Maximum single rate of <span class="num">$1,200.90</span> a fortnight (base <span class="num">$1,100.30</span> + pension supplement <span class="num">$86.50</span> + energy supplement <span class="num">$14.10</span>), indexed 20 March and 20 September &mdash; a separate cycle to the income free area. Check your own situation with Services Australia, and your plan with the NDIA.</p>
     <p>Built for WOS26. Queensland only.</p>
   </div>
 </dialog>
@@ -916,9 +916,16 @@ body::before {
    ============================================================ */
 
 const RULES = {
+  // Income free area indexes 1 July each year.
   incomeFreeAreaFortnight: 226.00,
   taperPerDollar: 0.50,
-  maxRateFortnight: 1178.70,
+  // Base rate + supplements index on a separate cycle, 20 March and 20 September.
+  // Current period effective 20 March 2026. Verify both figures against
+  // servicesaustralia.gov.au before every demo — they move independently.
+  baseRateFortnight: 1100.30,
+  pensionSupplementFortnight: 86.50,
+  energySupplementFortnight: 14.10,
+  maxRateFortnight: 1200.90,
   pccRetentionYears: 2,
   pccHoursThreshold: 30
 };
@@ -1716,6 +1723,9 @@ function renderIncomeSummary() {
   html.push('<div class="table-wrap"><table>');
   html.push('<caption>How your fortnightly payment was worked out</caption>');
   html.push('<thead><tr><th scope="col">Step</th><th class="num" scope="col">Amount</th></tr></thead><tbody>');
+  html.push('<tr><th scope="row">Base rate, single, per fortnight</th><td class="num">' + money2.format(RULES.baseRateFortnight) + '</td></tr>');
+  html.push('<tr><th scope="row">Pension supplement</th><td class="num">' + money2.format(RULES.pensionSupplementFortnight) + '</td></tr>');
+  html.push('<tr><th scope="row">Energy supplement</th><td class="num">' + money2.format(RULES.energySupplementFortnight) + '</td></tr>');
   html.push('<tr><th scope="row">Maximum pension for a single person, per fortnight</th><td class="num">' + money2.format(RULES.maxRateFortnight) + '</td></tr>');
   html.push('<tr><th scope="row">Your wages this fortnight</th><td class="num">' + money2.format(dsp.wages) + '</td></tr>');
   html.push('<tr><th scope="row">Income free area &mdash; earnings that do not count</th><td class="num">' + money2.format(RULES.incomeFreeAreaFortnight) + '</td></tr>');
