@@ -117,6 +117,9 @@
 
 /* ---------- reset-ish ---------- */
 *, *::before, *::after { box-sizing: border-box; }
+/* The UA rule [hidden]{display:none} is weaker than any author display rule,
+   so a hidden .btn (display:inline-flex) would still render. Enforce it. */
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
@@ -1877,6 +1880,10 @@ if (isIOS()) {
 let deferredPrompt = null;
 window.addEventListener("beforeinstallprompt", function (e) {
   e.preventDefault();
+  // iOS has no working prompt API. If a browser claiming to be iOS fires this
+  // anyway, keep the Share > Add to Home Screen wording rather than offering a
+  // button that cannot do anything.
+  if (isIOS()) return;
   deferredPrompt = e;
   showTip("Install Capable to open it from your home screen or dock, full screen and offline.", true);
 });
