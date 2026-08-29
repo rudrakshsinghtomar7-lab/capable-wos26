@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Capable — work, money and what you're owed</title>
+<meta name="description" content="Capable helps people with disability in Queensland find work that fits their capacity, track wages, Disability Support Pension and NDIS funding on a fortnightly cycle, and claim entitlements they are already eligible for.">
+<style>
+/* ============================================================
+   Capable — design tokens
+   Palette: deep teal + warm sand. Deliberately not default blue.
+   All pairs checked to WCAG 2.1 AA (4.5:1 body, 3:1 large/UI).
+   ============================================================ */
+:root {
+  color-scheme: light dark;
+
+  --bg:            #F6F3EC;
+  --bg-sunken:     #EDE8DE;
+  --surface:       #FFFFFF;
+  --surface-alt:   #F2EEE6;
+  --border:        #8F8674;
+  --border-strong: #6E665A;
+
+  --text:          #14211E;
+  --text-muted:    #4B5A56;
+
+  --accent:        #0C5349;   /* 8.6:1 on --surface */
+  --accent-hover:  #093F38;
+  --accent-ink:    #FFFFFF;
+  --accent-soft:   #DDECE8;
+
+  --warn:          #7A4200;   /* 6.9:1 on --surface */
+  --warn-soft:     #FBEEDC;
+  --warn-border:   #A96A1C;
+
+  --danger:        #97131B;   /* 7.6:1 on --surface */
+  --danger-soft:   #FBE7E6;
+  --danger-border: #B3363C;
+
+  --good:          #17564A;
+  --good-soft:     #DFEEE6;
+  --good-border:   #3C7C68;
+
+  --info:          #3C3372;
+  --info-soft:     #E8E5F5;
+  --info-border:   #6157A0;
+
+  --focus:         #1B1B1B;
+  --focus-alt:     #FFFFFF;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(20,33,30,.10), 0 4px 14px rgba(20,33,30,.06);
+
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-num: "SF Mono", ui-monospace, "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+  --measure: 68ch;
+  --tap: 44px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:            #0D1413;
+    --bg-sunken:     #080D0C;
+    --surface:       #16201E;
+    --surface-alt:   #1D2A27;
+    --border:        #647E77;
+    --border-strong: #8CA29D;
+
+    --text:          #ECF2F0;
+    --text-muted:    #AFC2BD;   /* 8.9:1 on --surface */
+
+    --accent:        #6FDCC6;   /* 10.4:1 on --surface */
+    --accent-hover:  #92E9D7;
+    --accent-ink:    #06231E;
+    --accent-soft:   #123430;
+
+    --warn:          #F5C077;   /* 9.5:1 on --surface */
+    --warn-soft:     #33240F;
+    --warn-border:   #B08243;
+
+    --danger:        #FF9B96;
+    --danger-soft:   #3A1512;
+    --danger-border: #B85A55;
+
+    --good:          #7FD8B7;
+    --good-soft:     #10312A;
+    --good-border:   #3F8570;
+
+    --info:          #BDB4F0;
+    --info-soft:     #211D3D;
+    --info-border:   #6A5FA8;
+
+    --focus:         #FFFFFF;
+    --focus-alt:     #0D1413;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 4px 14px rgba(0,0,0,.35);
+  }
+}
+
+/* ---------- reset-ish ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+img, svg { max-width: 100%; }
+h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 .5rem; text-wrap: balance; }
+h1 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem); letter-spacing: -.01em; }
+h2 { font-size: clamp(1.25rem, 1.05rem + .8vw, 1.55rem); letter-spacing: -.005em; }
+h3 { font-size: 1.15rem; }
+h4 { font-size: 1rem; }
+p  { margin: 0 0 .85rem; max-width: var(--measure); }
+ul, ol { margin: 0 0 .85rem; padding-left: 1.25rem; }
+a { color: var(--accent); text-underline-offset: .18em; }
+a:hover { color: var(--accent-hover); }
+
+/* ---------- focus: always visible, never removed ---------- */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.on-accent :focus-visible { outline-color: var(--focus-alt); }
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- utility ---------- */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%);
+  overflow: hidden; white-space: nowrap;
+}
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+.money {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: -.01em;
+}
+.muted { color: var(--text-muted); }
+.small { font-size: .9375rem; }
+.stack > * + * { margin-top: 1rem; }
+
+/* ---------- skip link ---------- */
+.skip-link {
+  position: absolute;
+  left: .75rem; top: -100px;
+  z-index: 100;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: .85rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: .75rem;
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* ---------- layout ---------- */
+.shell { max-width: 1180px; margin: 0 auto; padding: 0 clamp(.75rem, 2vw, 1.5rem); }
+
+.site-header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+}
+.site-header .shell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: .85rem;
+}
+.brand {
+  display: flex; align-items: center; gap: .6rem;
+  margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em;
+}
+.brand-mark {
+  width: 34px; height: 34px; flex: none;
+  border-radius: 9px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  display: grid; place-items: center;
+  font-size: 1.05rem; font-weight: 800;
+}
+.brand-tag { font-weight: 500; font-size: .9rem; color: var(--text-muted); }
+.whoami {
+  display: flex; align-items: center; gap: .6rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: .35rem .9rem .35rem .4rem;
+  font-size: .9375rem;
+}
+.avatar {
+  width: 32px; height: 32px; border-radius: 999px; flex: none;
+  background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center; font-weight: 800; font-size: .85rem;
+}
+
+/* ---------- main nav ---------- */
+.mainnav { background: var(--surface); border-bottom: 1px solid var(--border); }
+.mainnav ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .35rem;
+}
+.navbtn {
+  appearance: none;
+  display: flex; align-items: center; gap: .5rem;
+  min-height: var(--tap);
+  padding: .6rem .95rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  color: var(--text);
+  font: inherit; font-weight: 600;
+  cursor: pointer;
+}
+.navbtn:hover { background: var(--surface-alt); }
+.navbtn[aria-current="page"] {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.navbtn svg { flex: none; }
+
+main { display: block; padding-block: clamp(1.25rem, 3vw, 2.25rem) 3rem; }
+.view-intro { max-width: var(--measure); margin-bottom: 1.5rem; }
+
+/* ---------- cards & panels ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1rem, 2vw, 1.4rem);
+  box-shadow: var(--shadow);
+}
+.grid { display: grid; gap: 1rem; }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+
+.bignum {
+  display: block;
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 2.9rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--accent);
+  margin: .25rem 0 .35rem;
+}
+.midnum {
+  font-size: 1.5rem; font-weight: 800; letter-spacing: -.015em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* module cards on dashboard */
+.module-card { display: flex; flex-direction: column; gap: .35rem; }
+.module-card h2 { display: flex; align-items: center; gap: .55rem; margin-bottom: .15rem; }
+.module-card .icon-wrap {
+  width: 38px; height: 38px; flex: none; border-radius: 10px;
+  background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center;
+}
+.module-card .btn { margin-top: auto; align-self: flex-start; }
+
+/* ---------- buttons ---------- */
+.btn {
+  appearance: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: var(--tap); min-width: var(--tap);
+  padding: .6rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit; font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--accent-ink); }
+.btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.btn-secondary:hover { background: var(--accent-soft); color: var(--accent); }
+
+/* ---------- form controls ---------- */
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.1rem 1.15rem;
+  margin: 0 0 1.15rem;
+  min-width: 0;
+}
+legend { font-weight: 700; padding: 0 .4rem; font-size: 1.05rem; }
+label { display: block; font-weight: 600; margin-bottom: .3rem; }
+.hint { color: var(--text-muted); font-size: .9375rem; margin: 0 0 .45rem; }
+
+input[type="text"], input[type="number"], input[type="search"], select {
+  width: 100%;
+  min-height: var(--tap);
+  padding: .55rem .7rem;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+input[aria-invalid="true"] { border-color: var(--danger-border); background: var(--danger-soft); }
+
+input[type="range"] {
+  width: 100%;
+  min-height: var(--tap);
+  accent-color: var(--accent);
+}
+
+.check {
+  display: flex; align-items: flex-start; gap: .7rem;
+  min-height: var(--tap);
+  padding: .45rem .55rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+}
+.check:hover { background: var(--surface-alt); }
+.check input[type="checkbox"] {
+  width: 24px; height: 24px; margin: .3rem 0 0; flex: none;
+  accent-color: var(--accent);
+}
+.check span { font-weight: 600; }
+.check .check-note { display: block; font-weight: 400; color: var(--text-muted); font-size: .9375rem; }
+
+.field-error {
+  display: flex; align-items: flex-start; gap: .45rem;
+  color: var(--danger);
+  font-weight: 600;
+  margin: .45rem 0 0;
+}
+.field-error[hidden] { display: none; }
+
+/* ---------- notes / callouts ---------- */
+.note {
+  display: flex; gap: .7rem; align-items: flex-start;
+  border: 1px solid var(--border);
+  border-left-width: 6px;
+  border-radius: var(--radius-sm);
+  padding: .8rem .95rem;
+  background: var(--surface-alt);
+  margin: 0 0 1rem;
+}
+.note p:last-child { margin-bottom: 0; }
+.note svg { flex: none; margin-top: .15rem; }
+.note-warn   { background: var(--warn-soft);   border-color: var(--warn-border);   color: var(--warn); }
+.note-danger { background: var(--danger-soft); border-color: var(--danger-border); color: var(--danger); }
+.note-good   { background: var(--good-soft);   border-color: var(--good-border);   color: var(--good); }
+.note-info   { background: var(--info-soft);   border-color: var(--info-border);   color: var(--info); }
+.note strong { font-weight: 800; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: .875rem; font-weight: 700;
+  white-space: nowrap;
+}
+.badge-warn   { color: var(--warn);   background: var(--warn-soft); }
+.badge-danger { color: var(--danger); background: var(--danger-soft); }
+.badge-good   { color: var(--good);   background: var(--good-soft); }
+.badge-info   { color: var(--info);   background: var(--info-soft); }
+.badge-demo   { color: var(--text-muted); background: var(--surface-alt); border-color: var(--border-strong); }
+
+/* ---------- meters (decorative; always paired with real numbers) ---------- */
+.meter {
+  height: 14px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: .5rem 0 .35rem;
+}
+.meter > span { display: block; height: 100%; background: var(--good-border); }
+.meter.is-warn   > span { background: var(--warn-border); }
+.meter.is-danger > span { background: var(--danger-border); }
+.meter-marker { position: relative; }
+.meter-marker::after {
+  content: "";
+  position: absolute; top: -4px; bottom: -4px;
+  width: 3px; background: var(--text);
+  left: var(--marker, 50%);
+}
+
+/* ---------- lists of results ---------- */
+.results { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.result {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.result h3 { margin-bottom: .2rem; }
+.result-meta {
+  display: flex; flex-wrap: wrap; gap: .35rem .9rem;
+  color: var(--text-muted); font-size: .9375rem; margin: 0 0 .6rem;
+}
+.taglist { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0 0; padding: 0; }
+.taglist li { margin: 0; }
+.tag {
+  display: inline-flex; align-items: center; gap: .3rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: .18rem .6rem;
+  font-size: .875rem;
+  background: var(--surface-alt);
+}
+.tag-yes { color: var(--good); background: var(--good-soft); border-color: var(--good-border); font-weight: 600; }
+.tag-no  { color: var(--text-muted); }
+
+.figrow {
+  display: flex; flex-wrap: wrap; gap: .35rem 1.5rem;
+  padding: .65rem .8rem;
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+  margin: .7rem 0 .2rem;
+}
+.figrow div { min-width: 8rem; }
+.figrow dt { font-size: .875rem; color: var(--text-muted); font-weight: 600; margin: 0; }
+.figrow dd { margin: 0; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+table { border-collapse: collapse; width: 100%; min-width: 30rem; background: var(--surface); }
+caption { text-align: left; padding: .7rem .8rem; font-weight: 700; background: var(--surface-alt); border-bottom: 1px solid var(--border); }
+th, td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-weight: 700; background: var(--surface-alt); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums lining-nums; }
+tbody tr:last-child td { border-bottom: 0; }
+
+details.data-table { margin-top: .9rem; }
+details.data-table > summary {
+  min-height: var(--tap);
+  display: flex; align-items: center; gap: .4rem;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--accent);
+  padding: .5rem 0;
+}
+details.data-table > summary:hover { color: var(--accent-hover); }
+
+/* ---------- tabs (Claim) ---------- */
+.tablist {
+  display: flex; flex-wrap: wrap; gap: .35rem;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+.tab {
+  appearance: none;
+  min-height: var(--tap);
+  padding: .6rem 1rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  margin-bottom: -2px;
+  font: inherit; font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+}
+.tab:hover { background: var(--surface-alt); }
+.tab[aria-selected="true"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-bottom-color: var(--accent);
+}
+[role="tabpanel"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* ---------- scheme / offer items ---------- */
+.scheme {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.scheme-head {
+  display: flex; flex-wrap: wrap; gap: .5rem 1rem;
+  align-items: baseline; justify-content: space-between;
+}
+.scheme-value { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ext-link { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; }
+
+.site-footer {
+  background: var(--surface);
+  border-top: 2px solid var(--border);
+  padding-block: 1.5rem 2.5rem;
+  color: var(--text-muted);
+  font-size: .9375rem;
+}
+.site-footer h2 { font-size: 1rem; color: var(--text); }
+
+hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+/* 400% zoom / narrow reflow */
+@media (max-width: 30rem) {
+  body { font-size: 1.0625rem; }
+  .site-header .shell { flex-direction: column; align-items: flex-start; }
+  .figrow { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="shell">
+    <p class="brand">
+      <span class="brand-mark" aria-hidden="true">C</span>
+      <span>Capable
+        <span class="brand-tag">Work, money and what you&rsquo;re owed</span>
+      </span>
+    </p>
+    <p class="whoami">
+      <span class="avatar" aria-hidden="true">SW</span>
+      <span>Signed in as <strong>Sam Whitton</strong>, Brisbane</span>
+    </p>
+  </div>
+</header>
+
+<nav class="mainnav" aria-label="Main">
+  <div class="shell">
+    <ul>
+      <li><button type="button" class="navbtn" data-view="dashboard" aria-current="page">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="3" y="15" width="7" height="6" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/></svg>
+        Dashboard</button></li>
+      <li><button type="button" class="navbtn" data-view="jobs">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Job mapping</button></li>
+      <li><button type="button" class="navbtn" data-view="money">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18v12H3z"/><circle cx="12" cy="12" r="3"/></svg>
+        Financial tracker</button></li>
+      <li><button type="button" class="navbtn" data-view="claim">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 21V7"/><path d="M12 7S9.5 3 7.5 3A2.5 2.5 0 0 0 7.5 8"/><path d="M12 7s2.5-4 4.5-4a2.5 2.5 0 0 1 0 5"/></svg>
+        Claim</button></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main" tabindex="-1">
+  <div class="shell">
+    <div id="view-dashboard" class="view"></div>
+    <div id="view-jobs" class="view" hidden></div>
+    <div id="view-money" class="view" hidden></div>
+    <div id="view-claim" class="view" hidden></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <h2>About this app</h2>
+    <p><strong>Capable is a demonstration.</strong> All figures shown are estimates for one made-up demo user in Queensland. Nothing here is financial advice, and no data is sent anywhere &mdash; everything runs in your browser and is forgotten when you close the tab.</p>
+    <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight, then <span class="num">50</span> cents less payment for every dollar earned above it (single, as at 1 July 2026). Check your own situation with Services Australia, and your plan with the NDIA.</p>
+    <p>Built for WOS26. Queensland only.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. SEED DATA — one demo user, held in memory only.
+   ============================================================ */
+
+const RULES = {
+  // Disability Support Pension income test, single, as at 1 July 2026.
+  incomeFreeAreaFortnight: 226.00,
+  taperPerDollar: 0.50,
+  // Maximum single DSP rate per fortnight (base + pension supplement +
+  // energy supplement). Used as the starting point before the income test.
+  maxRateFortnight: 1178.70,
+  // Pensioner Concession Card is retained for up to 2 years if the payment
+  // stops because of work of 30+ hours a week or higher earnings.
+  pccRetentionYears: 2,
+  pccHoursThreshold: 30
+};
+
+const USER = {
+  name: "Sam Whitton",
+  suburb: "Woolloongabba",
+  city: "Brisbane",
+  state: "Queensland",
+  payment: "Disability Support Pension",
+  planManagement: "Self-managed NDIS plan",
+  concessionCard: "Pensioner Concession Card",
+  currentHoursPerWeek: 6,
+  currentHourlyRate: 32.50,
+  capacity: {
+    hoursPerWeek: 16,
+    needs: {
+      remote: false,
+      flexible_hours: true,
+      low_physical_demand: true,
+      quiet_environment: true,
+      public_transport_accessible: true
+    }
+  }
+};
+
+const NEED_LABELS = {
+  remote: "Work from home",
+  flexible_hours: "Flexible hours",
+  low_physical_demand: "Low physical demand",
+  quiet_environment: "Quiet environment",
+  public_transport_accessible: "Near public transport"
+};
+
+const NEED_NOTES = {
+  remote: "The job can be done from home most of the time.",
+  flexible_hours: "You can change your start and finish times, or swap shifts.",
+  low_physical_demand: "Little or no lifting, carrying or standing all day.",
+  quiet_environment: "Low noise, low interruption, calm workspace.",
+  public_transport_accessible: "Within a short walk of an accessible bus, train or ferry stop."
+};
+
+const JOBS = [
+  { id:"j1",  title:"Library Customer Service Assistant", employer:"Brisbane City Council Libraries", suburb:"Chermside",
+    hoursPerWeek:12, hourlyRate:38.40,
+    attrs:{ remote:false, flexible_hours:true, low_physical_demand:true, quiet_environment:true, public_transport_accessible:true },
+    summary:"Helping people find books, joining new members, some shelving on a trolley." },
+  { id:"j2",  title:"Data Entry Officer", employer:"Queensland Health Shared Services", suburb:"Fortitude Valley",
+    hoursPerWeek:20, hourlyRate:36.20,
+    attrs:{ remote:true, flexible_hours:true, low_physical_demand:true, quiet_environment:true, public_transport_accessible:true },
+    summary:"Entering patient transport records. Fully seated. Set your own hours between 7am and 7pm." },
+  { id:"j3",  title:"Peer Support Worker", employer:"Brook Red Mental Health", suburb:"Woolloongabba",
+    hoursPerWeek:8, hourlyRate:41.80,
+    attrs:{ remote:false, flexible_hours:true, low_physical_demand:true, quiet_environment:false, public_transport_accessible:true },
+    summary:"Lived experience role supporting people in a drop-in space. Busy and social." },
+  { id:"j4",  title:"Online Chat Support", employer:"Nexa Utilities", suburb:"Work from home (Brisbane based)",
+    hoursPerWeek:15, hourlyRate:34.50,
+    attrs:{ remote:true, flexible_hours:false, low_physical_demand:true, quiet_environment:true, public_transport_accessible:false },
+    summary:"Answering customer questions by text chat only. No phone calls. Fixed 4-hour blocks." },
+  { id:"j5",  title:"Cafe All-Rounder", employer:"The Milton Grind", suburb:"Milton",
+    hoursPerWeek:25, hourlyRate:29.60,
+    attrs:{ remote:false, flexible_hours:false, low_physical_demand:false, quiet_environment:false, public_transport_accessible:true },
+    summary:"Coffee, dishes and table service in a fast, loud cafe. On your feet the whole shift." },
+  { id:"j6",  title:"Bookkeeping Assistant", employer:"Southside Accounting Co", suburb:"Mount Gravatt",
+    hoursPerWeek:10, hourlyRate:39.00,
+    attrs:{ remote:true, flexible_hours:true, low_physical_demand:true, quiet_environment:true, public_transport_accessible:true },
+    summary:"Reconciling invoices in Xero. Two days from home, one short day in the office if you want it." },
+  { id:"j7",  title:"Warehouse Pick-Packer", employer:"Rocklea Distribution", suburb:"Rocklea",
+    hoursPerWeek:38, hourlyRate:31.20,
+    attrs:{ remote:false, flexible_hours:false, low_physical_demand:false, quiet_environment:false, public_transport_accessible:false },
+    summary:"Full-time picking and packing orders. Lifting up to 15kg. Site has no bus stop nearby." },
+  { id:"j8",  title:"Community Transport Driver", employer:"Blue Care", suburb:"Chermside",
+    hoursPerWeek:16, hourlyRate:33.90,
+    attrs:{ remote:false, flexible_hours:true, low_physical_demand:false, quiet_environment:true, public_transport_accessible:true },
+    summary:"Driving older people to appointments. Some help in and out of the vehicle." },
+  { id:"j9",  title:"Administration Officer, Records", employer:"The University of Queensland", suburb:"St Lucia",
+    hoursPerWeek:22, hourlyRate:37.75,
+    attrs:{ remote:false, flexible_hours:true, low_physical_demand:true, quiet_environment:true, public_transport_accessible:true },
+    summary:"Filing and digitising student records in a quiet basement office. Ferry stop at the door." },
+  { id:"j10", title:"Retail Assistant", employer:"Carindale Shopping Centre newsagency", suburb:"Carindale",
+    hoursPerWeek:18, hourlyRate:30.10,
+    attrs:{ remote:false, flexible_hours:true, low_physical_demand:false, quiet_environment:false, public_transport_accessible:true },
+    summary:"Serving customers, restocking magazines, some standing and reaching." },
+  { id:"j11", title:"Manual Test Analyst", employer:"Ardent Digital", suburb:"Work from home (Brisbane based)",
+    hoursPerWeek:30, hourlyRate:45.00,
+    attrs:{ remote:true, flexible_hours:true, low_physical_demand:true, quiet_environment:true, public_transport_accessible:false },
+    summary:"Testing web apps against a script and writing up what broke. Detail-focused, fully remote." },
+  { id:"j12", title:"Gardening and Grounds Assistant", employer:"Multicap", suburb:"Wacol",
+    hoursPerWeek:20, hourlyRate:32.80,
+    attrs:{ remote:false, flexible_hours:true, low_physical_demand:false, quiet_environment:true, public_transport_accessible:false },
+    summary:"Outdoor grounds work at a supported living site. Bending, kneeling, some machinery." }
+];
+
+/* --- NDIS plan.
+   Funding is flexible ACROSS CATEGORIES WITHIN a budget, never BETWEEN budgets.
+   A "stated" support can only buy the exact thing named in the plan. --- */
+const PLAN = {
+  planStart: "2026-03-01",
+  planEnd:   "2027-02-28",
+  management: "Self-managed",
+  budgets: [
+    {
+      id: "core",
+      name: "Core supports",
+      flexible: true,
+      note: "You can move funding freely between these categories, because none of them are stated supports.",
+      categories: [
+        { id:"daily",      name:"Assistance with Daily Life", allocated:18200, spent:9540, stated:false },
+        { id:"consum",     name:"Consumables",                allocated:1600,  spent:1180, stated:false },
+        { id:"social",     name:"Social and Community Participation", allocated:12400, spent:5120, stated:false },
+        { id:"transport",  name:"Transport",                  allocated:6200,  spent:4860, stated:false }
+      ]
+    },
+    {
+      id: "cb",
+      name: "Capacity Building supports",
+      flexible: true,
+      note: "Capacity Building funding is separate from Core. It can move between the categories below, but never into Core.",
+      categories: [
+        { id:"employ",     name:"Finding and Keeping a Job",  allocated:6400, spent:2880, stated:false },
+        { id:"dls",        name:"Improved Daily Living Skills", allocated:3200, spent:1760, stated:false }
+      ]
+    },
+    {
+      id: "capital",
+      name: "Capital supports",
+      flexible: false,
+      note: "This is a stated support. It can only pay for the exact item named in your plan, and it is not counted as money you are free to spend.",
+      categories: [
+        { id:"at", name:"Assistive Technology — power wheelchair repairs and replacement", allocated:7450, spent:1250, stated:true,
+          statedDetail:"Named in your plan as: power wheelchair maintenance, repair and replacement (quote required)." }
+      ]
+    }
+  ],
+  // Recent self-managed claims, newest first.
+  history: [
+    { date:"2026-08-22", categoryId:"transport", description:"Accessible taxi — hydrotherapy, Yeronga", amount:64.30 },
+    { date:"2026-08-20", categoryId:"daily",     description:"Support worker, 4 hrs weekday",           amount:271.20 },
+    { date:"2026-08-18", categoryId:"consum",    description:"Continence consumables, monthly order",   amount:96.40 },
+    { date:"2026-08-15", categoryId:"transport", description:"Accessible taxi — appointments x3",       amount:118.90 },
+    { date:"2026-08-13", categoryId:"social",    description:"Community access support, Saturday",      amount:212.60 },
+    { date:"2026-08-11", categoryId:"employ",    description:"Employment coach session",                amount:193.99 },
+    { date:"2026-08-08", categoryId:"daily",     description:"Support worker, 4 hrs weekday",           amount:271.20 },
+    { date:"2026-08-06", categoryId:"transport", description:"Accessible taxi — hydrotherapy",          amount:61.80 },
+    { date:"2026-08-04", categoryId:"dls",       description:"Occupational therapy, daily living goals", amount:193.99 },
+    { date:"2026-08-01", categoryId:"consum",    description:"Low-cost AT — jar opener and reacher",    amount:88.00 },
+    { date:"2026-07-28", categoryId:"at",        description:"Wheelchair repair — replacement castors", amount:1250.00 },
+    { date:"2026-07-25", categoryId:"social",    description:"Community access support, weekend",       amount:212.60 },
+    { date:"2026-07-22", categoryId:"transport", description:"Accessible taxi — appointments x2",       amount:79.40 },
+    { date:"2026-07-18", categoryId:"daily",     description:"Support worker, 6 hrs Saturday",          amount:474.60 }
+  ]
+};
+
+/* --- Queensland entitlements. Real schemes, real published values. --- */
+const ENTITLEMENTS = [
+  {
+    id:"e1", name:"Queensland Electricity Rebate",
+    covers:"Takes money off your household electricity bill every year, applied by your retailer.",
+    eligibility:"You hold a Pensioner Concession Card, and the account is in your name at your main home.",
+    annualValue:372.20, cashValue:true, claimed:true,
+    link:"https://www.qld.gov.au/community/cost-of-living-support/concessions/energy-concessions/electricity-rebate",
+    linkLabel:"Queensland Government electricity rebate page"
+  },
+  {
+    id:"e2", name:"Reticulated Natural Gas Rebate",
+    covers:"Takes money off your bill if your home is connected to mains natural gas.",
+    eligibility:"You hold a Pensioner Concession Card and the gas account is in your name.",
+    annualValue:84.66, cashValue:true, claimed:false,
+    link:"https://www.qld.gov.au/community/cost-of-living-support/concessions/energy-concessions/gas-rebate",
+    linkLabel:"Queensland Government gas rebate page"
+  },
+  {
+    id:"e3", name:"Pensioner Rate Subsidy Scheme",
+    covers:"Pays 20% of your council rates, up to $200 a year, if you own and live in the home.",
+    eligibility:"You hold a Pensioner Concession Card and are the owner-occupier.",
+    annualValue:200.00, cashValue:true, claimed:false,
+    link:"https://www.qld.gov.au/community/cost-of-living-support/concessions/rates-subsidy",
+    linkLabel:"Queensland Government rates subsidy page"
+  },
+  {
+    id:"e4", name:"Pensioner Water Subsidy Scheme",
+    covers:"Helps with state-supplied water charges, up to $120 a year.",
+    eligibility:"You hold a Pensioner Concession Card and are billed directly by a state water supplier.",
+    annualValue:120.00, cashValue:true, claimed:false,
+    link:"https://www.qld.gov.au/community/cost-of-living-support/concessions/water-subsidy",
+    linkLabel:"Queensland Government water subsidy page"
+  },
+  {
+    id:"e5", name:"Medical Cooling and Heating Electricity Concession Scheme",
+    covers:"An extra electricity rebate if a medical condition means you must keep your home cool or warm.",
+    eligibility:"You hold a Pensioner Concession Card and a doctor confirms a qualifying condition.",
+    annualValue:372.20, cashValue:true, claimed:false,
+    link:"https://www.qld.gov.au/community/cost-of-living-support/concessions/energy-concessions/medical-cooling-heating",
+    linkLabel:"Queensland Government medical cooling and heating page"
+  },
+  {
+    id:"e6", name:"Companion Card",
+    covers:"Your support person gets in free at cinemas, sport, transport and events across Queensland.",
+    eligibility:"You need lifelong attendant care support to take part in community activities.",
+    annualValue:null, cashValue:false, claimed:false,
+    valueNote:"Not a cash payment. It saves you a second ticket every time you go out.",
+    link:"https://www.qld.gov.au/disability/out-and-about/companion-card",
+    linkLabel:"Queensland Government Companion Card page"
+  }
+];
+
+/* --- Demo partner offers. Not real businesses. --- */
+const DISCOUNTS = [
+  { id:"d1", name:"Sunstate Pharmacy", offer:"15% off over-the-counter items", detail:"Show your Pensioner Concession Card at the counter. Excludes prescriptions." },
+  { id:"d2", name:"GreenLeaf Grocers",  offer:"10% off every Tuesday",          detail:"In store only, on shops over $30." },
+  { id:"d3", name:"Riverbend Cinemas",  offer:"$9 concession tickets, any day", detail:"Any session, any day. Companion Card accepted at the same counter." },
+  { id:"d4", name:"MoveAbout Rideshare",offer:"20% off wheelchair-accessible trips", detail:"Up to 8 trips a month within 20km of Brisbane CBD." },
+  { id:"d5", name:"Bright Optical",     offer:"Free eye test and $50 off frames", detail:"One test per year. Bulk billed where you are eligible." },
+  { id:"d6", name:"Wattle Gym",         offer:"$12 a week accessible membership", detail:"Includes hoist access, accessible change rooms and a staffed quiet hour." }
+];
+
+const CASHBACKS = [
+  { id:"c1", name:"Energy Compare AU",   offer:"$60 back when you switch retailer", detail:"Paid 45 days after your first bill on the new plan." },
+  { id:"c2", name:"CoverMate Insurance", offer:"$85 back on home contents cover",   detail:"New policies only. Paid after your first three payments." },
+  { id:"c3", name:"Telco Swap",          offer:"$45 back on a new mobile plan",     detail:"Paid as bill credit on your second invoice." },
+  { id:"c4", name:"Assistive Tech Direct", offer:"5% back on approved AT purchases", detail:"Applies to items bought with your own money, not plan funding." },
+  { id:"c5", name:"FuelSaver",           offer:"4 cents a litre back at partner servos", detail:"Up to 100 litres a month, paid monthly to your bank account." },
+  { id:"c6", name:"BankFirst",           offer:"$75 back on a new everyday account", detail:"Requires two deposits of $200 or more in the first 60 days." }
+];
+
+const TODAY = new Date("2026-08-29T00:00:00+10:00");
+
+/* ============================================================
+   2. HELPERS
+   ============================================================ */
+
+const money0 = new Intl.NumberFormat("en-AU", { style:"currency", currency:"AUD", maximumFractionDigits:0 });
+const money2 = new Intl.NumberFormat("en-AU", { style:"currency", currency:"AUD", minimumFractionDigits:2, maximumFractionDigits:2 });
+const dateFmt = new Intl.DateTimeFormat("en-AU", { day:"numeric", month:"long", year:"numeric" });
+const dateShort = new Intl.DateTimeFormat("en-AU", { day:"numeric", month:"short", year:"numeric" });
+
+function $(sel, root) { return (root || document).querySelector(sel); }
+function esc(str) {
+  return String(str).replace(/[&<>"']/g, function (c) {
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+  });
+}
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+function addDays(d, n) { const x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+function plural(n, one, many) { return n === 1 ? one : many; }
+
+const ICON = {
+  warn:  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+  alert: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5h.01"/></svg>',
+  ok:    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/></svg>',
+  info:  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg>',
+  lock:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+  ext:   '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>',
+  tick:  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg>',
+  cross: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  card:  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>'
+};
+
+/* --- Disability Support Pension income test --- */
+function dspEstimate(fortnightlyWages) {
+  const w = Math.max(0, Number(fortnightlyWages) || 0);
+  const over = Math.max(0, w - RULES.incomeFreeAreaFortnight);
+  const reduction = over * RULES.taperPerDollar;
+  const payment = Math.max(0, RULES.maxRateFortnight - reduction);
+  return {
+    wages: w,
+    aboveFreeArea: w > RULES.incomeFreeAreaFortnight,
+    over: over,
+    reduction: reduction,
+    payment: payment,
+    total: w + payment,
+    paymentStops: payment <= 0
+  };
+}
+
+/* --- NDIS plan maths --- */
+const PLAN_START = new Date(PLAN.planStart + "T00:00:00+10:00");
+const PLAN_END   = new Date(PLAN.planEnd   + "T00:00:00+10:00");
+const PLAN_DAYS_TOTAL = daysBetween(PLAN_START, PLAN_END) + 1;
+const PLAN_DAYS_ELAPSED = Math.min(PLAN_DAYS_TOTAL, Math.max(1, daysBetween(PLAN_START, TODAY)));
+const PLAN_DAYS_LEFT = PLAN_DAYS_TOTAL - PLAN_DAYS_ELAPSED;
+const PLAN_ELAPSED_PCT = PLAN_DAYS_ELAPSED / PLAN_DAYS_TOTAL;
+
+function categoryStats(cat) {
+  const left = cat.allocated - cat.spent;
+  const usedPct = cat.allocated > 0 ? cat.spent / cat.allocated : 0;
+  const perDay = cat.spent / PLAN_DAYS_ELAPSED;
+  const daysOfMoneyLeft = perDay > 0 ? left / perDay : Infinity;
+  const runsOutDate = isFinite(daysOfMoneyLeft) ? addDays(TODAY, Math.floor(daysOfMoneyLeft)) : null;
+  const runsOutEarly = isFinite(daysOfMoneyLeft) && daysOfMoneyLeft < PLAN_DAYS_LEFT;
+  const shortfallDays = runsOutEarly ? Math.round(PLAN_DAYS_LEFT - daysOfMoneyLeft) : 0;
+
+  let status = "ok";
+  if (runsOutEarly && shortfallDays >= 60) status = "danger";
+  else if (runsOutEarly) status = "warn";
+
+  return { left, usedPct, perDay, perFortnight: perDay * 14, daysOfMoneyLeft, runsOutDate, runsOutEarly, shortfallDays, status };
+}
+
+function planTotals() {
+  let allocated = 0, spent = 0, left = 0, spendableLeft = 0, statedLeft = 0;
+  PLAN.budgets.forEach(function (b) {
+    b.categories.forEach(function (c) {
+      const s = categoryStats(c);
+      allocated += c.allocated; spent += c.spent; left += s.left;
+      if (c.stated) statedLeft += s.left; else spendableLeft += s.left;
+    });
+  });
+  return { allocated, spent, left, spendableLeft, statedLeft };
+}
+
+function planAlerts() {
+  const out = [];
+  PLAN.budgets.forEach(function (b) {
+    b.categories.forEach(function (c) {
+      const s = categoryStats(c);
+      if (s.runsOutEarly) out.push({ budget: b, cat: c, stats: s });
+    });
+  });
+  return out.sort(function (a, b) { return b.stats.shortfallDays - a.stats.shortfallDays; });
+}
+
+/* --- Claim maths --- */
+function unclaimedCashTotal() {
+  return ENTITLEMENTS
+    .filter(function (e) { return !e.claimed && e.cashValue; })
+    .reduce(function (t, e) { return t + e.annualValue; }, 0);
+}
+
+/* --- Job matching --- */
+const NEED_KEYS = Object.keys(NEED_LABELS);
+
+function matchJob(job, capacity) {
+  const selected = NEED_KEYS.filter(function (k) { return capacity.needs[k]; });
+  const met = selected.filter(function (k) { return job.attrs[k]; });
+  return {
+    withinHours: job.hoursPerWeek <= capacity.hoursPerWeek,
+    selectedCount: selected.length,
+    metCount: met.length,
+    metKeys: met,
+    unmetKeys: selected.filter(function (k) { return !job.attrs[k]; }),
+    meetsAll: selected.length > 0 && met.length === selected.length
+  };
+}
+
+function matchedJobs(capacity, strictOnly) {
+  return JOBS
+    .map(function (job) { return { job: job, m: matchJob(job, capacity) }; })
+    .filter(function (r) { return r.m.withinHours && (!strictOnly || r.m.meetsAll); })
+    .sort(function (a, b) {
+      if (b.m.metCount !== a.m.metCount) return b.m.metCount - a.m.metCount;
+      const ea = a.job.hoursPerWeek * a.job.hourlyRate;
+      const eb = b.job.hoursPerWeek * b.job.hourlyRate;
+      return eb - ea;
+    });
+}
+
+/* ============================================================
+   3. APP STATE
+   ============================================================ */
+
+const state = {
+  view: "dashboard",
+  capacity: {
+    hoursPerWeek: USER.capacity.hoursPerWeek,
+    needs: Object.assign({}, USER.capacity.needs)
+  },
+  strictOnly: false,
+  fortnightlyWages: USER.currentHoursPerWeek * USER.currentHourlyRate * 2,
+  wagesInputValue: String((USER.currentHoursPerWeek * USER.currentHourlyRate * 2).toFixed(2)),
+  wagesError: null,
+  claimTab: "entitlements"
+};
+
+/* ============================================================
+   4. SHARED FRAGMENTS
+   ============================================================ */
+
+function estimateOnlyNote() {
+  return '<p class="small muted">' + ICON.info +
+    ' <strong>Estimate only, not financial advice.</strong> Based on the Disability Support Pension income test for a single person as at 1 July 2026: the first ' +
+    money2.format(RULES.incomeFreeAreaFortnight) + ' you earn each fortnight does not change your payment, then your payment drops by 50 cents for every extra dollar. Services Australia works out your real payment.</p>';
+}
+
+function pccReassurance() {
+  return '<div class="note note-good">' + ICON.card +
+    '<div><p><strong>You would keep your Pensioner Concession Card.</strong> If your payment stops because you are working ' +
+    RULES.pccHoursThreshold + ' hours a week or more, or earning too much, you keep the Pensioner Concession Card for up to ' +
+    RULES.pccRetentionYears + ' years. Your electricity rebate, transport concession and other card-based entitlements carry on during that time.</p>' +
+    '<p class="small">Taking on more hours does not mean losing everything at once.</p></div></div>';
+}
+
+/* ============================================================
+   5. VIEW: DASHBOARD
+   ============================================================ */
+
+function renderDashboard() {
+  const jobs = matchedJobs(state.capacity, state.strictOnly);
+  const totals = planTotals();
+  const unclaimed = unclaimedCashTotal();
+  const unclaimedCount = ENTITLEMENTS.filter(function (e) { return !e.claimed; }).length;
+  const dsp = dspEstimate(state.fortnightlyWages);
+  const alerts = planAlerts();
+
+  const html = [];
+  html.push('<div class="view-intro">');
+  html.push('<h1>Good morning, ' + esc(USER.name.split(" ")[0]) + '</h1>');
+  html.push('<p>Here is where your work, your money and your entitlements sit today, ' + dateFmt.format(TODAY) + '. Everything is shown per fortnight, because that is how your payment and your pay actually arrive.</p>');
+  html.push('</div>');
+
+  html.push('<div class="grid grid-3" role="group" aria-label="Your three summaries">');
+
+  // Card 1 — jobs
+  html.push('<section class="card module-card" aria-labelledby="dash-jobs-h">');
+  html.push('<h2 id="dash-jobs-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>Job mapping</h2>');
+  html.push('<p class="bignum" aria-hidden="true">' + jobs.length + '</p>');
+  html.push('<p><strong>' + jobs.length + ' ' + plural(jobs.length, "job matches", "jobs match") + ' your profile</strong> right now &mdash; that is work you can do in ' +
+    state.capacity.hoursPerWeek + ' hours a week or less, ranked by how well it fits your needs.</p>');
+  html.push('<p class="small muted">Matched on what you can do, not on your diagnosis.</p>');
+  html.push('<button type="button" class="btn" data-goto="jobs">See matching jobs</button>');
+  html.push('</section>');
+
+  // Card 2 — money
+  html.push('<section class="card module-card" aria-labelledby="dash-money-h">');
+  html.push('<h2 id="dash-money-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18v12H3z"/><circle cx="12" cy="12" r="3"/></svg></span>Financial tracker</h2>');
+  html.push('<p class="bignum money" aria-hidden="true">' + money0.format(totals.spendableLeft) + '</p>');
+  html.push('<p><strong>' + money2.format(totals.spendableLeft) + ' of NDIS funding left to spend</strong>, with ' +
+    PLAN_DAYS_LEFT + ' days to go in your plan.</p>');
+  html.push('<p class="small muted">A further ' + money2.format(totals.statedLeft) + ' sits in a stated support and can only buy the item named in your plan, so it is not counted here.</p>');
+  if (alerts.length) {
+    html.push('<p class="small"><span class="badge badge-' + (alerts[0].stats.status === "danger" ? "danger" : "warn") + '">' +
+      ICON.warn + ' ' + alerts.length + ' ' + plural(alerts.length, "category", "categories") + ' running out early</span></p>');
+  }
+  html.push('<button type="button" class="btn" data-goto="money">Open the tracker</button>');
+  html.push('</section>');
+
+  // Card 3 — claim
+  html.push('<section class="card module-card" aria-labelledby="dash-claim-h">');
+  html.push('<h2 id="dash-claim-h"><span class="icon-wrap" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 21V7"/></svg></span>Claim</h2>');
+  html.push('<p class="bignum money" aria-hidden="true">' + money0.format(unclaimed) + '</p>');
+  html.push('<p><strong>' + money2.format(unclaimed) + ' a year you are eligible for but not claiming</strong>, across ' +
+    unclaimedCount + ' Queensland ' + plural(unclaimedCount, "scheme", "schemes") + ' your Pensioner Concession Card already qualifies you for.</p>');
+  html.push('<p class="small muted">Plus a Companion Card, which is free entry for your support person rather than a cash amount.</p>');
+  html.push('<button type="button" class="btn" data-goto="claim">See what you can claim</button>');
+  html.push('</section>');
+
+  html.push('</div>');
+
+  // This fortnight
+  html.push('<hr class="sep">');
+  html.push('<section class="card" aria-labelledby="dash-fortnight-h">');
+  html.push('<h2 id="dash-fortnight-h">This fortnight</h2>');
+  html.push('<p>You are working ' + USER.currentHoursPerWeek + ' hours a week casual at ' + money2.format(USER.currentHourlyRate) + ' an hour.</p>');
+  html.push('<dl class="figrow" aria-label="Your fortnightly income">');
+  html.push('<div><dt>Wages</dt><dd class="money">' + money2.format(dsp.wages) + '</dd></div>');
+  html.push('<div><dt>Disability Support Pension</dt><dd class="money">' + money2.format(dsp.payment) + '</dd></div>');
+  html.push('<div><dt>Total for the fortnight</dt><dd class="money">' + money2.format(dsp.total) + '</dd></div>');
+  html.push('</dl>');
+  html.push(estimateOnlyNote());
+  html.push('<p><button type="button" class="btn btn-secondary" data-goto="money">Break this down</button></p>');
+  html.push('</section>');
+
+  $("#view-dashboard").innerHTML = html.join("");
+}
+
+/* ============================================================
+   6. VIEW: JOB MAPPING
+   ============================================================ */
+
+function renderJobsShell() {
+  const c = state.capacity;
+  const html = [];
+
+  html.push('<div class="view-intro">');
+  html.push('<h1>Job mapping</h1>');
+  html.push('<p>Tell us what you can do and we will show the work that fits. We never ask for your diagnosis. Change anything below and the list updates straight away.</p>');
+  html.push('</div>');
+
+  html.push('<div class="grid grid-2">');
+
+  // --- capacity profile ---
+  html.push('<section class="card" aria-labelledby="cap-h">');
+  html.push('<h2 id="cap-h">Your capacity profile</h2>');
+  html.push('<form id="capacity-form" novalidate>');
+
+  html.push('<fieldset>');
+  html.push('<legend>Hours you can work</legend>');
+  html.push('<label for="hours">Hours available per week</label>');
+  html.push('<p class="hint" id="hours-hint">Use the slider, or the arrow keys, to set anything from 2 to 38 hours. We only show jobs at or under this number.</p>');
+  html.push('<input type="range" id="hours" name="hours" min="2" max="38" step="1" value="' + c.hoursPerWeek + '" aria-describedby="hours-hint">');
+  html.push('<p class="midnum" id="hours-value"><span class="num">' + c.hoursPerWeek + '</span> hours a week</p>');
+  html.push('</fieldset>');
+
+  html.push('<fieldset>');
+  html.push('<legend>What you need from a job</legend>');
+  html.push('<p class="hint" id="needs-hint">Tick everything that matters to you. Jobs are ranked by how many of these they meet.</p>');
+  NEED_KEYS.forEach(function (k) {
+    html.push('<label class="check" for="need-' + k + '">');
+    html.push('<input type="checkbox" id="need-' + k + '" name="need" value="' + k + '" ' + (c.needs[k] ? "checked" : "") + ' aria-describedby="need-' + k + '-note">');
+    html.push('<span>' + esc(NEED_LABELS[k]) + '<span class="check-note" id="need-' + k + '-note">' + esc(NEED_NOTES[k]) + '</span></span>');
+    html.push('</label>');
+  });
+  html.push('</fieldset>');
+
+  html.push('<fieldset>');
+  html.push('<legend>How strict should we be?</legend>');
+  html.push('<label class="check" for="strict">');
+  html.push('<input type="checkbox" id="strict" ' + (state.strictOnly ? "checked" : "") + ' aria-describedby="strict-note">');
+  html.push('<span>Only show jobs that meet every need I ticked<span class="check-note" id="strict-note">Leave this off to also see jobs that meet most of your needs.</span></span>');
+  html.push('</label>');
+  html.push('</fieldset>');
+
+  html.push('</form>');
+  html.push('</section>');
+
+  // --- results ---
+  html.push('<section aria-labelledby="results-h">');
+  html.push('<h2 id="results-h">Jobs that fit</h2>');
+  html.push('<div aria-live="polite" aria-atomic="true" id="jobs-count-live"></div>');
+  html.push('<div id="jobs-results"></div>');
+  html.push('</section>');
+
+  html.push('</div>');
+
+  $("#view-jobs").innerHTML = html.join("");
+
+  // wire up
+  const hours = $("#hours");
+  hours.addEventListener("input", function () {
+    state.capacity.hoursPerWeek = Number(hours.value);
+    $("#hours-value").innerHTML = '<span class="num">' + state.capacity.hoursPerWeek + '</span> hours a week';
+    renderJobResults();
+    renderDashboard();
+  });
+  NEED_KEYS.forEach(function (k) {
+    $("#need-" + k).addEventListener("change", function (e) {
+      state.capacity.needs[k] = e.target.checked;
+      renderJobResults();
+      renderDashboard();
+    });
+  });
+  $("#strict").addEventListener("change", function (e) {
+    state.strictOnly = e.target.checked;
+    renderJobResults();
+    renderDashboard();
+  });
+
+  renderJobResults();
+}
+
+function renderJobResults() {
+  const results = matchedJobs(state.capacity, state.strictOnly);
+  const selectedCount = NEED_KEYS.filter(function (k) { return state.capacity.needs[k]; }).length;
+  const anyLongHours = results.some(function (r) { return r.job.hoursPerWeek >= RULES.pccHoursThreshold; });
+
+  // Live count announcement.
+  $("#jobs-count-live").innerHTML =
+    '<p class="midnum" style="margin-bottom:.4rem">' +
+    (results.length === 0
+      ? "No jobs match your profile yet"
+      : results.length + " " + plural(results.length, "job matches", "jobs match") + " your profile") +
+    '</p>' +
+    '<p class="small muted">Up to ' + state.capacity.hoursPerWeek + ' hours a week' +
+    (selectedCount ? ', with ' + selectedCount + ' ' + plural(selectedCount, "need", "needs") + ' ticked' : ', with no needs ticked') +
+    (state.strictOnly ? ', showing only jobs that meet every need.' : ', ranked by best fit.') + '</p>';
+
+  const html = [];
+
+  if (results.length === 0) {
+    html.push('<div class="note note-info">' + ICON.info +
+      '<div><p><strong>Nothing matches yet.</strong> Try one of these:</p><ul>' +
+      '<li>Raise your hours a week &mdash; the shortest job on our list is 8 hours.</li>' +
+      '<li>Turn off <em>Only show jobs that meet every need I ticked</em>.</li>' +
+      '<li>Untick one need to see jobs that meet most of what you asked for.</li>' +
+      '</ul></div></div>');
+  }
+
+  if (anyLongHours) html.push(pccReassurance());
+
+  html.push('<ul class="results">');
+  results.forEach(function (r) {
+    const job = r.job, m = r.m;
+    const fortnightly = job.hoursPerWeek * job.hourlyRate * 2;
+    const est = dspEstimate(fortnightly);
+    const matchWords = selectedCount === 0
+      ? "You have not ticked any needs yet"
+      : "Matches " + m.metCount + " of your " + selectedCount + " " + plural(selectedCount, "need", "needs");
+    const pct = selectedCount ? Math.round((m.metCount / selectedCount) * 100) : 0;
+
+    html.push('<li class="result">');
+    html.push('<h3>' + esc(job.title) + '</h3>');
+    html.push('<p class="result-meta">');
+    html.push('<span>' + esc(job.employer) + '</span>');
+    html.push('<span>' + esc(job.suburb) + '</span>');
+    html.push('<span><span class="num">' + job.hoursPerWeek + '</span> hrs a week</span>');
+    html.push('<span class="money">' + money2.format(job.hourlyRate) + ' an hour</span>');
+    html.push('</p>');
+    html.push('<p>' + esc(job.summary) + '</p>');
+
+    html.push('<p><strong>' + matchWords + '.</strong>' +
+      (m.meetsAll && selectedCount ? ' <span class="badge badge-good">' + ICON.tick + ' Meets everything you asked for</span>' : '') + '</p>');
+    if (selectedCount) {
+      html.push('<div class="meter ' + (pct >= 100 ? "" : pct >= 60 ? "is-warn" : "is-danger") + '" aria-hidden="true"><span style="width:' + pct + '%"></span></div>');
+    }
+
+    html.push('<ul class="taglist">');
+    NEED_KEYS.forEach(function (k) {
+      const wanted = state.capacity.needs[k];
+      const has = job.attrs[k];
+      if (!wanted && !has) return;
+      const cls = has ? "tag tag-yes" : "tag tag-no";
+      const mark = has ? ICON.tick : ICON.cross;
+      const word = has ? "Yes" : "No";
+      html.push('<li><span class="' + cls + '">' + mark +
+        '<span class="visually-hidden">' + word + ': </span>' + esc(NEED_LABELS[k]) +
+        (wanted ? '' : ' <span class="small">(not on your list)</span>') + '</span></li>');
+    });
+    html.push('</ul>');
+
+    html.push('<dl class="figrow">');
+    html.push('<div><dt>Wages a fortnight</dt><dd class="money">' + money2.format(fortnightly) + '</dd></div>');
+    html.push('<div><dt>Estimated pension</dt><dd class="money">' + money2.format(est.payment) + '</dd></div>');
+    html.push('<div><dt>Total a fortnight</dt><dd class="money">' + money2.format(est.total) + '</dd></div>');
+    html.push('</dl>');
+
+    if (est.aboveFreeArea) {
+      html.push('<p class="small">' + ICON.warn + ' <strong>Above the income free area.</strong> ' +
+        money2.format(fortnightly) + ' is ' + money2.format(est.over) + ' more than the ' +
+        money2.format(RULES.incomeFreeAreaFortnight) + ' you can earn before your payment changes, so your pension drops by ' +
+        money2.format(est.reduction) + ' a fortnight. You are still ' +
+        money2.format(est.total - dspEstimate(0).payment) + ' a fortnight better off than not working.</p>');
+    } else {
+      html.push('<p class="small">' + ICON.ok + ' <strong>Under the income free area.</strong> ' +
+        money2.format(fortnightly) + ' a fortnight is below ' + money2.format(RULES.incomeFreeAreaFortnight) +
+        ', so your pension does not change at all. You keep every dollar you earn.</p>');
+    }
+
+    if (job.hoursPerWeek >= RULES.pccHoursThreshold) {
+      html.push('<p class="small"><span class="badge badge-info">' + ICON.card + ' ' + job.hoursPerWeek +
+        ' hours a week &mdash; concession card kept for up to 2 years</span></p>');
+    }
+
+    html.push('</li>');
+  });
+  html.push('</ul>');
+
+  if (results.length) {
+    html.push('<details class="data-table"><summary>Show these ' + results.length + ' jobs as a table</summary>');
+    html.push('<div class="table-wrap"><table>');
+    html.push('<caption>Jobs matching your profile, best fit first</caption>');
+    html.push('<thead><tr><th scope="col">Job</th><th scope="col">Suburb</th><th class="num" scope="col">Hours a week</th><th class="num" scope="col">Rate</th><th class="num" scope="col">Wages a fortnight</th><th scope="col">Needs met</th></tr></thead><tbody>');
+    results.forEach(function (r) {
+      const f = r.job.hoursPerWeek * r.job.hourlyRate * 2;
+      html.push('<tr><th scope="row">' + esc(r.job.title) + '<span class="muted small"><br>' + esc(r.job.employer) + '</span></th>' +
+        '<td>' + esc(r.job.suburb) + '</td>' +
+        '<td class="num">' + r.job.hoursPerWeek + '</td>' +
+        '<td class="num">' + money2.format(r.job.hourlyRate) + '</td>' +
+        '<td class="num">' + money2.format(f) + '</td>' +
+        '<td>' + (selectedCount ? r.m.metCount + " of " + selectedCount : "No needs ticked") + '</td></tr>');
+    });
+    html.push('</tbody></table></div></details>');
+  }
+
+  html.push(estimateOnlyNote());
+
+  $("#jobs-results").innerHTML = html.join("");
+}
+
+/* ============================================================
+   7. VIEW: FINANCIAL TRACKER
+   ============================================================ */
+
+function renderMoneyShell() {
+  const html = [];
+
+  html.push('<div class="view-intro">');
+  html.push('<h1>Financial tracker</h1>');
+  html.push('<p>Your wages, your Disability Support Pension and your NDIS plan funding, all on the fortnightly cycle you actually live on. Plan year runs ' +
+    dateFmt.format(PLAN_START) + ' to ' + dateFmt.format(PLAN_END) + '.</p>');
+  html.push('</div>');
+
+  html.push('<section class="card" aria-labelledby="income-h" style="margin-bottom:1.5rem">');
+  html.push('<h2 id="income-h">Money coming in this fortnight</h2>');
+  html.push('<form id="wages-form" novalidate>');
+  html.push('<fieldset>');
+  html.push('<legend>Your wages</legend>');
+  html.push('<label for="wages">Wages you were paid this fortnight, before tax</label>');
+  html.push('<p class="hint" id="wages-hint">Enter a number in dollars, like 390. Include every casual shift paid in the last 14 days.</p>');
+  html.push('<input type="text" id="wages" name="wages" inputmode="decimal" autocomplete="off" value="' + esc(state.wagesInputValue) +
+    '" aria-describedby="wages-hint wages-error" style="max-width:16rem">');
+  html.push('<p class="field-error" id="wages-error" hidden></p>');
+  html.push('</fieldset>');
+  html.push('</form>');
+  html.push('<div id="income-summary" aria-live="polite" aria-atomic="true"></div>');
+  html.push(estimateOnlyNote());
+  html.push('</section>');
+
+  html.push('<section aria-labelledby="plan-h">');
+  html.push('<h2 id="plan-h">Your NDIS plan</h2>');
+  html.push('<div id="plan-summary" aria-live="polite" aria-atomic="true"></div>');
+  html.push('<div id="plan-body"></div>');
+  html.push('</section>');
+
+  $("#view-money").innerHTML = html.join("");
+
+  const wages = $("#wages");
+  wages.addEventListener("input", function () {
+    validateWages(wages.value);
+    renderIncomeSummary();
+    renderDashboard();
+  });
+
+  renderIncomeSummary();
+  renderPlan();
+}
+
+function validateWages(raw) {
+  const input = $("#wages");
+  const errEl = $("#wages-error");
+  state.wagesInputValue = raw;
+
+  const cleaned = String(raw).trim().replace(/^\$/, "").replace(/,/g, "");
+  let error = null;
+
+  if (cleaned === "") {
+    error = "Enter your wages for this fortnight as a number, like 390. If you were not paid, enter 0.";
+  } else if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) {
+    error = "Enter your wages as a number only, like 390 or 390.50. Do not use letters or spaces.";
+  } else if (Number(cleaned) > 20000) {
+    error = "That is higher than we can work with. Enter your wages for one fortnight, like 390.";
+  }
+
+  if (error) {
+    state.wagesError = error;
+    input.setAttribute("aria-invalid", "true");
+    errEl.innerHTML = ICON.alert + " <span>" + esc(error) + "</span>";
+    errEl.hidden = false;
+  } else {
+    state.wagesError = null;
+    state.fortnightlyWages = Number(cleaned);
+    input.setAttribute("aria-invalid", "false");
+    errEl.hidden = true;
+    errEl.textContent = "";
+  }
+}
+
+function renderIncomeSummary() {
+  const dsp = dspEstimate(state.fortnightlyWages);
+  const base = dspEstimate(0).payment;
+  const html = [];
+
+  if (state.wagesError) {
+    html.push('<div class="note note-danger">' + ICON.alert +
+      '<div><p><strong>We cannot work out your income yet.</strong> ' + esc(state.wagesError) +
+      '</p><p class="small">The figures below still show your last valid amount, ' + money2.format(dsp.wages) + '.</p></div></div>');
+  }
+
+  html.push('<dl class="figrow" style="margin-top:.4rem">');
+  html.push('<div><dt>Wages</dt><dd class="money">' + money2.format(dsp.wages) + '</dd></div>');
+  html.push('<div><dt>Disability Support Pension</dt><dd class="money">' + money2.format(dsp.payment) + '</dd></div>');
+  html.push('<div><dt>Total this fortnight</dt><dd class="money">' + money2.format(dsp.total) + '</dd></div>');
+  html.push('<div><dt>Same amount a year</dt><dd class="money">' + money0.format(dsp.total * 26) + '</dd></div>');
+  html.push('</dl>');
+
+  if (!dsp.aboveFreeArea) {
+    html.push('<div class="note note-good">' + ICON.ok +
+      '<div><p><strong>Your pension is not affected.</strong> You earned ' + money2.format(dsp.wages) +
+      ', which is under the ' + money2.format(RULES.incomeFreeAreaFortnight) +
+      ' income free area. You keep your full payment of ' + money2.format(dsp.payment) + ' and every dollar of your wages.</p>' +
+      '<p class="small">You could earn another ' + money2.format(RULES.incomeFreeAreaFortnight - dsp.wages) +
+      ' this fortnight before your payment changes.</p></div></div>');
+  } else if (dsp.paymentStops) {
+    html.push('<div class="note note-warn">' + ICON.warn +
+      '<div><p><strong>Your pension would stop at this level of earnings.</strong> ' + money2.format(dsp.wages) +
+      ' a fortnight reduces the payment past zero.</p></div></div>');
+    html.push(pccReassurance());
+  } else {
+    html.push('<div class="note note-warn">' + ICON.warn +
+      '<div><p><strong>Your pension is reduced, and you are still better off.</strong> You earned ' +
+      money2.format(dsp.over) + ' more than the ' + money2.format(RULES.incomeFreeAreaFortnight) +
+      ' income free area, so your payment drops by 50 cents in the dollar &mdash; ' + money2.format(dsp.reduction) + ' less.</p>' +
+      '<p>Not working at all you would get ' + money2.format(base) + '. Working, you have ' + money2.format(dsp.total) +
+      '. That is <strong>' + money2.format(dsp.total - base) + ' more a fortnight</strong>.</p></div></div>');
+  }
+
+  html.push('<details class="data-table"><summary>Show the income test working, step by step</summary>');
+  html.push('<div class="table-wrap"><table>');
+  html.push('<caption>How your fortnightly payment was worked out</caption>');
+  html.push('<thead><tr><th scope="col">Step</th><th class="num" scope="col">Amount</th></tr></thead><tbody>');
+  html.push('<tr><th scope="row">Maximum pension for a single person, per fortnight</th><td class="num">' + money2.format(RULES.maxRateFortnight) + '</td></tr>');
+  html.push('<tr><th scope="row">Your wages this fortnight</th><td class="num">' + money2.format(dsp.wages) + '</td></tr>');
+  html.push('<tr><th scope="row">Income free area &mdash; earnings that do not count</th><td class="num">' + money2.format(RULES.incomeFreeAreaFortnight) + '</td></tr>');
+  html.push('<tr><th scope="row">Earnings above the free area</th><td class="num">' + money2.format(dsp.over) + '</td></tr>');
+  html.push('<tr><th scope="row">Reduction, at 50 cents per dollar</th><td class="num">&minus;' + money2.format(dsp.reduction) + '</td></tr>');
+  html.push('<tr><th scope="row">Pension paid to you</th><td class="num">' + money2.format(dsp.payment) + '</td></tr>');
+  html.push('<tr><th scope="row">Wages plus pension</th><td class="num">' + money2.format(dsp.total) + '</td></tr>');
+  html.push('</tbody></table></div></details>');
+
+  $("#income-summary").innerHTML = html.join("");
+}
+
+function renderPlan() {
+  const totals = planTotals();
+  const alerts = planAlerts();
+
+  // --- live summary ---
+  const sum = [];
+  sum.push('<div class="card" style="margin-bottom:1.25rem">');
+  sum.push('<h3>Where your plan stands</h3>');
+  sum.push('<p>You are <strong>' + Math.round(PLAN_ELAPSED_PCT * 100) + '% of the way</strong> through the plan year &mdash; day ' +
+    PLAN_DAYS_ELAPSED + ' of ' + PLAN_DAYS_TOTAL + ', with ' + PLAN_DAYS_LEFT + ' days left.</p>');
+  sum.push('<dl class="figrow">');
+  sum.push('<div><dt>Funded in total</dt><dd class="money">' + money2.format(totals.allocated) + '</dd></div>');
+  sum.push('<div><dt>Spent so far</dt><dd class="money">' + money2.format(totals.spent) + '</dd></div>');
+  sum.push('<div><dt>Free to spend</dt><dd class="money">' + money2.format(totals.spendableLeft) + '</dd></div>');
+  sum.push('<div><dt>Locked in a stated support</dt><dd class="money">' + money2.format(totals.statedLeft) + '</dd></div>');
+  sum.push('</dl>');
+  sum.push('<p class="small muted">' + ICON.lock + ' The ' + money2.format(totals.statedLeft) +
+    ' stated amount is deliberately left out of &ldquo;free to spend&rdquo;. It can only buy the item named in your plan.</p>');
+  sum.push('</div>');
+
+  if (alerts.length) {
+    sum.push('<div class="note note-' + (alerts[0].stats.status === "danger" ? "danger" : "warn") + '">' + ICON.warn);
+    sum.push('<div><p><strong>' + alerts.length + ' ' + plural(alerts.length, "category is", "categories are") +
+      ' on track to run out before ' + dateFmt.format(PLAN_END) + '.</strong></p><ul>');
+    alerts.forEach(function (a) {
+      sum.push('<li><strong>' + esc(a.cat.name) + '</strong> &mdash; ' + money2.format(a.stats.left) +
+        ' left, spending about ' + money2.format(a.stats.perFortnight) + ' a fortnight. At that rate the money runs out around <strong>' +
+        dateShort.format(a.stats.runsOutDate) + '</strong>, roughly ' + a.stats.shortfallDays + ' days early.</li>');
+    });
+    sum.push('</ul></div></div>');
+  } else {
+    sum.push('<div class="note note-good">' + ICON.ok +
+      '<div><p><strong>Every category is on track to last the plan year.</strong></p></div></div>');
+  }
+
+  $("#plan-summary").innerHTML = sum.join("");
+
+  // --- budgets ---
+  const html = [];
+
+  html.push('<div class="note note-info">' + ICON.info +
+    '<div><p><strong>How the three budgets work.</strong> Within one budget you can usually move funding between categories. You can <em>never</em> move funding from one budget to another &mdash; Core money cannot pay for a Capacity Building support, and neither can touch Capital.</p></div></div>');
+
+  PLAN.budgets.forEach(function (budget) {
+    const bAlloc = budget.categories.reduce(function (t, c) { return t + c.allocated; }, 0);
+    const bSpent = budget.categories.reduce(function (t, c) { return t + c.spent; }, 0);
+    const bLeft = bAlloc - bSpent;
+    const hasStated = budget.categories.some(function (c) { return c.stated; });
+
+    html.push('<section class="card" style="margin-bottom:1.25rem" aria-labelledby="b-' + budget.id + '-h">');
+    html.push('<h3 id="b-' + budget.id + '-h">' + esc(budget.name) +
+      (hasStated ? ' <span class="badge badge-info">' + ICON.lock + ' Stated support</span>' : '') + '</h3>');
+    html.push('<p>' + money2.format(bSpent) + ' spent of ' + money2.format(bAlloc) + '. <strong>' +
+      money2.format(bLeft) + ' left in this budget' + (hasStated ? ', locked to the item named in your plan' : '') + '.</strong></p>');
+    html.push('<p class="small muted">' + esc(budget.note) + '</p>');
+
+    budget.categories.forEach(function (cat) {
+      const s = categoryStats(cat);
+      const pct = Math.round(s.usedPct * 100);
+      const meterClass = s.status === "danger" ? "is-danger" : s.status === "warn" ? "is-warn" : "";
+
+      html.push('<div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">');
+      html.push('<h4>' + esc(cat.name) +
+        (cat.stated ? ' <span class="badge badge-info">' + ICON.lock + ' Stated &mdash; not free to spend</span>' : '') + '</h4>');
+
+      html.push('<p><strong class="money">' + money2.format(s.left) + ' left</strong> of ' + money2.format(cat.allocated) +
+        '. You have used <span class="num">' + pct + '%</span> of this category, and you are <span class="num">' +
+        Math.round(PLAN_ELAPSED_PCT * 100) + '%</span> of the way through the plan year.</p>');
+
+      html.push('<div class="meter ' + meterClass + ' meter-marker" style="--marker:' + (PLAN_ELAPSED_PCT * 100).toFixed(1) + '%" aria-hidden="true"><span style="width:' + Math.min(100, pct) + '%"></span></div>');
+      html.push('<p class="small muted" aria-hidden="true">Bar shows funding used. The vertical line shows how far through the plan year you are.</p>');
+
+      if (cat.stated) {
+        html.push('<div class="note note-info" style="margin-top:.6rem">' + ICON.lock +
+          '<div><p><strong>This is a stated support.</strong> ' + esc(cat.statedDetail) +
+          ' It cannot be spent on anything else, and it is not included in your &ldquo;free to spend&rdquo; total.</p></div></div>');
+      } else if (s.status === "danger") {
+        html.push('<div class="note note-danger" style="margin-top:.6rem">' + ICON.warn +
+          '<div><p><strong>Running low: ' + money2.format(s.left) + ' left in ' + esc(cat.name) + '.</strong> ' +
+          'You are spending about ' + money2.format(s.perFortnight) + ' a fortnight. At that rate this runs out around <strong>' +
+          dateShort.format(s.runsOutDate) + '</strong> &mdash; about ' + s.shortfallDays + ' days before your plan ends.</p>' +
+          '<p class="small">Because this sits in ' + esc(budget.name) + ', you can move funding across from another category in the same budget.</p></div></div>');
+      } else if (s.status === "warn") {
+        html.push('<div class="note note-warn" style="margin-top:.6rem">' + ICON.warn +
+          '<div><p><strong>Watch this one: ' + money2.format(s.left) + ' left in ' + esc(cat.name) + '.</strong> ' +
+          'At about ' + money2.format(s.perFortnight) + ' a fortnight it runs out around <strong>' +
+          dateShort.format(s.runsOutDate) + '</strong>, roughly ' + s.shortfallDays + ' days before the plan ends.</p></div></div>');
+      } else {
+        html.push('<div class="note note-good" style="margin-top:.6rem">' + ICON.ok +
+          '<div><p><strong>On track.</strong> At about ' + money2.format(s.perFortnight) +
+          ' a fortnight, this lasts the rest of the plan year.</p></div></div>');
+      }
+      html.push('</div>');
+    });
+
+    // table alternative for this budget
+    html.push('<details class="data-table"><summary>Show ' + esc(budget.name) + ' as a table</summary>');
+    html.push('<div class="table-wrap"><table>');
+    html.push('<caption>' + esc(budget.name) + ' &mdash; funding, spending and how long it will last</caption>');
+    html.push('<thead><tr><th scope="col">Category</th><th class="num" scope="col">Funded</th><th class="num" scope="col">Spent</th><th class="num" scope="col">Left</th><th class="num" scope="col">Used</th><th class="num" scope="col">Spending a fortnight</th><th scope="col">Runs out</th><th scope="col">Stated?</th></tr></thead><tbody>');
+    budget.categories.forEach(function (cat) {
+      const s = categoryStats(cat);
+      html.push('<tr><th scope="row">' + esc(cat.name) + '</th>' +
+        '<td class="num">' + money2.format(cat.allocated) + '</td>' +
+        '<td class="num">' + money2.format(cat.spent) + '</td>' +
+        '<td class="num">' + money2.format(s.left) + '</td>' +
+        '<td class="num">' + Math.round(s.usedPct * 100) + '%</td>' +
+        '<td class="num">' + money2.format(s.perFortnight) + '</td>' +
+        '<td>' + (s.runsOutDate ? dateShort.format(s.runsOutDate) + (s.runsOutEarly ? " (early)" : " (after plan ends)") : "Nothing spent yet") + '</td>' +
+        '<td>' + (cat.stated ? "Yes — locked" : "No — flexible") + '</td></tr>');
+    });
+    html.push('</tbody></table></div></details>');
+    html.push('</section>');
+  });
+
+  // spending history
+  html.push('<section class="card" aria-labelledby="hist-h">');
+  html.push('<h3 id="hist-h">Recent claims you have made</h3>');
+  html.push('<p class="small muted">Your last ' + PLAN.history.length + ' self-managed claims, newest first.</p>');
+  html.push('<div class="table-wrap"><table>');
+  html.push('<caption>Recent NDIS spending</caption>');
+  html.push('<thead><tr><th scope="col">Date</th><th scope="col">What it was for</th><th scope="col">Category</th><th class="num" scope="col">Amount</th></tr></thead><tbody>');
+  PLAN.history.forEach(function (h) {
+    let catName = h.categoryId, budgetName = "";
+    PLAN.budgets.forEach(function (b) {
+      b.categories.forEach(function (c) { if (c.id === h.categoryId) { catName = c.name; budgetName = b.name; } });
+    });
+    html.push('<tr><td>' + dateShort.format(new Date(h.date + "T00:00:00+10:00")) + '</td>' +
+      '<td>' + esc(h.description) + '</td>' +
+      '<td>' + esc(catName) + '<span class="muted small"><br>' + esc(budgetName) + '</span></td>' +
+      '<td class="num">' + money2.format(h.amount) + '</td></tr>');
+  });
+  html.push('</tbody></table></div>');
+  html.push('</section>');
+
+  $("#plan-body").innerHTML = html.join("");
+}
+
+/* ============================================================
+   8. VIEW: CLAIM
+   ============================================================ */
+
+const CLAIM_TABS = [
+  { id: "entitlements", label: "Entitlements" },
+  { id: "discounts",    label: "Discounts" },
+  { id: "cashbacks",    label: "Cashbacks" }
+];
+
+function renderClaimShell() {
+  const html = [];
+
+  html.push('<div class="view-intro">');
+  html.push('<h1>Claim</h1>');
+  html.push('<p>Money you are already entitled to but have not collected. Your Pensioner Concession Card is the key to most of it.</p>');
+  html.push('</div>');
+
+  html.push('<div class="tablist" role="tablist" aria-label="What you can claim">');
+  CLAIM_TABS.forEach(function (t) {
+    const sel = state.claimTab === t.id;
+    html.push('<button type="button" class="tab" role="tab" id="tab-' + t.id + '" aria-controls="panel-' + t.id +
+      '" aria-selected="' + sel + '" tabindex="' + (sel ? "0" : "-1") + '">' + t.label + '</button>');
+  });
+  html.push('</div>');
+
+  CLAIM_TABS.forEach(function (t) {
+    html.push('<div role="tabpanel" id="panel-' + t.id + '" aria-labelledby="tab-' + t.id + '" tabindex="0"' +
+      (state.claimTab === t.id ? "" : " hidden") + '>' + claimPanelHtml(t.id) + '</div>');
+  });
+
+  $("#view-claim").innerHTML = html.join("");
+
+  const tabs = Array.prototype.slice.call(document.querySelectorAll('#view-claim [role="tab"]'));
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener("click", function () { selectClaimTab(tab.id.replace("tab-", ""), true); });
+    tab.addEventListener("keydown", function (e) {
+      let next = null;
+      if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+      else if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+      else if (e.key === "Home") next = tabs[0];
+      else if (e.key === "End") next = tabs[tabs.length - 1];
+      if (next) {
+        e.preventDefault();
+        selectClaimTab(next.id.replace("tab-", ""), true);
+      }
+    });
+  });
+}
+
+function selectClaimTab(id, focusTab) {
+  state.claimTab = id;
+  CLAIM_TABS.forEach(function (t) {
+    const tab = document.getElementById("tab-" + t.id);
+    const panel = document.getElementById("panel-" + t.id);
+    const sel = t.id === id;
+    tab.setAttribute("aria-selected", String(sel));
+    tab.tabIndex = sel ? 0 : -1;
+    panel.hidden = !sel;
+  });
+  if (focusTab) document.getElementById("tab-" + id).focus();
+}
+
+function claimPanelHtml(id) {
+  if (id === "entitlements") return entitlementsHtml();
+  if (id === "discounts") return offersHtml(DISCOUNTS, "discount");
+  return offersHtml(CASHBACKS, "cashback");
+}
+
+function entitlementsHtml() {
+  const unclaimed = ENTITLEMENTS.filter(function (e) { return !e.claimed; });
+  const unclaimedCash = unclaimed.filter(function (e) { return e.cashValue; });
+  const total = unclaimedCashTotal();
+  const html = [];
+
+  html.push('<section class="card" style="margin-bottom:1.5rem" aria-labelledby="ent-total-h">');
+  html.push('<h2 id="ent-total-h">Government entitlements you are not claiming</h2>');
+  html.push('<p class="bignum money" aria-hidden="true">' + money0.format(total) + '</p>');
+  html.push('<div aria-live="polite" aria-atomic="true">');
+  html.push('<p><strong>' + money2.format(total) + ' a year</strong> across ' + unclaimedCash.length +
+    ' Queensland ' + plural(unclaimedCash.length, "scheme", "schemes") + ' you are eligible for and have not claimed. ' +
+    'That is about <strong>' + money2.format(total / 26) + ' a fortnight</strong>.</p>');
+  html.push('</div>');
+  html.push('<p class="small muted">' + ICON.info +
+    ' These are real Queensland Government schemes. Values are the published annual amounts and can change each July. Each one has its own form &mdash; most take about ten minutes.</p>');
+  html.push('</section>');
+
+  html.push('<h2>Every scheme, and where you stand</h2>');
+  html.push('<ul class="results">');
+
+  ENTITLEMENTS.slice().sort(function (a, b) {
+    if (a.claimed !== b.claimed) return a.claimed ? 1 : -1;
+    return (b.annualValue || 0) - (a.annualValue || 0);
+  }).forEach(function (e) {
+    html.push('<li class="result" style="border-left-color:' + (e.claimed ? "var(--good-border)" : "var(--warn-border)") + '">');
+    html.push('<div class="scheme-head">');
+    html.push('<h3 style="margin:0">' + esc(e.name) + '</h3>');
+    html.push('<p class="scheme-value money" style="margin:0">' +
+      (e.cashValue ? "Up to " + money2.format(e.annualValue) + " a year" : "No cash value") + '</p>');
+    html.push('</div>');
+
+    html.push('<p style="margin-top:.5rem">' +
+      (e.claimed
+        ? '<span class="badge badge-good">' + ICON.tick + ' Already claimed</span>'
+        : '<span class="badge badge-warn">' + ICON.warn + ' Not claimed yet</span>') + '</p>');
+
+    html.push('<p><strong>What it covers.</strong> ' + esc(e.covers) + '</p>');
+    html.push('<p><strong>Who can get it.</strong> ' + esc(e.eligibility) + '</p>');
+    if (e.valueNote) html.push('<p class="small muted">' + esc(e.valueNote) + '</p>');
+
+    html.push('<p><a class="ext-link" href="' + esc(e.link) + '" target="_blank" rel="noopener noreferrer">' +
+      (e.claimed ? "Check your " + esc(e.name) : "Claim the " + esc(e.name)) + ' on qld.gov.au ' + ICON.ext +
+      '<span class="visually-hidden"> (' + esc(e.linkLabel) + ', opens in a new tab)</span></a>');
+    html.push('<br><span class="small muted">Goes to the Queensland Government website. Opens in a new tab.</span></p>');
+    html.push('</li>');
+  });
+  html.push('</ul>');
+
+  html.push('<details class="data-table"><summary>Show all entitlements as a table</summary>');
+  html.push('<div class="table-wrap"><table>');
+  html.push('<caption>Queensland entitlements, their value and your status</caption>');
+  html.push('<thead><tr><th scope="col">Scheme</th><th class="num" scope="col">Value a year</th><th scope="col">Status</th><th scope="col">Based on</th></tr></thead><tbody>');
+  ENTITLEMENTS.forEach(function (e) {
+    html.push('<tr><th scope="row">' + esc(e.name) + '</th>' +
+      '<td class="num">' + (e.cashValue ? money2.format(e.annualValue) : "No cash value") + '</td>' +
+      '<td>' + (e.claimed ? "Already claimed" : "Not claimed yet") + '</td>' +
+      '<td>' + esc(e.eligibility) + '</td></tr>');
+  });
+  html.push('<tr><th scope="row">Total not claimed</th><td class="num">' + money2.format(total) + '</td><td></td><td></td></tr>');
+  html.push('</tbody></table></div></details>');
+
+  return html.join("");
+}
+
+function offersHtml(list, kind) {
+  const isCashback = kind === "cashback";
+  const html = [];
+
+  html.push('<div class="note note-info">' + ICON.info +
+    '<div><p><strong>Demo partner data.</strong> The ' + (isCashback ? "cashback offers" : "discounts") +
+    ' below are made up for this demonstration. The businesses are not real and nothing here can be redeemed. Government entitlements, on the <em>Entitlements</em> tab, are real schemes.</p></div></div>');
+
+  html.push('<h2>' + (isCashback ? "Cashbacks" : "Discounts") + ' for concession card holders</h2>');
+  html.push('<p>' + (isCashback
+    ? "Money paid back to you after you buy or switch. Always check the offer still runs before you sign up to anything."
+    : "Money off at the counter when you show your Pensioner Concession Card.") + '</p>');
+
+  html.push('<ul class="results">');
+  list.forEach(function (o) {
+    html.push('<li class="result" style="border-left-color:var(--border-strong)">');
+    html.push('<div class="scheme-head">');
+    html.push('<h3 style="margin:0">' + esc(o.name) + '</h3>');
+    html.push('<p style="margin:0"><span class="badge badge-demo">Demo partner</span></p>');
+    html.push('</div>');
+    html.push('<p class="midnum" style="margin:.4rem 0">' + esc(o.offer) + '</p>');
+    html.push('<p>' + esc(o.detail) + '</p>');
+    html.push('</li>');
+  });
+  html.push('</ul>');
+
+  html.push('<details class="data-table"><summary>Show these ' + list.length + ' offers as a table</summary>');
+  html.push('<div class="table-wrap"><table>');
+  html.push('<caption>' + (isCashback ? "Cashback" : "Discount") + ' offers (demo partner data)</caption>');
+  html.push('<thead><tr><th scope="col">Partner</th><th scope="col">Offer</th><th scope="col">Conditions</th></tr></thead><tbody>');
+  list.forEach(function (o) {
+    html.push('<tr><th scope="row">' + esc(o.name) + '</th><td>' + esc(o.offer) + '</td><td>' + esc(o.detail) + '</td></tr>');
+  });
+  html.push('</tbody></table></div></details>');
+
+  return html.join("");
+}
+
+/* ============================================================
+   9. NAVIGATION
+   ============================================================ */
+
+const VIEW_TITLES = {
+  dashboard: "Dashboard",
+  jobs: "Job mapping",
+  money: "Financial tracker",
+  claim: "Claim"
+};
+
+function showView(name, moveFocus) {
+  state.view = name;
+
+  ["dashboard", "jobs", "money", "claim"].forEach(function (v) {
+    document.getElementById("view-" + v).hidden = (v !== name);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".navbtn"), function (b) {
+    if (b.dataset.view === name) b.setAttribute("aria-current", "page");
+    else b.removeAttribute("aria-current");
+  });
+
+  document.title = VIEW_TITLES[name] + " — Capable";
+
+  if (moveFocus) {
+    const h1 = document.querySelector("#view-" + name + " h1");
+    const target = h1 || document.getElementById("main");
+    if (target) {
+      if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+      target.focus();
+    }
+    window.scrollTo(0, 0);
+  }
+}
+
+document.addEventListener("click", function (e) {
+  const nav = e.target.closest(".navbtn");
+  if (nav) { showView(nav.dataset.view, true); return; }
+  const goto = e.target.closest("[data-goto]");
+  if (goto) { showView(goto.dataset.goto, true); }
+});
+
+/* ============================================================
+   10. START
+   ============================================================ */
+
+renderDashboard();
+renderJobsShell();
+renderMoneyShell();
+renderClaimShell();
+showView("dashboard", false);
+</script>
+</body>
+</html>
