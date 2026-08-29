@@ -776,6 +776,29 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 .dialog-body { padding: .75rem 1.4rem 1.4rem; }
 .dialog-body p:last-child { margin-bottom: 0; }
 
+/* ---------- talk to Capable ---------- */
+.voice-panel {
+  background: var(--accent-soft);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem 1.15rem;
+  margin: 0 0 1.5rem;
+}
+.vp-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.vp-title { margin: 0; font-size: 1.05rem; }
+.vp-said {
+  font-size: 1.25rem; font-weight: 700; line-height: 1.45;
+  margin: .75rem 0 0; max-width: none;
+}
+.vp-heard { margin: .5rem 0 0; color: var(--text-muted); font-style: italic; max-width: none; }
+.vp-heard:empty { display: none; }
+.vp-hint { margin: .9rem 0 .5rem; color: var(--text-muted); font-size: 1rem; }
+.vp-options { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+.vp-listening .vp-title::after {
+  content: " — listening";
+  font-weight: 600; color: var(--accent);
+}
+
 /* ---------- employer accessibility reviews, inline on each job ---------- */
 .job-review {
   margin-top: 1rem;
@@ -1104,6 +1127,22 @@ body::before {
         <button type="button" class="btn btn-secondary btn-sm" id="install-dismiss">Dismiss</button>
       </div>
     </div>
+
+    <section class="voice-panel" id="voice-panel" aria-labelledby="voice-title" hidden>
+      <div class="vp-head">
+        <p class="vp-title" id="voice-title"><strong>Talking to Capable</strong></p>
+        <button type="button" class="btn btn-secondary" id="voice-stop">Stop</button>
+      </div>
+      <p class="vp-said" id="voice-said" role="status"></p>
+      <p class="vp-heard" id="voice-heard"></p>
+      <p class="vp-hint" id="voice-hint">You can say it, or tap one of these.</p>
+      <ul class="vp-options">
+        <li><button type="button" class="btn btn-secondary" data-ask="jobs">Jobs for me</button></li>
+        <li><button type="button" class="btn btn-secondary" data-ask="money">My money</button></li>
+        <li><button type="button" class="btn btn-secondary" data-ask="claim">What I can claim</button></li>
+        <li><button type="button" class="btn btn-secondary" data-ask="help">Who to call</button></li>
+      </ul>
+    </section>
 
     <div id="view-easyread" class="view" hidden></div>
 
@@ -1700,6 +1739,9 @@ function jargon(plain, official) {
 /* The same three tools at the top of every view, in the same order. */
 function viewToolsHtml() {
   return '<ul class="view-tools">' +
+    '<li><button type="button" class="tool-btn" data-tool="ask">' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>' +
+      'Ask Capable</button></li>' +
     '<li><button type="button" class="tool-btn" data-tool="speak">' +
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M17 9.5a3.5 3.5 0 0 1 0 5"/><path d="M19.5 7a7 7 0 0 1 0 10"/></svg>' +
       '<span data-speak-label>Read this to me</span></button></li>' +
@@ -3056,6 +3098,156 @@ document.addEventListener("click", function (e) {
   if (tool === "speak") toggleSpeak(btn);
   else if (tool === "share") shareView(btn);
   else if (tool === "awake") toggleAwake(btn);
+  else if (tool === "ask") startConversation();
+});
+
+/* ============================================================
+   TALK TO CAPABLE
+   Capable greets you, asks what you want, listens, then answers and takes
+   you there.
+
+   Two rules this is built around:
+   - Speaking is never required. Plenty of people who need this app most
+     have a speech disability, or are in a room where they cannot talk.
+     Every step has buttons that do exactly the same thing.
+   - Everything spoken is also written on screen, for anyone who is deaf or
+     hard of hearing, and so you can see it heard you correctly.
+   ============================================================ */
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let conversing = false;
+
+/* Pure, so it can be tested without a microphone. Scores each topic by how
+   many of its words it hears, rather than matching one keyword, because
+   people phrase this a dozen ways. */
+const ASK_TOPICS = {
+  jobs:  ["job", "jobs", "work", "working", "hours", "employment", "employer", "shift", "career"],
+  money: ["money", "pay", "paid", "wage", "wages", "pension", "payment", "centrelink", "ndis",
+          "plan", "budget", "funding", "income", "afford", "spend"],
+  claim: ["claim", "claiming", "entitlement", "entitlements", "rebate", "rebates", "owed", "owe",
+          "discount", "concession", "card", "free", "get more"],
+  help:  ["help", "call", "phone", "ring", "number", "contact", "talk to someone", "wrong", "stuck"]
+};
+
+function matchTopic(said) {
+  const t = (said || "").toLowerCase();
+  let best = null, bestScore = 0;
+  Object.keys(ASK_TOPICS).forEach(function (topic) {
+    let score = 0;
+    ASK_TOPICS[topic].forEach(function (w) {
+      if (new RegExp("\\b" + w.replace(/ /g, "\\s+"), "i").test(t)) score++;
+    });
+    if (score > bestScore) { bestScore = score; best = topic; }
+  });
+  return bestScore > 0 ? best : null;
+}
+
+const ASK_REPLIES = {
+  jobs:  "OK. Here are the jobs that fit you.",
+  money: "OK. Here is your money.",
+  claim: "OK. Here is what you can claim.",
+  help:  "OK. Here is who to call."
+};
+
+function vpSay(text) {
+  document.getElementById("voice-said").textContent = text;
+}
+function vpHeard(text) {
+  document.getElementById("voice-heard").textContent = text ? "You said: " + text : "";
+}
+function vpListening(on) {
+  document.getElementById("voice-panel").classList.toggle("vp-listening", !!on);
+  document.getElementById("voice-hint").textContent = on
+    ? "Listening. Say it, or tap one of these."
+    : "You can say it, or tap one of these.";
+}
+
+function endConversation() {
+  conversing = false;
+  vpListening(false);
+  if (recognition) { try { recognition.abort(); } catch (e) { /* already stopped */ } }
+  stopSpeaking();
+  document.getElementById("voice-panel").hidden = true;
+}
+
+function listen() {
+  if (!SR) {
+    // No recognition here (notably older iOS). The buttons still do everything.
+    document.getElementById("voice-hint").textContent =
+      "This browser cannot listen. Tap one of these instead.";
+    return;
+  }
+  recognition = new SR();
+  recognition.lang = "en-AU";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 3;
+  recognition.onstart = function () { vpListening(true); };
+  recognition.onend = function () { vpListening(false); };
+  recognition.onerror = function (ev) {
+    vpListening(false);
+    if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
+      vpSay("I cannot use the microphone. You can tap a button instead.");
+    } else if (ev.error === "no-speech") {
+      vpSay("I did not hear anything. Try again, or tap a button.");
+    }
+  };
+  recognition.onresult = function (ev) {
+    const said = ev.results[0][0].transcript;
+    vpHeard(said);
+    const topic = matchTopic(said);
+    if (!topic) {
+      const miss = "Sorry, I did not catch that. You can tap one of the buttons.";
+      vpSay(miss);
+      speakQueue(miss, function () {});
+      return;
+    }
+    answerTopic(topic);
+  };
+  try { recognition.start(); } catch (e) { /* already running */ }
+}
+
+function answerTopic(topic) {
+  if (recognition) { try { recognition.abort(); } catch (e) { /* fine */ } }
+  vpListening(false);
+  const reply = ASK_REPLIES[topic];
+  vpSay(reply);
+
+  if (topic === "help") {
+    const d = document.getElementById("help-dialog");
+    if (d && typeof d.showModal === "function") d.showModal();
+    speakQueue(reply + " Services Australia, on 13 27 17. The N D I S, on 1800 800 110.", function () {});
+    return;
+  }
+
+  showView(topic, false);
+  // Say the short reply first, then read that screen's summary.
+  speakQueue(reply, function () {
+    speakQueue(spokenSummary(), function () {});
+  });
+}
+
+function startConversation() {
+  if (conversing) { endConversation(); return; }
+  conversing = true;
+  const panel = document.getElementById("voice-panel");
+  panel.hidden = false;
+  const greeting = "Welcome Sam. What do you want to know?";
+  vpSay(greeting);
+  vpHeard("");
+  window.scrollTo(0, 0);
+  document.getElementById("voice-stop").focus();
+  // Listen only after the greeting finishes, or it hears itself.
+  speakQueue(greeting, function () { if (conversing) listen(); });
+}
+
+document.getElementById("voice-stop").addEventListener("click", endConversation);
+document.addEventListener("click", function (e) {
+  const b = e.target.closest("[data-ask]");
+  if (b) answerTopic(b.dataset.ask);
+});
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" && conversing) endConversation();
 });
 
 /* ============================================================
