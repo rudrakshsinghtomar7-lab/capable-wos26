@@ -122,13 +122,35 @@
 [hidden] { display: none !important; }
 /* Safari inflates text in landscape unless this is pinned, which quietly
    breaks the type scale. Both spellings: Safari still needs the prefix. */
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-size: 17px;   /* baseline everywhere; the whole scale is rem off this */
+}
+
+/* ---------- iOS Dynamic Type ----------
+   font: -apple-system-body makes the root font follow the reader's own
+   Larger Text setting, so someone who has already told their phone they need
+   big text opens the app and finds it correct — nothing to discover, nothing
+   to pinch. Because the type scale is all rem, everything follows.
+
+   Scoped to coarse pointers on purpose: on macOS Safari -apple-system-body
+   resolves to about 13px, which would shrink the desktop app instead.
+   Declared after font-size so browsers that reject the shorthand keep 17px;
+   font-family and line-height are restored because the shorthand resets them. */
+@media (pointer: coarse) {
+  html {
+    font: -apple-system-body;
+    font-family: var(--font);
+    line-height: 1.6;
+  }
+}
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
-  font-size: 1.0625rem;
+  font-size: 1rem;   /* root is 17px, or the reader's Dynamic Type size */
   line-height: 1.6;
   overflow-wrap: break-word;
   -webkit-tap-highlight-color: transparent;
@@ -432,7 +454,7 @@ input[type="text"], input[type="number"], input[type="search"], input[type="tel"
      focused, and does not zoom back out — stranding the user inside a form
      they can only see part of. A 16px floor is the fix; disabling zoom is not
      (that would fail WCAG 1.4.4). max() so Dynamic Type can still scale up. */
-  font-size: max(1.0625rem, 16px);
+  font-size: max(1rem, 16px);
   font-variant-numeric: tabular-nums;
   color: var(--text);
   background: var(--surface);
@@ -446,6 +468,19 @@ input[type="range"] {
   min-height: var(--tap);
   accent-color: var(--accent);
 }
+
+/* Typed + stepped alternative to the slider (WCAG 2.5.7). The gap is
+   deliberate: adjacent targets need space, not just size (2.5.8). */
+.stepper { display: flex; align-items: stretch; gap: .5rem; margin-bottom: .75rem; }
+.stepper input[type="number"] { max-width: 7rem; text-align: center; font-weight: 700; }
+.step-btn {
+  flex: none;
+  min-width: 3rem;
+  font-size: 1.4rem; font-weight: 800; line-height: 1;
+  padding: .5rem .75rem;
+}
+.step-btn:disabled { opacity: .45; cursor: not-allowed; }
+.step-btn:disabled:hover { background: transparent; color: var(--accent); }
 
 .check {
   display: flex; align-items: flex-start; gap: .7rem;
@@ -495,7 +530,9 @@ input[type="range"] {
   border-radius: 999px;
   border: 1px solid currentColor;
   font-size: .875rem; font-weight: 700;
-  white-space: nowrap;
+  /* Deliberately NOT nowrap: at large Dynamic Type sizes a badge that refuses
+     to wrap pushes the whole page sideways. Wrapping is the lesser evil. */
+  max-width: 100%;
 }
 .badge-warn   { color: var(--warn);   background: var(--warn-soft); }
 .badge-danger { color: var(--danger); background: var(--danger-soft); }
@@ -530,7 +567,9 @@ input[type="range"] {
 }
 
 /* ---------- lists of results ---------- */
-.results { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+/* minmax(0, 1fr): grid items default to min-width:auto and so refuse to shrink
+   below their content, which pushes the page sideways at large text sizes. */
+.results { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
 .results.cols-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr)); align-items: start; }
 .results.cols-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr)); align-items: start; }
 .result {
@@ -565,7 +604,8 @@ input[type="range"] {
   border-radius: var(--radius-sm);
   margin: .7rem 0 .2rem;
 }
-.figrow div { min-width: 8rem; }
+/* min() so the column floor collapses instead of overflowing at large text. */
+.figrow div { min-width: min(8rem, 100%); }
 .figrow dt { font-size: .875rem; color: var(--text-muted); font-weight: 600; margin: 0; }
 .figrow dd { margin: 0; font-weight: 800; font-variant-numeric: tabular-nums; }
 
@@ -648,7 +688,7 @@ details.data-table > summary:hover { color: var(--accent-hover); }
   display: flex; flex-wrap: wrap; gap: .5rem 1rem;
   align-items: baseline; justify-content: space-between;
 }
-.scheme-value { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scheme-value { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; }
 .ext-link { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; }
 
 .site-footer {
@@ -660,6 +700,7 @@ details.data-table > summary:hover { color: var(--accent-hover); }
 }
 .site-footer .shell { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .6rem .9rem; }
 .site-footer p { margin: 0; }
+.footer-actions { display: flex; flex-wrap: wrap; gap: .75rem; max-width: none; }
 
 hr.sep { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 
@@ -919,6 +960,15 @@ body::before {
     <p><strong>Capable is a demonstration.</strong> All figures shown are estimates for one made-up demo user in Queensland. Nothing here is financial advice, and no data is sent anywhere &mdash; everything runs in your browser and is forgotten when you close the tab.</p>
     <p>Payment rules used: Disability Support Pension income free area of <span class="num">$226.00</span> per fortnight, then <span class="num">50</span> cents less payment for every dollar earned above it (single, as at 1 July 2026). Check your own situation with Services Australia, and your plan with the NDIA.</p>
     <p>Built for WOS26. Queensland only.</p>
+
+    <h3>Your saved answers</h3>
+    <p>Capable remembers the hours, needs and wages you enter, so putting your
+      phone down does not cost you the form. It is kept on this device only.</p>
+    <p class="footer-actions">
+      <button type="button" class="btn btn-secondary" id="clear-data">Clear saved answers</button>
+      <button type="button" class="btn btn-secondary" id="undo-clear" hidden>Undo clearing</button>
+    </p>
+    <p class="small" id="clear-status" role="status"></p>
   </div>
 </dialog>
 
@@ -1430,11 +1480,26 @@ function renderJobsShell() {
   html.push('<h2 id="cap-h">Your capacity profile</h2>');
   html.push('<form id="capacity-form" novalidate>');
 
+  // Three ways to set the same number. Dragging is impossible with a head
+  // pointer or a switch, and hard with a tremor, so the slider is never the
+  // only route: there is a typed field and a pair of step buttons beside it.
   html.push('<fieldset>');
   html.push('<legend>Hours you can work</legend>');
-  html.push('<label for="hours">Hours available per week</label>');
-  html.push('<p class="hint" id="hours-hint">Use the slider, or the arrow keys, to set anything from 2 to 38 hours. We only show jobs at or under this number.</p>');
-  html.push('<input type="range" id="hours" name="hours" min="2" max="38" step="1" value="' + c.hoursPerWeek + '" aria-describedby="hours-hint">');
+  html.push('<label for="hours-number">Hours available per week</label>');
+  html.push('<p class="hint" id="hours-hint">Anything from 2 to 38 hours. Type it, use the minus and plus buttons, or drag the slider &mdash; whichever suits you. We only show jobs at or under this number.</p>');
+  html.push('<div class="stepper">');
+  html.push('<button type="button" class="btn btn-secondary step-btn" id="hours-down"' +
+    (c.hoursPerWeek <= 2 ? ' disabled' : '') + '>' +
+    '<span aria-hidden="true">&minus;</span><span class="visually-hidden">One hour less</span></button>');
+  html.push('<input type="number" id="hours-number" name="hours-number" inputmode="numeric" enterkeyhint="done" ' +
+    'min="2" max="38" step="1" value="' + c.hoursPerWeek + '" aria-describedby="hours-hint hours-error">');
+  html.push('<button type="button" class="btn btn-secondary step-btn" id="hours-up"' +
+    (c.hoursPerWeek >= 38 ? ' disabled' : '') + '>' +
+    '<span aria-hidden="true">+</span><span class="visually-hidden">One hour more</span></button>');
+  html.push('</div>');
+  html.push('<p class="field-error" id="hours-error" hidden></p>');
+  html.push('<input type="range" id="hours" name="hours" min="2" max="38" step="1" value="' + c.hoursPerWeek +
+    '" aria-describedby="hours-hint" aria-label="Hours available per week, slider">');
   html.push('<p class="midnum" id="hours-value"><span class="num">' + c.hoursPerWeek + '</span> hours a week</p>');
   html.push('</fieldset>');
 
@@ -1471,27 +1536,83 @@ function renderJobsShell() {
 
   $("#view-jobs").innerHTML = html.join("");
 
-  const hours = $("#hours");
-  hours.addEventListener("input", function () {
-    state.capacity.hoursPerWeek = Number(hours.value);
-    $("#hours-value").innerHTML = '<span class="num">' + state.capacity.hoursPerWeek + '</span> hours a week';
-    renderJobResults();
-    renderDashboard();
+  // wire up
+  $("#hours").addEventListener("input", function (e) {
+    setHours(Number(e.target.value), "range");
   });
+  // Never clamp mid-keystroke — typing "18" would snap to 2 after the "1".
+  // Say what is wrong instead, and tidy the field on blur.
+  $("#hours-number").addEventListener("input", function (e) {
+    const raw = e.target.value.trim();
+    if (raw === "") { setHoursError("Enter how many hours a week you can work, as a number between 2 and 38."); return; }
+    if (!/^\d+$/.test(raw)) { setHoursError("Enter whole hours as a number, like 16. No letters or symbols."); return; }
+    const v = Number(raw);
+    if (v < 2 || v > 38) {
+      setHoursError("Enter a number between 2 and 38. We are showing jobs for " +
+        Math.min(38, Math.max(2, v)) + " hours until you change it.");
+      setHours(v, "number");
+      return;
+    }
+    setHoursError(null);
+    setHours(v, "number");
+  });
+  $("#hours-number").addEventListener("blur", function (e) {
+    setHoursError(null);
+    setHours(Number(e.target.value), "blur");   // tidy whatever they left behind
+  });
+  $("#hours-down").addEventListener("click", function () { setHours(state.capacity.hoursPerWeek - 1, "step"); });
+  $("#hours-up").addEventListener("click", function () { setHours(state.capacity.hoursPerWeek + 1, "step"); });
   NEED_KEYS.forEach(function (k) {
     $("#need-" + k).addEventListener("change", function (e) {
       state.capacity.needs[k] = e.target.checked;
       renderJobResults();
       renderDashboard();
+      saveSession();
     });
   });
   $("#strict").addEventListener("change", function (e) {
     state.strictOnly = e.target.checked;
     renderJobResults();
     renderDashboard();
+    saveSession();
   });
 
   renderJobResults();
+}
+
+function setHoursError(message) {
+  const input = $("#hours-number"), errEl = $("#hours-error");
+  if (message) {
+    input.setAttribute("aria-invalid", "true");
+    errEl.innerHTML = ICON.alert + " <span>" + esc(message) + "</span>";
+    errEl.hidden = false;
+  } else {
+    input.setAttribute("aria-invalid", "false");
+    errEl.hidden = true;
+    errEl.textContent = "";
+  }
+}
+
+/* One value, three controls. `source` says which one the user touched, so we
+   don't write back into the control they're typing in and move their cursor. */
+function setHours(value, source) {
+  let v = Math.round(Number(value));
+  if (isNaN(v)) v = state.capacity.hoursPerWeek;
+  v = Math.min(38, Math.max(2, v));
+  state.capacity.hoursPerWeek = v;
+
+  const range = $("#hours"), number = $("#hours-number");
+  if (source !== "range") range.value = String(v);
+  if (source !== "number") number.value = String(v);
+
+  // Step buttons stop at the ends rather than silently doing nothing.
+  $("#hours-down").disabled = (v <= 2);
+  $("#hours-up").disabled = (v >= 38);
+
+  $("#hours-value").innerHTML = '<span class="num">' + v + '</span> hours a week';
+  renderJobResults();
+  renderDashboard();
+  saveSession();
 }
 
 function renderJobResults() {
@@ -1655,6 +1776,7 @@ function renderMoneyShell() {
     validateWages(wages.value);
     renderIncomeSummary();
     renderDashboard();
+    saveSession();
   });
 
   renderIncomeSummary();
@@ -1921,6 +2043,7 @@ function renderClaimShell() {
 
 function selectClaimTab(id, focusTab) {
   state.claimTab = id;
+  saveSession();
   CLAIM_TABS.forEach(function (t) {
     const tab = document.getElementById("tab-" + t.id);
     const panel = document.getElementById("panel-" + t.id);
@@ -2061,6 +2184,7 @@ function showView(name, moveFocus) {
   });
 
   document.title = VIEW_TITLES[name] + " — Capable";
+  saveSession();
 
   if (moveFocus) {
     const h1 = document.querySelector("#view-" + name + " h1");
@@ -2113,9 +2237,12 @@ function initMenu(triggerId, panelId) {
     e.stopPropagation();
     if (panel.hidden) open(); else close(false);
   });
-  panel.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") close(true);
-  });
+  // Escape is bound to the trigger as well as the panel: opening the menu
+  // leaves focus on the trigger, so a panel-only listener never fired for
+  // the most common case — open with the keyboard, then press Escape.
+  function onEsc(e) { if (e.key === "Escape") close(true); }
+  panel.addEventListener("keydown", onEsc);
+  trigger.addEventListener("keydown", onEsc);
   panel.addEventListener("click", function (e) {
     if (e.target.closest("button, a")) close(false);
   });
@@ -2162,16 +2289,121 @@ Array.prototype.forEach.call(document.querySelectorAll("dialog"), function (d) {
 });
 
 /* ============================================================
-   12. START
+   12. KEEPING WHAT YOU TYPED
+   Fatigue, pain and brain fog mean a session gets abandoned part-way and
+   picked up hours later. Making someone re-enter their income because they
+   put the phone down is an accessibility failure, even though no WCAG
+   criterion names it. Everything is restored silently — no welcome-back
+   modal, nothing to dismiss.
    ============================================================ */
 
+const SESSION_KEY = "capable.session";
+let undoSnapshot = null;
+
+function saveSession() {
+  try {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      view: state.view,
+      hoursPerWeek: state.capacity.hoursPerWeek,
+      needs: state.capacity.needs,
+      strictOnly: state.strictOnly,
+      wagesInputValue: state.wagesInputValue,
+      claimTab: state.claimTab
+    }));
+  } catch (e) { /* private browsing, or storage full — not worth interrupting for */ }
+}
+
+function readSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+/* Applies a saved session onto `state`. Every field is validated, because
+   localStorage is user-editable and a bad value here would render NaN. */
+function applySession(s) {
+  if (!s) return;
+  if (typeof s.hoursPerWeek === "number" && s.hoursPerWeek >= 2 && s.hoursPerWeek <= 38) {
+    state.capacity.hoursPerWeek = Math.round(s.hoursPerWeek);
+  }
+  if (s.needs && typeof s.needs === "object") {
+    NEED_KEYS.forEach(function (k) {
+      if (typeof s.needs[k] === "boolean") state.capacity.needs[k] = s.needs[k];
+    });
+  }
+  if (typeof s.strictOnly === "boolean") state.strictOnly = s.strictOnly;
+  if (typeof s.wagesInputValue === "string") {
+    state.wagesInputValue = s.wagesInputValue;
+    const cleaned = s.wagesInputValue.trim().replace(/^\$/, "").replace(/,/g, "");
+    if (/^\d+(\.\d{1,2})?$/.test(cleaned) && Number(cleaned) <= 20000) {
+      state.fortnightlyWages = Number(cleaned);
+    }
+  }
+  if (CLAIM_TABS.some(function (t) { return t.id === s.claimTab; })) state.claimTab = s.claimTab;
+  if (VIEW_TITLES[s.view]) state.view = s.view;
+}
+
+function defaultsSession() {
+  state.capacity.hoursPerWeek = USER.capacity.hoursPerWeek;
+  state.capacity.needs = Object.assign({}, USER.capacity.needs);
+  state.strictOnly = false;
+  state.fortnightlyWages = USER.currentHoursPerWeek * USER.currentHourlyRate * 2;
+  state.wagesInputValue = String(state.fortnightlyWages.toFixed(2));
+  state.wagesError = null;
+  state.claimTab = "entitlements";
+  state.view = "dashboard";
+}
+
+function rebuildEverything() {
+  renderDashboard();
+  renderJobsShell();
+  renderMoneyShell();
+  renderClaimShell();
+  showView(state.view, false);
+}
+
+/* Clearing is reversible rather than guarded by a confirm dialog. Modals are
+   hostile to VoiceOver and brutal on Switch Control, and undo asks less of
+   everyone. The undo never expires — a countdown is a barrier by itself. */
+function clearSavedAnswers() {
+  undoSnapshot = readSession() || {
+    view: state.view, hoursPerWeek: state.capacity.hoursPerWeek,
+    needs: Object.assign({}, state.capacity.needs), strictOnly: state.strictOnly,
+    wagesInputValue: state.wagesInputValue, claimTab: state.claimTab
+  };
+  try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* nothing to remove */ }
+  defaultsSession();
+  rebuildEverything();
+  document.getElementById("undo-clear").hidden = false;
+  document.getElementById("clear-status").textContent =
+    "Your saved answers were cleared and everything is back to the starting figures. You can undo this.";
+}
+
+function undoClear() {
+  applySession(undoSnapshot);
+  undoSnapshot = null;
+  saveSession();
+  rebuildEverything();
+  document.getElementById("undo-clear").hidden = true;
+  document.getElementById("clear-status").textContent = "Your answers are back.";
+}
+
+/* ============================================================
+   13. START
+   ============================================================ */
+
+applySession(readSession());
 renderDashboard();
 renderJobsShell();
 renderMoneyShell();
 renderClaimShell();
 
+document.getElementById("clear-data").addEventListener("click", clearSavedAnswers);
+document.getElementById("undo-clear").addEventListener("click", undoClear);
+
 /* ============================================================
-   13. ONBOARDING
+   14. ONBOARDING
    One screen, shown the first time the app opens. No carousel, no
    auto-advance: everything is on screen at once and one button leaves.
    ============================================================ */
@@ -2221,11 +2453,11 @@ document.getElementById("menu-replay").addEventListener("click", function () {
 });
 
 renderOnboarding();
-showView("dashboard", false);
+showView(state.view, false);   // restored view, or dashboard on a first visit
 if (!hasOnboarded()) showOnboarding(false);
 
 /* ============================================================
-   14. INSTALLABLE APP
+   15. INSTALLABLE APP
    Add to Home Screen on iOS; the native install prompt elsewhere.
    A slim one-line strip nudges once; "Install Capable" in the
    header menu offers the same action on demand, any time.
