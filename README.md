@@ -1,8 +1,12 @@
 # Capable
 
+### 👉 [**Open the live app →**](https://rudrakshsinghtomar7-lab.github.io/capable-wos26/)
+
 **Work, money and what you're owed.** A financial app for people with disability in Queensland, Australia.
 
 Built for WOS26. Single self-contained `index.html` — no build step, no backend, no dependencies. Open the file, or visit the live site, and it runs.
+
+**Live demo:** https://rudrakshsinghtomar7-lab.github.io/capable-wos26/
 
 ## What it does
 
