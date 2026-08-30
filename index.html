@@ -851,6 +851,14 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 }
 .jr-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin: 0 0 .4rem; }
 .jr-rating { margin: 0 0 .5rem; }
+/* Badges wrap freely at large text sizes, so they need a real row gap.
+   `gap` covers both axes, which a space between inline elements does not. */
+.jr-bits {
+  display: flex; flex-wrap: wrap;
+  gap: .5rem;
+  margin: 0 0 .25rem;
+}
+.jr-bits .badge { align-items: flex-start; }
 .job-review .quotes { margin-top: .6rem; }
 .job-review details.data-table > summary { padding: .35rem 0; font-size: 1rem; }
 
@@ -2077,9 +2085,12 @@ function jobReviewHtml(jobId) {
   h.push('<p class="jr-rating">' + starsHtml(rev.rating) +
     ' <strong>' + rev.rating.toFixed(1) + ' out of 5</strong> from ' + rev.count +
     ' ' + plural(rev.count, "worker", "workers") + '.</p>');
-  h.push('<p class="small"><span class="badge badge-good">' + ICON.tick + ' Best: ' + esc(rev.best) +
-    '</span> <span class="badge badge-' + (tone === "danger" ? "danger" : "warn") + '">' +
-    ICON.warn + ' Hardest: ' + esc(rev.worst) + '</span></p>');
+  // A flex row, not two badges separated by a space in a <p>. Inline badges
+  // that wrap onto their own line get no row gap and end up touching.
+  h.push('<div class="jr-bits">' +
+    '<span class="badge badge-good">' + ICON.tick + ' Best: ' + esc(rev.best) + '</span>' +
+    '<span class="badge badge-' + (tone === "danger" ? "danger" : "warn") + '">' +
+    ICON.warn + ' Hardest: ' + esc(rev.worst) + '</span></div>');
 
   const first = rev.quotes[0];
   h.push('<ul class="quotes"><li><blockquote>&ldquo;' + esc(first.text) + '&rdquo;</blockquote>' +
