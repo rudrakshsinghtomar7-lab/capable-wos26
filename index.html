@@ -856,9 +856,17 @@ dialog::backdrop { background: rgba(10, 15, 14, .55); }
 .jr-bits {
   display: flex; flex-wrap: wrap;
   gap: .5rem;
+  align-items: stretch;   /* pills match height, so tops and bottoms line up */
   margin: 0 0 .25rem;
 }
-.jr-bits .badge { align-items: flex-start; }
+.jr-bits .badge { align-items: center; }
+/* The shared icon set is drawn at several sizes (tick 15, warn 22). Inside a
+   badge they must render identically or the two pills read as misaligned
+   even when their boxes match exactly. */
+.badge > svg {
+  width: 1.05em; height: 1.05em;
+  flex: none;
+}
 .job-review .quotes { margin-top: .6rem; }
 .job-review details.data-table > summary { padding: .35rem 0; font-size: 1rem; }
 
