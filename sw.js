@@ -1,11 +1,11 @@
 /* Capable — offline service worker (web/PWA only; the iOS app does not use it).
 
-   Versioning: bump CACHE whenever any app file changes. Corrected rules and
-   wording then reach returning users on their next visit.
+   Versioning: bump CACHE whenever any app file changes. The updated worker
+   installs its assets in a separate cache before activation.
 
    This worker only ever touches the Cache Storage it owns. It never reads or
    clears localStorage, so saved answers and preferences survive every update. */
-const CACHE = "capable-v7-2026-11-15";
+const CACHE = "capable-v8-app-store-2026-11-15";
 const ASSETS = [
   "./",
   "./index.html",
@@ -72,3 +72,4 @@ self.addEventListener("fetch", (e) => {
     }))
   );
 });
+

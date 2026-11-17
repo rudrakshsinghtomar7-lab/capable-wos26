@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Capable privacy policy — draft template</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #faf8f2; color: #28231f; font: 1.0625rem/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .wrap { max-width: 48rem; margin: 0 auto; padding: 1.5rem; }
+    header { border-bottom: 1px solid #c8bfb3; }
+    h1, h2 { line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 6vw, 2.7rem); margin: 0.5rem 0 1rem; }
+    h2 { font-size: 1.4rem; margin: 2rem 0 0.65rem; }
+    p, ul { margin: 0.65rem 0 1rem; }
+    li + li { margin-top: 0.5rem; }
+    a { color: #65402b; text-decoration: underline; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
+    a:focus-visible { outline: 3px solid #1f4e74; outline-offset: 4px; }
+    .brand { font-weight: 750; letter-spacing: 0.025em; margin: 0; }
+    .draft { padding: 1rem 1.2rem; margin: 1.5rem 0; border: 2px solid #855410; border-radius: 0.5rem; background: #fff2d6; }
+    .draft h2 { margin: 0 0 0.65rem; font-size: 1.2rem; }
+    .draft p:last-child { margin-bottom: 0; }
+    code { overflow-wrap: anywhere; font-size: 0.95em; }
+    footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #c8bfb3; font-size: 0.95rem; }
+    .skip { position: absolute; left: 1rem; top: -8rem; background: white; padding: 0.7rem; z-index: 1; }
+    .skip:focus { top: 1rem; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to privacy policy</a>
+  <div class="wrap">
+    <header>
+      <p class="brand">Capable</p>
+      <h1>Privacy policy</h1>
+      <p>How Capable handles information on your device and when you choose to share it.</p>
+    </header>
+
+    <aside class="draft" aria-labelledby="draft-heading">
+      <h2 id="draft-heading">Draft — not ready to publish</h2>
+      <p>The owner must replace <code>{{DEVELOPER_DISPLAY_NAME}}</code> and <code>{{SUPPORT_EMAIL}}</code>, confirm the statements below against the final release archive, and review the support and privacy links before hosting this page.</p>
+      <p>The proposed native-app App Store privacy answer, <strong>Data Not Collected</strong>, remains provisional until the archive and its dependencies are checked. This template does not certify legal compliance. Remove this draft panel and update the title and template links only after the review is complete.</p>
+    </aside>
+
+    <main id="main">
+      <h2>Who provides Capable</h2>
+      <p>Capable is provided by <strong>{{DEVELOPER_DISPLAY_NAME}}</strong>. For privacy questions or help with your information, email <a href="mailto:{{SUPPORT_EMAIL}}">{{SUPPORT_EMAIL}}</a>.</p>
+      <p>This policy explains the native iPhone app and identifies differences in the web version. Capable does not require an account and does not provide a Capable cloud-sync service.</p>
+
+      <h2>Information you choose to keep on your device</h2>
+      <p>When you choose to save answers, Capable stores the information you enter locally. Depending on the features you use, this can include:</p>
+      <ul>
+        <li>Wages and Disability Support Pension amounts.</li>
+        <li>Manually entered NDIS funding or balance information.</li>
+        <li>Work preferences, available hours and access needs.</li>
+        <li>Health-related or concession answers used to explore possible support.</li>
+      </ul>
+      <p>Saved answers remain on that installation or browser until you clear them. Some interface preferences can be saved independently of your choice to save personal answers. Clearing one set of information may not reset every preference.</p>
+      <p>The native app and the web version use separate storage. Saving or clearing information in one does not automatically change the other.</p>
+
+      <h2>Information sent to Capable</h2>
+      <p>The app does not upload your saved answers to a Capable server. Its core interface, scripts and fonts are bundled locally, and it does not include advertising or analytics services.</p>
+      <p>The web version must be delivered by a website host. Your browser and the hosting provider may handle connection information when you visit the website, under their own practices. This differs from opening the native app’s bundled interface.</p>
+
+      <h2>Voice commands and read-aloud</h2>
+      <p>Speaking is optional. You can use the on-screen controls instead.</p>
+      <p><strong>Native iPhone app:</strong> voice commands request on-device speech recognition. If on-device recognition is unavailable, Capable makes listening unavailable rather than automatically switching to online recognition. Recognised words are used to respond to your command.</p>
+      <p><strong>Web version:</strong> speech recognition is supplied by your browser or its provider and may use an online service. That provider’s privacy practices apply. The native app’s on-device recognition behavior does not apply to browser speech recognition.</p>
+      <p>Read-aloud uses speech features provided by your device or browser. Voice availability depends on that environment. Permission requests for listening appear when you choose to use the feature; denying access does not prevent you from using the other controls.</p>
+
+      <h2>Photos and manual entry</h2>
+      <p>If you take or choose a photo, Capable shows a local preview to help you enter information manually. It does not perform automatic text recognition (OCR) or automatically extract figures from the photo. Capable does not upload that preview to a Capable service or include the photo in its saved answers.</p>
+      <p>A photo that already exists in your photo library or another app remains subject to that app’s storage, backup and deletion behavior.</p>
+
+      <h2>Sharing and copying</h2>
+      <p>When you choose Share, Capable prepares a text summary for the system share sheet. Where sharing is unavailable, it can offer a clipboard fallback. This action shares or copies the summary, not a complete saved record or a photo.</p>
+      <p>A summary can contain information you entered. Check it and choose the recipient or destination carefully. Information you send to another app, person or service is then handled by that destination. Copying also makes the summary available through your clipboard.</p>
+
+      <h2>Official links and other websites</h2>
+      <p>Capable includes links to government information. Following a link is your choice and opens another service, whose privacy policy applies. Capable does not sign in to your government accounts or submit a claim on your behalf.</p>
+
+      <h2>Clearing information and device backups</h2>
+      <p>Open <strong>Privacy and your data</strong>. In your own session, <strong>Clear my answers</strong> removes saved answers. <strong>Delete everything Capable has stored</strong> also removes Capable’s saved interface choices. Each deletion asks you to confirm. If you use both the app and the web version, clear each separately.</p>
+      <p>Clearing Capable does not recall a summary you have already shared, remove copies held by another service, or remove information from device or browser backups. Your operating system, browser, backup settings and other providers control those copies. This policy makes no claim that Capable data is excluded from backups or protected by additional app-specific encryption.</p>
+
+      <h2>Contacting support</h2>
+      <p>If you email support, the developer and the email provider receive your email address, message and anything you choose to attach. That information is used to respond to and resolve your enquiry; it is separate from the answers stored locally in Capable.</p>
+      <p>Please describe the issue without sending identity documents, government identifiers, health records, payslips or your financial answers. For a privacy or deletion question about a support email, contact <a href="mailto:{{SUPPORT_EMAIL}}">{{SUPPORT_EMAIL}}</a>. Copies held by mail or backup providers may be subject to their own retention practices.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>This policy will be updated if Capable’s handling of information changes. You can find the current policy through the app’s privacy link and its App Store listing.</p>
+    </main>
+
+    <footer>
+      <p><a href="support.template.html">Capable support</a></p>
+      <p>Draft template for owner review. Not approved for publication.</p>
+    </footer>
+  </div>
+  <!--
+    Release preparation references, not a certification:
+    https://developer.apple.com/app-store/app-privacy-details/
+    https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy/
+    https://developer.apple.com/app-store/review/guidelines/#privacy
+    Before publication: replace both identity placeholders, review the distribution
+    archive and email/hosting practices, remove draft-only text, and update links
+    from template filenames to the actual public privacy and support URLs.
+  -->
+</body>
+</html>

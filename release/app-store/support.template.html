@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Capable support — draft template</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #faf8f2; color: #28231f; font: 1.0625rem/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .wrap { max-width: 48rem; margin: 0 auto; padding: 1.5rem; }
+    header { border-bottom: 1px solid #c8bfb3; }
+    h1, h2 { line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 6vw, 2.7rem); margin: 0.5rem 0 1rem; }
+    h2 { font-size: 1.4rem; margin: 2rem 0 0.65rem; }
+    p, ul { margin: 0.65rem 0 1rem; }
+    li + li { margin-top: 0.5rem; }
+    a { color: #65402b; text-decoration: underline; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
+    a:focus-visible { outline: 3px solid #1f4e74; outline-offset: 4px; }
+    .brand { font-weight: 750; letter-spacing: 0.025em; margin: 0; }
+    .draft { padding: 1rem 1.2rem; margin: 1.5rem 0; border: 2px solid #855410; border-radius: 0.5rem; background: #fff2d6; }
+    .draft h2 { margin: 0 0 0.65rem; font-size: 1.2rem; }
+    .draft p:last-child { margin-bottom: 0; }
+    code { overflow-wrap: anywhere; font-size: 0.95em; }
+    footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #c8bfb3; font-size: 0.95rem; }
+    .skip { position: absolute; left: 1rem; top: -8rem; background: white; padding: 0.7rem; z-index: 1; }
+    .skip:focus { top: 1rem; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to support information</a>
+  <div class="wrap">
+    <header>
+      <p class="brand">Capable</p>
+      <h1>Help with Capable</h1>
+      <p>Help with using the app, saved answers and accessibility features.</p>
+    </header>
+
+    <aside class="draft" aria-labelledby="draft-heading">
+      <h2 id="draft-heading">Draft — not ready to publish</h2>
+      <p>The owner must replace <code>{{DEVELOPER_DISPLAY_NAME}}</code> and <code>{{SUPPORT_EMAIL}}</code> with the public developer name and chosen support contact, confirm this guidance against the final app, and update the privacy link before hosting this page.</p>
+      <p>Remove this draft panel and update the title and template links after review. This is a release-preparation draft, not a certification of accessibility or legal compliance.</p>
+    </aside>
+
+    <main id="main">
+      <h2>Contact support</h2>
+      <p>Capable is provided by <strong>{{DEVELOPER_DISPLAY_NAME}}</strong>.</p>
+      <p>Email <a href="mailto:{{SUPPORT_EMAIL}}">{{SUPPORT_EMAIL}}</a> for an app issue, accessibility problem, privacy question or feature suggestion.</p>
+      <p>Tell us your device model, operating-system version, app version if available, what you tried and what happened. A screenshot can help if you first remove personal information.</p>
+      <p>Please do not send identity documents, government identifiers, health records, payslips or financial answers. Your email and anything you send are received by the developer and the email provider so we can help with your enquiry.</p>
+
+      <h2>What does Capable do?</h2>
+      <p>Capable helps people in Queensland organise information about work, money and possible concessions. It can use values and preferences you enter, show relevant information, and offer accessible ways to navigate the app.</p>
+      <p>Capable is an independent app. It is not a government service, does not access your government accounts and does not lodge claims for you. An estimate, manually entered balance or possible concession shown in the app is not confirmation of an entitlement or a payment.</p>
+
+      <h2>Where should I check an amount or eligibility rule?</h2>
+      <p>Check the original source linked in the app and your own current plan, statement or decision letter. For questions about your circumstances, contact the responsible organisation through its official website:</p>
+      <ul>
+        <li><a href="https://www.servicesaustralia.gov.au/disability-support-pension">Services Australia — Disability Support Pension</a></li>
+        <li><a href="https://www.ndis.gov.au/participants/using-your-funding">NDIS — using your funding</a></li>
+        <li><a href="https://www.ndis.gov.au/contact">NDIS — contact and support</a></li>
+        <li><a href="https://www.qld.gov.au/community/cost-of-living-support/concessions">Queensland Government — concessions</a></li>
+      </ul>
+      <p>A manually entered NDIS balance is a record of what you entered. It may differ from the amount currently available in a particular budget or funding period. Check the source and date before relying on it.</p>
+
+      <h2>Can I use Capable offline?</h2>
+      <p>The native iPhone app’s bundled core screens work without an internet connection. Following external links needs a connection. Voice availability depends on the device and its speech capabilities.</p>
+      <p>The web version can work offline after the required files have been loaded and cached successfully. A first visit or an update may need a connection. Information available offline is the information included in that installed or cached version.</p>
+
+      <h2>Why is listening unavailable, or why did permission fail?</h2>
+      <p>You can always use the on-screen choices instead of speaking.</p>
+      <p>In the native iPhone app, voice commands require on-device recognition to be available. Capable does not automatically switch to online recognition when it is unavailable. If you previously denied access, review the app’s relevant permissions in your device settings if you want to try listening again.</p>
+      <p>In a browser, recognition depends on the browser or its provider and may need an online service. Browser speech can behave differently from the native app. Read-aloud voice availability also depends on the device or browser.</p>
+
+      <h2>How do I remove saved answers?</h2>
+      <p>Open <strong>Privacy and your data</strong>. In your own session, choose <strong>Clear my answers</strong> to remove your saved answers. Choose <strong>Delete everything Capable has stored</strong> to remove saved interface choices too. Confirm the deletion you intend.</p>
+      <p>The native app and website have separate storage. Clear both if you use both. Clearing the app does not recall summaries you have shared or copied, or remove copies held by other apps, services or device backups.</p>
+      <p>See the <a href="privacy-policy.template.html">privacy policy</a> for more detail. If a clearing control does not work as expected, contact support with the steps you took, without including the saved values.</p>
+
+      <h2>Does taking a photo fill in my wages automatically?</h2>
+      <p>No. A photo provides a local preview to help you enter the figure yourself. Capable does not perform automatic text recognition or extract amounts from that image. Check the figure before saving it.</p>
+
+      <h2>What does Share send?</h2>
+      <p>Share prepares a text summary for the system share sheet, or offers a clipboard fallback where available. It does not export your complete saved record or a photo. Check the summary before choosing where to send it.</p>
+
+      <h2>How do I get updates?</h2>
+      <p>For the App Store version, use the App Store’s update controls or your automatic-update settings. The web version updates separately. If something looks out of date, check the installed app version and the date of the source information.</p>
+
+      <h2>How do I report an accessibility problem?</h2>
+      <p>Tell support which screen or task was difficult, the device you used, and any relevant setting or assistive technology, such as VoiceOver or Larger Text. You do not need to describe your diagnosis or send health information.</p>
+      <p>Feedback helps us understand what to improve. The presence of voice or Easy Read features does not mean every access need has been tested or certified.</p>
+    </main>
+
+    <footer>
+      <p><a href="privacy-policy.template.html">Capable privacy policy</a></p>
+      <p>Draft template for owner review. Not approved for publication.</p>
+    </footer>
+  </div>
+  <!--
+    Release preparation reference:
+    https://developer.apple.com/help/app-store-connect/reference/app-information/platform-version-information/
+    App Store Support URL must lead to actual developer contact information.
+    Before publication: choose and replace both identity placeholders, check
+    the FAQ against the final build, verify official links, remove draft-only
+    text, and update the privacy link to the actual public URL.
+  -->
+</body>
+</html>

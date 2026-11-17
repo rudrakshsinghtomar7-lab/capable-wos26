@@ -712,8 +712,6 @@ function renderDemoPlan() {
 }
 
 /* ============================== CLAIM ============================== */
-const CLAIM_TABS = [{ id: "entitlements", label: "Concessions" }, { id: "discounts", label: "Discounts (fictional)" }, { id: "cashbacks", label: "Cashbacks (fictional)" }];
-
 const MISSING_TEXT = {
   cards: "which concession card you hold", qldResident: "whether you live in Queensland", elecAccount: "whether the electricity account for your home is in your name",
   gasAccount: "whether you have a mains gas account in your name", medicalCondition: "whether a specialist will certify a qualifying medical condition",
@@ -739,44 +737,12 @@ function renderClaimShell() {
   h.push('<div class="view-intro"><h1>Claim</h1><p>Queensland concessions you may be able to claim. Answer a few questions and Capable checks each scheme&rsquo;s actual rules.</p></div>');
   h.push(modeBanner());
   h.push(viewToolsHtml());
-  h.push('<div class="tablist" role="tablist" aria-label="What you can claim">');
-  CLAIM_TABS.forEach(function (t) {
-    const sel = state.claimTab === t.id;
-    h.push('<button type="button" class="tab" role="tab" id="tab-' + t.id + '" aria-controls="panel-' + t.id + '" aria-selected="' + sel + '" tabindex="' + (sel ? "0" : "-1") + '">' + t.label + '</button>');
-  });
-  h.push('</div>');
-  CLAIM_TABS.forEach(function (t) {
-    h.push('<div role="tabpanel" id="panel-' + t.id + '" aria-labelledby="tab-' + t.id + '" tabindex="0"' + (state.claimTab === t.id ? "" : " hidden") + '>' +
-      (t.id === "entitlements" ? concessionsPanelHtml() : offersHtml(t.id)) + '</div>');
-  });
+  h.push('<div id="panel-entitlements">' + concessionsPanelHtml() + '</div>');
   if (state.mode === "demo") h.push(claimHistoryHtml());
   $("#view-claim").innerHTML = h.join("");
 
-  const tabs = $$('#view-claim [role="tab"]');
-  tabs.forEach(function (tab, i) {
-    tab.addEventListener("click", function () { selectClaimTab(tab.id.slice(4), true); });
-    tab.addEventListener("keydown", function (e) {
-      let next = null;
-      if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
-      else if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
-      else if (e.key === "Home") next = tabs[0];
-      else if (e.key === "End") next = tabs[tabs.length - 1];
-      if (next) { e.preventDefault(); selectClaimTab(next.id.slice(4), true); }
-    });
-  });
   $("#conc-form").addEventListener("change", onConcessionChange);
   renderConcessionResults();
-}
-
-function selectClaimTab(id, focus) {
-  state.claimTab = id; persist();
-  CLAIM_TABS.forEach(function (t) {
-    const sel = t.id === id;
-    const tab = document.getElementById("tab-" + t.id);
-    tab.setAttribute("aria-selected", String(sel)); tab.tabIndex = sel ? 0 : -1;
-    document.getElementById("panel-" + t.id).hidden = !sel;
-  });
-  if (focus) document.getElementById("tab-" + id).focus();
 }
 
 const YNU_OPTS = [["yes", "Yes"], ["no", "No"], ["unsure", "I'm not sure"]];
@@ -859,17 +825,6 @@ function schemeCardHtml(r) {
     '<p class="small">Effective from: ' + (s.effectiveFrom ? fmtDate(s.effectiveFrom) : "not stated by the source") + '. Checked: ' + fmtDate(s.verifiedOn) + '. ' + esc(s.limitation || "") + '</p>' +
     '<p class="small">' + extLink(s.source, s.name + " — qld.gov.au", "Queensland Government") + '</p></details>');
   h.push('</li>');
-  return h.join("");
-}
-
-function offersHtml(kind) {
-  const list = D.OFFERS[kind];
-  const h = ['<div class="note note-info">' + ICON.info + '<div><p><strong>Fictional examples.</strong> These businesses are made up. None is a partner of Capable and nothing here can be redeemed. They show how offers might appear in a future version.</p></div></div><ul class="results cols-3">'];
-  list.forEach(function (o) {
-    h.push('<li class="result" style="border-left-color:var(--border-strong)"><div class="scheme-head"><h3 style="margin:0">' + esc(o.name) + '</h3><p style="margin:0"><span class="badge badge-demo">Fictional</span></p></div>' +
-      '<p class="midnum" style="margin:.4rem 0;font-size:1.15rem">' + esc(o.offer) + '</p><p class="small">' + esc(o.detail) + '</p></li>');
-  });
-  h.push('</ul>');
   return h.join("");
 }
 
@@ -1511,7 +1466,9 @@ function start() {
     state.saveConsent = true;
     state.personal = rep.record.personal;
     state.view = rep.record.ui.view;
-    state.claimTab = rep.record.ui.claimTab;
+    // Older saved sessions may name a retired prototype offer tab. Keep the
+    // storage schema compatible and open actual concessions without changing answers.
+    state.claimTab = "entitlements";
     state.mode = "personal";
   } else {
     const m = getPref(MODE_PREF);
@@ -1543,3 +1500,4 @@ if (!NATIVE && "serviceWorker" in navigator && window.isSecureContext) {
 /* Test hooks (read-only views of internal formatting). */
 window.CapableApp = { voiceAvailability: voiceAvailability, spokenSummary: spokenSummary, summaryItems: function (v) { return summaryItems(v, facts()); }, state: state, facts: facts };
 })();
+

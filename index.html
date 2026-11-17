@@ -773,37 +773,7 @@ details.data-table > summary:hover { color: var(--accent-hover); }
 .cat-card details p:last-child { margin-block-end: 0; }
 .alert-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0 0; padding: 0; list-style: none; }
 
-/* ---------- tabs (Claim) ---------- */
-.tablist {
-  display: flex; flex-wrap: wrap;
-  /* Adjacent targets need space, not just size (2.5.8). At .35rem these tabs
-     sat ~4-6px apart, so a shaky tap on one landed on its neighbour. */
-  gap: .75rem;
-  border-bottom: 2px solid var(--border);
-  margin-bottom: 1.25rem;
-}
-.tab {
-  appearance: none;
-  min-height: var(--tap);
-  padding: .6rem 1rem;
-  background: transparent;
-  border: 1px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  margin-bottom: -2px;
-  font: inherit; font-weight: 700;
-  color: var(--text);
-  cursor: pointer;
-}
-.tab:hover { background: var(--surface-alt); }
-.tab[aria-selected="true"] {
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-bottom-color: var(--accent);
-}
-[role="tabpanel"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-
-/* ---------- scheme / offer items ---------- */
+/* ---------- concession scheme items ---------- */
 .scheme-head {
   display: flex; flex-wrap: wrap; gap: .5rem 1rem;
   align-items: baseline; justify-content: space-between;
@@ -1378,3 +1348,4 @@ body.onboarding-active .menu:has(#profile-btn) { display: none; }
 <script src="app.js"></script>
 </body>
 </html>
+

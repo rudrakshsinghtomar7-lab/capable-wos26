@@ -15,7 +15,7 @@ A fresh `git clone` of `fix/reliability-ios` at commit `2090bc1` was put through
 | Swift | 6.4.2 |
 | Capacitor (core, cli, ios) | 8.6.2, pinned exactly |
 | capacitor-swift-pm (SPM) | 8.6.2, revision `b945758eaf3f034cea377e3138a60611cb40a88b` |
-| Deployment target | iOS 15.0 |
+| Deployment target | Project default: iOS 15.0. Current App target (Debug and Release): iOS 27.0; this override controls the app's minimum supported OS. |
 
 **Lockfiles committed:**
 
@@ -119,3 +119,4 @@ Write pass or fail beside each.
 9. **Reset**: Privacy › **Delete everything Capable has stored** › Cancel (nothing changes), then again › Delete everything. You're back at the welcome choice.
 10. **Payslip photo**: Money › take a photo. Camera permission text appears, and the photo shows on screen.
 11. **Links**: tap a qld.gov.au link (opens outside the app) and a phone number (offers to call).
+

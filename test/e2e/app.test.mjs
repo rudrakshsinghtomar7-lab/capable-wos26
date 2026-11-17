@@ -55,9 +55,8 @@ test("demo is clearly labelled and computes the DSP estimate from rules", async 
   assert.match(jt, /sample jobs at fictional employers/i);
   assert.match(jt, /not job ads/);
   await go(p, "claim");
-  await p.$eval("#tab-discounts", (e) => e.scrollIntoView({ block: "center" }));
-  await p.click("#tab-discounts");
-  assert.match(await bodyText(p), /None is a partner of Capable/);
+  assert.equal(await p.$("#tab-discounts, #tab-cashbacks"), null, "prototype offer tabs are not in the release UI");
+  assert.notEqual(await p.$("#conc-form"), null, "actual concessions remain available");
 });
 
 test("standard, Easy Read and spoken summaries show the same figures", async () => {
@@ -308,3 +307,4 @@ test("offline: after one visit the app cold-launches and calculates with no netw
   await p.setOfflineMode(false);
   assert.deepEqual(p.errors.filter((e) => !/ERR_INTERNET_DISCONNECTED|Failed to load resource/.test(e)), []);
 });
+

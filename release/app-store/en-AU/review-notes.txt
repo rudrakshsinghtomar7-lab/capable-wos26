@@ -1,0 +1,31 @@
+CAPABLE — APP REVIEW NOTES
+Draft: verify every statement against the uploaded release candidate. Enter reviewer contact details in App Store Connect's separate contact fields.
+
+PURPOSE
+Capable is an independent information and planning companion for people with disability in Queensland, Australia. It provides a restricted DSP income-test estimate, scheme-specific concession guidance, local NDIS balance notes and illustrative work-role comparisons.
+
+ACCESS
+No sign-in or reviewer credentials are required. On the first screen, “Try the demo” opens clearly labelled fictional data. “Start my own session” opens a blank questionnaire. All core functionality is available without an account.
+
+SUGGESTED REVIEW PATH
+1. Open “Try the demo” and view Summary.
+2. Open Money. Review the DSP estimate, its exclusions, the source records and the separate NDIS balance information.
+3. Open Claim to view the actual concessions questionnaire/results and official guidance.
+4. Open Jobs to compare illustrative roles. These are planning examples, not live vacancies, employer offers or job applications.
+5. Use Easy Read and Read aloud. Return to standard view to edit questionnaire answers.
+6. Open Ask Capable. Voice navigation uses Apple's on-device speech recognition where the selected device/language supports it. If on-device recognition is unavailable or permission is declined, tappable controls remain available; the app does not use server speech as a fallback.
+7. Use Share to send the current text summary through the system-selected destination. A clipboard fallback is available where system sharing is unsupported.
+8. Start an own session. Saving answers is off until selected in Privacy and your data. The privacy controls also clear answers or all app-stored data.
+
+DATA AND CONNECTIONS
+The iOS app ships its web assets inside a native Capacitor bundle. It does not download its interface from the public web app. The app has no developer-operated account or answer-storage backend. Voice input is processed on-device where supported. A payslip reference photo is displayed locally so the user can read or enter an amount manually; this is not an automatic OCR service. External websites and user-selected sharing are separate, explicit actions.
+
+SCOPE
+Capable does not connect to Centrelink, myGov, NDIS or bank accounts; submit benefit claims; process payments or loans; offer investments; diagnose conditions; or make official eligibility decisions. It is not affiliated with the Australian or Queensland governments. Government figures have source and verification labels. Unsupported or uncertain DSP situations do not receive an estimate.
+
+NATIVE UTILITY
+The app combines interactive calculations, local optional saved answers, offline use, simpler summaries, native read-aloud and supported on-device voice navigation. Demonstration data is clearly distinguished from the user's own session. The production Claim flow contains functional concession guidance, not prototype discounts or cashback offers.
+
+RELEASE EVIDENCE
+Before submitting, replace this drafting note with the exact app version/build and any genuinely necessary reviewer instructions. Do not state that a device check passed until it has been observed. The published base's test results do not certify a modified archive.
+

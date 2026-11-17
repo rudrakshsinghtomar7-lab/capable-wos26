@@ -1,0 +1,37 @@
+{
+  "draft_status": "Prepared for the first App Store submission; verify against the final signed archive and approved developer account before entering App Store Connect.",
+  "name": "Capable: Money & Concessions",
+  "subtitle": "Work, money and QLD support",
+  "primary_language": "en-AU",
+  "proposed_primary_category": "Finance",
+  "proposed_secondary_category": "Utilities",
+  "proposed_price": "Free",
+  "proposed_storefronts": [
+    "Australia"
+  ],
+  "proposed_marketing_version": "1.0",
+  "build_number": "Use the next unused build number for version 1.0; current source value is 1.",
+  "bundle_id": "dev.capable.wos26",
+  "sku": "CAPABLE-IOS-001",
+  "promotional_text": "Explore Queensland concessions, understand a supported DSP income scenario, and keep work preferences and NDIS balance notes together.",
+  "description": "Make sense of work, money and Queensland concessions with Capable.\n\nCapable helps people with disability organise information and prepare for conversations with government services, support workers and trusted people.\n\nUNDERSTAND A SUPPORTED DSP INCOME SCENARIO\nEnter gross fortnightly wages to explore an income-test estimate for the single adult circumstances Capable supports. Questions identify situations it cannot estimate, and missing or uncertain answers lead to guidance instead of a potentially misleading amount. Each result explains its limits and links to official information.\n\nEXPLORE QUEENSLAND CONCESSIONS\nAnswer scheme-specific questions to see which concessions may be worth checking, what further information is needed, and where to find official application guidance.\n\nKEEP NDIS BALANCE NOTES SEPARATE\nRecord a balance, its source and date, and whether it covers a whole plan or a funding period. Your entry is not verified by Capable and may not all be available to use now. NDIS funding stays separate from personal income.\n\nEXPLORE EXAMPLE WORK ROLES\nCompare illustrative roles with your work preferences and available hours. These are examples for planning, not live vacancies or job offers.\n\nCHOOSE HOW YOU USE THE APP\nUse Easy Read summaries, read-aloud and voice navigation on devices that support on-device speech recognition. Core tools work offline. No account is needed, and saving your answers on the device is optional.\n\nCapable is an independent information and planning tool. It is not a government service and does not access Centrelink or NDIS accounts, submit claims, make eligibility decisions or provide financial advice. Check important decisions with the relevant official service. Figures and rules can change; the app shows its sources and verification information.",
+  "keywords": "queensland,concessions,disability,pension,benefits,budget,work,accessibility",
+  "copyright": null,
+  "support_url": null,
+  "privacy_policy_url": null,
+  "marketing_url": "https://rudrakshsinghtomar7-lab.github.io/capable-wos26/",
+  "app_review_contact": "Enter the account holder's approved contact details directly in App Store Connect; do not commit private telephone numbers or addresses.",
+  "age_rating": "Complete Apple's current questionnaire from actual app content and capabilities; no rating is preselected.",
+  "privacy_label": "Candidate: Data Not Collected for the native app, subject to final archive/dependency/data-flow verification.",
+  "release_option": "Proposed: manual release after approval; record the setting actually chosen.",
+  "unresolved": [
+    "Apple Developer Program membership and suitable seller entity",
+    "Public support email and developer display name",
+    "Bundle ID availability under distribution team",
+    "Final supported iOS version and device families",
+    "Final archive privacy/export-compliance declarations",
+    "Actual native screenshots",
+    "Share and Easy Read release-candidate phone checks"
+  ]
+}
+
