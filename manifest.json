@@ -1,0 +1,38 @@
+{
+  "name": "Capable — work, money and concessions",
+  "short_name": "Capable",
+  "description": "Explore work that fits your capacity, estimate how wages affect the Disability Support Pension on a fortnightly cycle, keep NDIS funding separate from income, and check Queensland concessions you may be able to claim.",
+  "lang": "en-AU",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7F6F2",
+  "theme_color": "#FFFFFF",
+  "categories": [
+    "finance",
+    "government",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

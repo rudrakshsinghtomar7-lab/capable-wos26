@@ -1,0 +1,26 @@
+{
+  "name": "capable",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Capable — accessible work, money and concessions companion for people with disability in Queensland.",
+  "license": "UNLICENSED",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build:web": "node scripts/build-web.mjs",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --test test/unit/*.test.js",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e/*.test.mjs",
+    "serve": "node scripts/serve.mjs www 8080",
+    "ios:sync": "npm run build:web && npx cap sync ios",
+    "ios:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.6.2",
+    "@capacitor/ios": "8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.2",
+    "axe-core": "4.14.0",
+    "puppeteer-core": "25.17.0"
+  }
+}

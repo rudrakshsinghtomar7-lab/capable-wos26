@@ -1,0 +1,9 @@
+{
+  "appId": "dev.capable.wos26",
+  "appName": "Capable",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always",
+    "zoomEnabled": true
+  }
+}

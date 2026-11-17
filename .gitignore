@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+www/
+brag-output/
+.env
+.env.*
+*.p12
+*.mobileprovision
+test-results/
+build/
