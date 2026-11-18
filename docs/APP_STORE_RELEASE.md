@@ -1,6 +1,6 @@
 # Capable: App Store release runbook
 
-Prepared 15 November 2026 for the Mac checkout at `~/code/capable-wos26`. Recorded published base: `3f25ffe`. Intended release branch: `release/app-store-1.0`; confirm it has been published before fetching it. This document does not establish that a release build has passed, been uploaded, or been submitted.
+Prepared 15 November 2026 for the Mac checkout at `~/code/capable-wos26`. Merged into `main` on 18 November 2026 (`25c5c57`); release from `main`. This document does not establish that a release build has passed, been uploaded, or been submitted.
 
 The user has authorised progressing to App Store release. Prepare everything possible now, resolve the account, owner/contact, phone-test and submission-entity questions below, then continue through submission. A separate public TestFlight beta is not a required project milestone. Apple review and public availability remain separate outcomes.
 
@@ -21,12 +21,12 @@ After confirming the intended origin and a clean checkout:
 
 ```sh
 git fetch origin
-git switch release/app-store-1.0
-git pull --ff-only origin release/app-store-1.0
+git switch main
+git pull --ff-only origin main
 git rev-parse HEAD
 ```
 
-If the branch exists only remotely, replace the switch command with `git switch --track origin/release/app-store-1.0`. If it has not been published, obtain the prepared branch first. Record the exact release commit; do not substitute the default branch. Review changes from `3f25ffe`, including removal of the unfinished Discounts/Cashbacks placeholder. Do not promote unfinished features in the listing.
+The App Store preparation (including removal of the unfinished Discounts/Cashbacks placeholder) was merged into `main` on 18 November 2026 at `25c5c57`. Release from `main` and record the exact commit you archive. Do not promote unfinished features in the listing.
 
 ## 2. Resolve membership and seller identity
 
@@ -82,7 +82,7 @@ npx cap open ios
 
 Set `CHROME_PATH` if the browser test runner needs the installed Chrome location. Inspect sync changes before retaining them. Confirm `www/asset-manifest.json` contains only intended assets, native loading uses bundled files, and no development-server URL or secret is packaged.
 
-Evidence boundary: **42 unit and 19 browser tests were reported at `3f25ffe`; those results do not certify this branch.** In this preparation environment, the 38 engine tests passed and JavaScript syntax checks passed. Full web build, browser checks, native archive and signing remain pending on the Mac. Do not copy historical pass counts into a new result.
+Evidence boundary: **On 18 November 2026, before the merge, the full web build, all 42 unit tests and all 19 browser tests (including axe accessibility checks) passed on the Mac for this branch.** Native archive and signing remain pending. Re-run the tests on the exact commit you archive. Do not copy historical pass counts into a new result.
 
 Finish the outstanding physical-phone checks on the release candidate: **Share and Easy Read**. Check sharing opens the expected system UI, cancellation returns safely, and no unintended information is included. Verify Easy Read agrees with the ordinary screens and remains usable with VoiceOver and large text. Smoke-check launch, the changed Claim screen and the final privacy/support links in the installed candidate; record the device, OS, commit, build and result. Revisit previously passed phone checks only if related code or native settings change. See [IOS.md](IOS.md) for historical evidence.
 

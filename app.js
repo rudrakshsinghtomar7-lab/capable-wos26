@@ -1500,4 +1500,3 @@ if (!NATIVE && "serviceWorker" in navigator && window.isSecureContext) {
 /* Test hooks (read-only views of internal formatting). */
 window.CapableApp = { voiceAvailability: voiceAvailability, spokenSummary: spokenSummary, summaryItems: function (v) { return summaryItems(v, facts()); }, state: state, facts: facts };
 })();
-

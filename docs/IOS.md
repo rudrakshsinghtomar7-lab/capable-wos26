@@ -2,7 +2,7 @@
 
 ## Toolchain used for the successful clean build (15 November 2026)
 
-A fresh `git clone` of `fix/reliability-ios` at commit `2090bc1` was put through `npm ci`, `npm run build:web` and `npx cap sync ios`, then two Xcode builds. The Debug build for the iPhone 18 Pro simulator succeeded. The Release build for `generic/platform=iOS` (arm64, unsigned) also succeeded. Both used fresh DerivedData and a fresh SPM checkout. `cap sync` left the working tree unchanged.
+A fresh `git clone` of the pre-release reliability branch (its history was later squashed into the first public commit, `bbe913a`) was put through `npm ci`, `npm run build:web` and `npx cap sync ios`, then two Xcode builds. The Debug build for the iPhone 18 Pro simulator succeeded. The Release build for `generic/platform=iOS` (arm64, unsigned) also succeeded. Both used fresh DerivedData and a fresh SPM checkout. `cap sync` left the working tree unchanged.
 
 | Tool | Version |
 |---|---|
@@ -81,7 +81,7 @@ The web/PWA and the iPhone app keep **separate** storage. Answers saved in Safar
 |---|---|---|---|
 | Bundled assets, no dev server | `webDir: www` | passed | passed (self-test, 15 Nov 2026) |
 | No service worker or install prompt | `app.js` skips both in native | passed | passed (self-test) |
-| Calculations, Easy Read, storage | same web code | passed (re-run 15 Nov 2026 at `2090bc1`) | calculation + storage passed (self-test); saving, persistence, reset and airplane-mode launch passed (user-reported, 15 Nov 2026); Easy Read on device not run |
+| Calculations, Easy Read, storage | same web code | passed (re-run 15 Nov 2026 on the pre-release reliability branch) | calculation + storage passed (self-test); saving, persistence, reset and airplane-mode launch passed (user-reported, 15 Nov 2026); Easy Read on device not run |
 | Read aloud | local plugin → `AVSpeechSynthesizer` (system voices, on device) | passed (speech completed) | works, but **sounds robotic**: the phone has only default-quality English voices (47, none Enhanced/Premium). Code now prefers Premium/Enhanced in any English accent, honours the Read & Speak (formerly Spoken Content) voice setting, and shows a one-time hint to download a better voice. After the user downloaded an Enhanced/Premium voice in Read & Speak, read-aloud sounded **much better: passed** (user, 15 Nov 2026). The app's voice list still showed only default voices, so iOS applies the user's voice through `prefersAssistiveTechnologySettings` without exposing it to the app; the tip can now be dismissed permanently. |
 | Voice input | local plugin → `SFSpeechRecognizer` with `requiresOnDeviceRecognition = true`; refuses when on-device isn't supported, with **no server fallback** | simulator has no on-device recogniser → correctly refused and the panel says voice is off; tap options shown | on-device recogniser available for en-AU (self-test); speaking a command with permission allowed, denial message and tap fallback: passed (user-reported, 15 Nov 2026) |
 | Mic permission | requested only on **Speak**; denial message points to Settings | not requested at launch: passed | not requested at launch: passed (mic + speech both `prompt`); grant/deny dialogs: passed (user-reported, 15 Nov 2026) |
@@ -119,4 +119,3 @@ Write pass or fail beside each.
 9. **Reset**: Privacy › **Delete everything Capable has stored** › Cancel (nothing changes), then again › Delete everything. You're back at the welcome choice.
 10. **Payslip photo**: Money › take a photo. Camera permission text appears, and the photo shows on screen.
 11. **Links**: tap a qld.gov.au link (opens outside the app) and a phone number (offers to call).
-

@@ -198,7 +198,7 @@ a { color: var(--accent); text-underline-offset: .18em; }
    border only — nothing moves position, which keeps it calm. All of it is
    switched off by the prefers-reduced-motion block below, which wins on
    !important regardless of order. */
-.btn, .btn-secondary, .navbtn, .tab, .tool-btn, .er-toggle, .check, .card,
+.btn, .btn-secondary, .navbtn, .tool-btn, .er-toggle, .check, .card,
 .result, .menu-item, .icon-btn, .profile-btn, input, select, textarea, summary {
   transition: background-color var(--ease), border-color var(--ease),
               color var(--ease), box-shadow var(--ease);
@@ -1124,18 +1124,18 @@ body.onboarding-active .menu:has(#profile-btn) { display: none; }
 }
 /* ---- Apple design pass (2026-11-15) ---- */
 /* Response: feedback the instant a finger lands, not on release. */
-.btn:active, .tool-btn:active, .navbtn:active, .tab:active, .er-toggle:active,
+.btn:active, .tool-btn:active, .navbtn:active, .er-toggle:active,
 .icon-btn:active, .profile-btn:active, .menu-item:active, .linklike:active, .check:active { filter: brightness(.93); }
 @media (prefers-reduced-motion: no-preference) {
   .btn:active, .tool-btn:active, .er-toggle:active, .icon-btn:active { transform: scale(.97); transition: transform 80ms ease-out; }
 }
 /* Touch screens have no hover: stop tints sticking after a tap. State
-   styles (current tab, pressed toggles, open menus) are left alone. */
+   styles (current view, pressed toggles, open menus) are left alone. */
 @media (hover: none) {
   .btn:not(.btn-secondary):not(.btn-danger):hover { background: var(--accent); border-color: var(--accent); }
   .btn-secondary:hover { background: transparent; }
   .tool-btn:not([aria-pressed="true"]):hover { background: var(--surface); color: var(--text-muted); }
-  .navbtn:not([aria-current]):hover, .tab:not([aria-selected="true"]):hover,
+  .navbtn:not([aria-current]):hover,
   .check:hover, .menu-item:hover, .icon-btn:not([aria-expanded="true"]):hover { background: transparent; }
   .er-toggle:not([aria-pressed="true"]):hover { border-color: var(--border-strong); color: var(--text); }
 }
@@ -1319,7 +1319,7 @@ body.onboarding-active .menu:has(#profile-btn) { display: none; }
     </button>
   </div>
   <div class="dialog-body">
-    <p><strong>Capable gives estimates, not financial advice.</strong> It is for people with disability in Queensland. The demo uses a made-up person. Sample jobs, reviews and offers are fictional.</p>
+    <p><strong>Capable gives estimates, not financial advice.</strong> It is for people with disability in Queensland. The demo uses a made-up person. Sample jobs and reviews are fictional.</p>
     <h3>Government figures</h3>
     <div id="about-sources"></div>
     <h3 id="accessibility-statement">Accessibility</h3>
@@ -1348,4 +1348,3 @@ body.onboarding-active .menu:has(#profile-btn) { display: none; }
 <script src="app.js"></script>
 </body>
 </html>
-

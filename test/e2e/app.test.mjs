@@ -307,4 +307,3 @@ test("offline: after one visit the app cold-launches and calculates with no netw
   await p.setOfflineMode(false);
   assert.deepEqual(p.errors.filter((e) => !/ERR_INTERNET_DISCONNECTED|Failed to load resource/.test(e)), []);
 });
-

@@ -5,7 +5,7 @@
 
    This worker only ever touches the Cache Storage it owns. It never reads or
    clears localStorage, so saved answers and preferences survive every update. */
-const CACHE = "capable-v8-app-store-2026-11-15";
+const CACHE = "capable-v9-2026-11-18";
 const ASSETS = [
   "./",
   "./index.html",
@@ -72,4 +72,3 @@ self.addEventListener("fetch", (e) => {
     }))
   );
 });
-

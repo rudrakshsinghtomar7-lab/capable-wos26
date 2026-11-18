@@ -32,7 +32,7 @@
 |---|---|
 | `rules.js` | **Single source of truth** for every government figure, with source, effective date, checked date, status and how it was checked. See [docs/SOURCES.md](docs/SOURCES.md). |
 | `engine.js` | Pure logic: money, DSP estimate, concession eligibility, NDIS totals, storage validation and migration. Runs in the browser and in Node tests. |
-| `demo-data.js` | The fictional demo person, sample jobs, reviews and offers. |
+| `demo-data.js` | The fictional demo person, sample jobs and reviews. |
 | `app.js` | Interface. |
 | `index.html` | Shell and styles. |
 | `sw.js` | Offline service worker (web only). |

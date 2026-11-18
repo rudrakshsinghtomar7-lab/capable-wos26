@@ -5,7 +5,7 @@
  * - SAMPLE_JOBS are illustrative roles at fictional employers. They are not
  *   vacancies and are not open for application. They are shown in both modes,
  *   always labelled "Sample".
- * - REVIEWS and OFFERS are fictional. No business here is a partner.
+ * - REVIEWS are fictional. No business here is a partner.
  */
 (function (root, factory) {
   if (typeof module === "object" && module.exports) module.exports = factory();
@@ -155,18 +155,5 @@
       quotes: [{ text: "Good crew, but it is real physical work and the site is hard to get to.", who: "Grounds assistant", tag: "Physical demand" }] }
   };
 
-  const OFFERS = {
-    discounts: [
-      { id: "d1", name: "Sunstate Pharmacy", offer: "15% off over-the-counter items", detail: "Show a concession card at the counter. Excludes prescriptions." },
-      { id: "d2", name: "GreenLeaf Grocers", offer: "10% off every Tuesday", detail: "In store only, on shops over $30." },
-      { id: "d3", name: "Riverbend Cinemas", offer: "$9 concession tickets", detail: "Any session. Companion Card accepted." }
-    ],
-    cashbacks: [
-      { id: "c1", name: "Energy Compare AU", offer: "$60 back when you switch retailer", detail: "Paid 45 days after your first bill on the new plan." },
-      { id: "c2", name: "CoverMate Insurance", offer: "$85 back on home contents cover", detail: "New policies only." },
-      { id: "c3", name: "Telco Swap", offer: "$45 back on a new mobile plan", detail: "Paid as bill credit on your second invoice." }
-    ]
-  };
-
-  return { DEMO_PROFILE: DEMO_PROFILE, DEMO_PLAN: DEMO_PLAN, SAMPLE_JOBS: SAMPLE_JOBS, REVIEWS: REVIEWS, OFFERS: OFFERS };
+  return { DEMO_PROFILE: DEMO_PROFILE, DEMO_PLAN: DEMO_PLAN, SAMPLE_JOBS: SAMPLE_JOBS, REVIEWS: REVIEWS };
 }));
